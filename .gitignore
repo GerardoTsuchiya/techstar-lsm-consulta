@@ -1,0 +1,29 @@
+# Dependencias y compilación
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Material de elicitación: NO se sube al repositorio (TECHSTAR_MVP.md §2).
+# Contiene transcripciones, audio/video y nombres de participantes.
+Entrevistas/
+
+# Capturas, clips o grabaciones de consulta: nunca se versionan (RF-18).
+capturas/
+*.mp4
+*.webm
+*.mov
+
+# Entorno local
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+
+# Registro de sesiones de elicitación: perfiles de participantes (aunque codificados).
+# Se conserva en la trazabilidad formal, fuera del repositorio (TECHSTAR_MVP.md §2).
+Docs/ACS_REGISTRO-SESIONES-ELICITACION_TechStar.pdf
+
+# Configuración local de herramientas
+.claude/settings.local.json
