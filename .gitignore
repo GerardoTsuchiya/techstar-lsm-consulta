@@ -17,6 +17,9 @@ capturas/
 # Solo esta carpeta; `npm run validar-catalogo` avisa de cualquier archivo que no esté en el catálogo.
 !public/recursos/*.mp4
 !public/recursos/*.webm
+# Videos candidatos descargados de Iztacala Enseña e Indiscapacidad: sin permiso de redistribución.
+# Se regeneran con recursos-candidatos/descargar.py; README, procedencia e índices sí se versionan.
+recursos-candidatos/videos/
 
 # Entorno local
 .env
