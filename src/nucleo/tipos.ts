@@ -15,17 +15,36 @@ export type Rol = 'paciente' | 'medico';
  */
 export type EstadoRecurso = 'validado' | 'prueba';
 
+/** `marcador-prueba`: la app dibuja un marcador; no hay archivo. */
+export type TipoRecurso = 'video' | 'imagen' | 'marcador-prueba';
+
+/** Quién aprobó la asociación entrada–recurso y cuándo (TECHSTAR_MVP.md §6.2). */
+export interface AprobacionRecurso {
+  quien: string;
+  /** Fecha AAAA-MM-DD. */
+  fecha: string;
+}
+
+/**
+ * Recurso en LSM. Los datos vienen de `catalogo/*.json` y pasan por `validarCatalogo`.
+ * Un recurso `validado` siempre tiene `archivo`, `src` y `aprobacion`.
+ */
 export interface Recurso {
   id: string;
-  tipo: 'video' | 'imagen' | 'marcador-prueba';
+  tipo: TipoRecurso;
   estado: EstadoRecurso;
   /** Qué debería mostrar el recurso (no es el recurso). */
   descripcion: string;
-  /** Ruta local del archivo cuando exista (RNF-03 propone recursos instalados). */
+  /** Nombre del archivo dentro de `public/recursos/` (RNF-03: instalado, sin internet). */
+  archivo?: string;
+  /** Ruta relativa con la que la vista carga el archivo (`recursos/<archivo>`). */
   src?: string;
   procedencia: string;
   condicionesUso: string;
   revisionLinguistica: string;
+  aprobacion?: AprobacionRecurso;
+  /** Dónde se comprobó que se reproduce y con qué resultado. */
+  estadoReproduccion: string;
 }
 
 export type TipoEntrada =
@@ -37,6 +56,8 @@ export type TipoEntrada =
 export interface EntradaCatalogo {
   id: string;
   tipo: TipoEntrada;
+  /** Qué quiere comunicar la entrada, para revisar que el recurso conserva el sentido. */
+  significado: string;
   /** Término de búsqueda en español (RF-14). */
   termino: string;
   /** Mensaje en español que se entrega. */

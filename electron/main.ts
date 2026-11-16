@@ -2,7 +2,8 @@ import { randomUUID } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
 import { app, BrowserWindow, ipcMain, type IpcMainInvokeEvent, session, type WebContents } from 'electron';
-import { catalogoFicticio } from '../src/catalogo/catalogoFicticio';
+import { catalogoFicticio, ERRORES_CATALOGO } from '../src/catalogo/catalogoFicticio';
+import { describirErrores } from '../src/catalogo/validarCatalogo';
 import { CoordinadorSesion } from '../src/nucleo/coordinador';
 import type { Evento } from '../src/nucleo/tipos';
 import { esComando } from '../src/transporte/protocoloRed';
@@ -162,7 +163,9 @@ void app.whenReady().then(async () => {
       }),
     );
   }
-  if (args.modo === 'medico') await prepararMedico();
+  // Catálogo con errores: no se abre la red ni la sesión; la ventana muestra los errores.
+  if (ERRORES_CATALOGO.length > 0) console.error(describirErrores([...ERRORES_CATALOGO]));
+  else if (args.modo === 'medico') await prepararMedico();
   crearVentana();
 });
 

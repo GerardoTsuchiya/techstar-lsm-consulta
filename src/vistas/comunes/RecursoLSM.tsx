@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Disponibilidad } from '../../nucleo/tipos';
 import { IconoEntrada } from './IconoEntrada';
 import { IconoReproducir } from './Iconos';
@@ -31,15 +32,38 @@ function Silueta() {
  */
 export function RecursoLSM({ disponibilidad: d, icono, tamano = 'mediano', etiqueta }: Props) {
   const clase = `recurso recurso--${tamano}`;
+  // Archivo que no se pudo cargar (falta en public/recursos/ o está dañado, RNF-03).
+  const [srcFallido, setSrcFallido] = useState<string>();
+
+  if (d.estado === 'validado' && d.recurso.src && d.recurso.src === srcFallido) {
+    // Se informa del fallo y no se muestra otro recurso en su lugar (RI-01).
+    return (
+      <span
+        className={`${clase} recurso--faltante`}
+        role="img"
+        aria-label={`No se pudo cargar el recurso en LSM (falta o está dañado): ${etiqueta}`}
+        title={`No se pudo cargar ${d.recurso.src} (${d.recurso.id}). Falta o está dañado; no se muestra otro en su lugar.`}
+        data-recurso-fallido={d.recurso.id}
+      >
+        <span className="recurso__cuerpo" aria-hidden="true">
+          <span className="recurso__vacio">
+            <IconoEntrada clave={icono} tamano={tamano === 'mini' || tamano === 'mediano' ? 16 : 30} />
+            {tamano !== 'mini' && <span>Recurso dañado o faltante</span>}
+          </span>
+        </span>
+      </span>
+    );
+  }
 
   if (d.estado === 'validado' && d.recurso.src) {
     const { recurso } = d;
+    const alFallar = () => setSrcFallido(recurso.src);
     return (
       <span className={`${clase} recurso--validado`} data-recurso={recurso.id}>
         {recurso.tipo === 'video' ? (
-          <video src={recurso.src} controls loop muted playsInline aria-label={`Video en LSM: ${etiqueta}`} />
+          <video src={recurso.src} controls loop muted playsInline aria-label={`Video en LSM: ${etiqueta}`} onError={alFallar} />
         ) : (
-          <img src={recurso.src} alt={`Apoyo visual en LSM: ${etiqueta}`} />
+          <img src={recurso.src} alt={`Apoyo visual en LSM: ${etiqueta}`} onError={alFallar} />
         )}
       </span>
     );

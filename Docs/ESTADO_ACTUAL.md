@@ -92,7 +92,7 @@ No se consultaron entrevistas: no fue necesario aclarar el origen de ningún req
 | D36 | La captura solo inicia con el catálogo **sin opciones elegidas**; la propuesta de la cámara **se confirma o se descarta** (sin «Cambiar selección»; RF-08 está propuesto). La intensidad del dolor puede indicarse en la revisión, como en el catálogo | Evita perder una selección. Igual revisión para ambas vías (RF-03) |
 | D37 | **«Cancelar» también durante el procesamiento**: deja de esperar el resultado (aborta el reconocimiento) y vuelve al catálogo. Cualquier resultado tardío se descarta | RF-17 y RF-18: nada procesado tras cancelar aparece en pantalla |
 | D38 | Si llega un **mensaje del médico durante la captura**, se anuncia arriba («Llegó un mensaje del médico: «…»») sin ocultar la cámara; se ve completo al terminar o cancelar | RF-17: la cámara activa siempre está a la vista. El texto se muestra, así que el acuse «Recibido» sigue siendo cierto (RF-20) |
-| D39 | Recurso de prueba nuevo `REC-PRUEBA-SIS-CANCELAR` para el control «Cancelar» (en el catálogo ficticio) | §6.1 pide recursos de los controles de cancelación |
+| D39 | Recurso de prueba nuevo `REC-PRUEBA-SIS-CANCELAR` para el control «Cancelar» (en `catalogo/ficticio-dev.json`) | §6.1 pide recursos de los controles de cancelación |
 
 ## 3. Requisitos cubiertos en la etapa A
 
@@ -162,8 +162,8 @@ permiso de Windows «Cámara» en «Allow» · navegador integrado de la app de 
 
 ### 4.1 Automáticas (`npm run check`)
 
-Resultado (16/11/2026, etapa C): **105 de 105 pruebas pasan** (46 de la etapa A + 25 de la etapa B + 34 de la etapa C),
-sin errores de tipos y con las compilaciones correctas. Resultado de la
+Resultado (16/11/2026, etapa C): **127 de 127 pruebas pasan** (46 de la etapa A + 25 de la etapa B + 34 de la etapa C +
+22 del catálogo editable, trabajo paralelo), sin errores de tipos y con las compilaciones correctas. Resultado de la
 etapa B: 71 de 71. Las pruebas de red se repitieron 5 veces seguidas sin fallos.
 
 | Archivo | Qué comprueba |

@@ -11,6 +11,8 @@ const CSP = [
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
+  // Videos en LSM instalados en `public/recursos/` (RNF-03). Nunca desde internet.
+  "media-src 'self'",
   "font-src 'self' data:",
   "connect-src 'self' ws:",
   "object-src 'none'",

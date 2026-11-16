@@ -68,12 +68,14 @@ Abrir **http://127.0.0.1:5173**. El servidor de desarrollo solo escucha en esta 
 | `npm run electron:medico-local` | Médico escuchando solo en 127.0.0.1 (pruebas con dos procesos en una computadora) |
 | `npm run info-equipo` | Muestra sistema operativo, arquitectura y versión de Node (para registrar las laptops) |
 | `npm run dev` | Servidor de desarrollo en http://127.0.0.1:5173 (modo navegador) |
-| `npm test` | Ejecuta las pruebas automáticas (105) |
+| `npm test` | Ejecuta las pruebas automáticas (127) |
 | `npm run typecheck` | Revisa los tipos de TypeScript (vistas y proceso principal de Electron) |
 | `npm run build` | Revisa los tipos y genera la versión de producción en `dist/` |
 | `npm run build:electron` | Genera `dist/` y el proceso principal y preload de Electron en `dist-electron/` |
 | `npm run preview` | Sirve `dist/` en http://127.0.0.1:4173 |
-| `npm run check` | Tipos, pruebas y compilaciones (lo que hay que correr antes de entregar) |
+| `npm run validar-catalogo` | Revisa `catalogo/*.json`, los archivos de `public/recursos/` y que el inventario esté al día |
+| `npm run docs-recursos` | Regenera [Docs/RECURSOS_LSM.md](Docs/RECURSOS_LSM.md) a partir del catálogo |
+| `npm run check` | Tipos, catálogo, pruebas y compilaciones (lo que hay que correr antes de entregar) |
 
 Opciones de la app de escritorio (después de `--`, p. ej. `npm run electron:medico -- --puerto=47200`):
 `--recursos=desarrollo|producto` (sin la opción o con otro valor: producto), `--puerto=N` (médico; el paciente lo
@@ -172,6 +174,97 @@ Reglas: la captura solo empieza con el catálogo sin opciones elegidas (para no 
 la cámara se confirma o se descarta (no hay «Cambiar selección»); si llega un mensaje del médico durante la captura, se
 anuncia arriba sin ocultar la cámara.
 
+## Editar el catálogo
+
+El catálogo está en **[catalogo/ficticio-dev.json](catalogo/ficticio-dev.json)**. Para agregar o cambiar frases y
+recursos **no hay que tocar código**: se edita ese archivo (VS Code marca en rojo los errores de JSON) y se ejecuta
+`npm run validar-catalogo`. Si el archivo tiene errores, la app no abre ninguna consulta y muestra la lista de errores.
+El inventario [Docs/RECURSOS_LSM.md](Docs/RECURSOS_LSM.md) **se genera** desde el catálogo con
+`npm run docs-recursos`. No se edita a mano: `npm run validar-catalogo` (y por lo tanto `npm run check`) falla si el
+inventario quedó desactualizado.
+
+**Campos de cada entrada** (todos obligatorios salvo `nota`):
+
+| Campo | Qué es | Ejemplo |
+|---|---|---|
+| `id` | Identificador único, sin espacios ni acentos | `"PAC-S-09"` |
+| `tipo` | `sintoma`, `respuesta-paciente`, `pregunta-medico` o `respuesta-medico` | `"sintoma"` |
+| `significado` | Qué quiere comunicar, para revisar que el recurso conserva el sentido | `"El paciente informa que le duele el oído."` |
+| `texto` | Mensaje en español que se entrega, exactamente como se mostrará | `"Me duele el oído."` |
+| `termino` | Término con el que el médico la busca (RF-14) | `"dolor de oído"` |
+| `icono` | Clave de un icono existente (el validador lista las disponibles) | `"cabeza"` |
+| `esDolor` | `true` solo en síntomas de dolor (admiten intensidad 1–10) | `true` |
+| `recursoId` | ID del recurso en LSM asociado, o `null` si todavía no tiene (la entrada queda bloqueada) | `"REC-PAC-S-09"` |
+| `nota` | Opcional. Aparece en el inventario | `"Pendiente de revisión médica."` |
+
+**Campos de cada recurso:** `id`, `tipo` (`video`, `imagen` o `marcador-prueba`), `estado` (`validado` o
+`prueba`), `descripcion` (qué debe mostrar), `archivo` (nombre dentro de `public/recursos/`, o `null`),
+`procedencia`, `condicionesUso`, `revisionLinguistica`, `aprobacion` (`{ "quien": "...", "fecha": "AAAA-MM-DD" }` o
+`null`) y `estadoReproduccion` (dónde se comprobó que se reproduce). Los controles del sistema («Confirmar», «No
+entendí», aviso de alcance…) se asocian en `recursosSistema`.
+
+### Agregar una entrada, paso a paso
+
+1. Abrir `catalogo/ficticio-dev.json` y, dentro de `"entradas"`, copiar una entrada del mismo tipo. Pegarla debajo
+   y cuidar las comas: entre dos `{ … }` va una coma, y después de la última no.
+2. Cambiar `id` (sigan la serie: `PAC-S-09`, `MED-P-07`…), `significado`, `texto`, `termino`, `icono` y `esDolor`.
+3. Si todavía no hay recurso en LSM, poner `"recursoId": null`. La entrada aparece en el catálogo pero no se puede
+   enviar (regla del encargo). Para probar la interfaz en modo desarrollo se puede asociar un recurso
+   `marcador-prueba`, copiando uno de los `REC-PRUEBA-…` con un ID nuevo.
+4. `npm run validar-catalogo` y corregir lo que indique. Cada mensaje dice qué entrada o recurso falla y por qué.
+5. `npm run docs-recursos` para actualizar el inventario.
+6. `npm run check` y revisar la entrada en la app (`npm run dev`, modo desarrollo).
+
+Un icono nuevo sí requiere código: agregar la clave en `CLAVES_ICONO` (`src/catalogo/validarCatalogo.ts`) y su
+dibujo en `src/vistas/comunes/IconoEntrada.tsx`. El compilador avisa si falta uno de los dos.
+
+### Registrar un video en LSM validado, paso a paso
+
+Antes de marcar un recurso como `validado` hay que comprobar (TECHSTAR_MVP.md §6.2) que corresponde al **mensaje
+completo**, que **se reproduce en la app**, que el **uso está permitido** por sus condiciones, y **quién aprobó** la
+asociación entrada–recurso y cuándo.
+
+1. **Preparar el archivo.** Video `.mp4` (H.264) o `.webm`; imagen `.png`, `.jpg` o `.webp`. Nombrarlo con el ID
+   de la entrada, sin espacios ni acentos: `PAC-S-01.mp4`. Nunca usar capturas o grabaciones de consultas (RF-18).
+2. **Copiarlo a `public/recursos/`.** La app lo empaqueta y lo reproduce sin internet (RNF-03). No se admiten
+   direcciones `https://…`.
+3. **Registrar el recurso** en `"recursos"` (un recurso nuevo o el `REC-PRUEBA-…` de esa entrada, ya cambiado):
+
+   ```json
+   {
+     "id": "REC-PAC-S-01",
+     "tipo": "video",
+     "estado": "validado",
+     "descripcion": "Seña en LSM de «Tengo dolor de cabeza.»",
+     "archivo": "PAC-S-01.mp4",
+     "procedencia": "Iztacala Enseña, video «…» (URL de la ficha original)",
+     "condicionesUso": "Uso educativo sin fines de lucro, con atribución (según la licencia de la fuente)",
+     "revisionLinguistica": "Revisado por <nombre o rol del apoyo lingüístico>, 2026-11-18: conserva el sentido",
+     "aprobacion": { "quien": "<quién aprobó la asociación>", "fecha": "2026-11-20" },
+     "estadoReproduccion": "Probado en Electron (Windows 10), 2026-11-20: se reproduce sin internet"
+   }
+   ```
+
+4. **Asociarlo a la entrada:** en la entrada `PAC-S-01`, `"recursoId": "REC-PAC-S-01"`. Si quedó un `REC-PRUEBA-…`
+   sin uso, borrarlo (el validador avisa de los recursos sin uso).
+5. `npm run validar-catalogo`. Rechaza un recurso validado sin archivo o sin aprobación, y comprueba que el archivo
+   existe con ese nombre exacto (mayúsculas incluidas), que no está vacío y que su contenido es del formato de su
+   extensión.
+6. `npm run docs-recursos` y `npm run check`.
+7. **Probar la reproducción:** `npm run dev` → **Flujo de producto** → la entrada se puede enviar y muestra
+   exactamente ese video. Las demás siguen bloqueadas. En la app de escritorio:
+   `npm run build:electron` y luego `npx electron . --modo=demo --recursos=producto`. Anotar el resultado en
+   `estadoReproduccion` y regenerar el inventario.
+8. **Guardar en el repositorio:** `git add public/recursos/PAC-S-01.mp4 catalogo/ Docs/RECURSOS_LSM.md`. El
+   `.gitignore` excluye todos los videos salvo los de `public/recursos/`.
+
+Si en una laptop el archivo falta o está dañado, la pantalla muestra «Recurso dañado o faltante» y **no muestra otro
+recurso en su lugar**.
+
+**Catálogo V1:** cuando esté aprobado, crear `catalogo/v1.json` (mismo formato) y validarlo con
+`npm run validar-catalogo -- catalogo/v1.json`. Cambiar la app al V1 es una decisión del equipo. Hay que cambiar dos
+líneas: el `import` de `src/catalogo/catalogoFicticio.ts` y `CATALOGO_APP` en `scripts/comun.ts`.
+
 ## Diseño
 
 El estilo sigue el prototipo Figma «Pinkies», página V2: fondo crema `#FCF9F2`, verdes `#364C3F`/`#395443`,
@@ -193,13 +286,16 @@ electron/        App de escritorio (proceso principal de Electron, Node)
   servidor/        Servidor WebSocket que envuelve al coordinador (laptop del médico)
 src/
   nucleo/        Reglas de la sesión (TypeScript puro, sin React ni red)
-  catalogo/      Catálogo ficticio y textos del aviso de alcance
+  catalogo/      Carga y validación del catálogo; genera el inventario de recursos
   transporte/    Cómo viajan los mensajes entre vistas y coordinador
   cliente/       Conecta una vista con la sesión (hooks de React)
   camara/        Adaptador de cámara: interfaz y cámara real del navegador/Electron (etapa C)
   reconocimiento/ Interfaz del reconocedor y reconocedor SIMULADO de desarrollo (etapa C)
   vistas/        Pantallas: paciente, médico y piezas comunes
   modos/         Modos de inicio (demostración, médico, paciente y los de red) y pantalla de inicio
+catalogo/        Datos del catálogo (entradas y recursos), editables sin tocar código
+public/recursos/ Archivos de los recursos en LSM (videos o imágenes), instalados con la app
+scripts/         validar-catalogo y docs-recursos (Node)
 Docs/            Documentos de referencia (SRS, lista), estado actual, inventario de recursos y prueba con dos laptops
 ```
 
@@ -217,8 +313,11 @@ Docs/            Documentos de referencia (SRS, lista), estado actual, inventari
 - **`nucleo/mensajes.ts`**: arma el texto en español de cada elemento («… Intensidad del dolor: 7 de 10.»), igual en las
   dos pantallas.
 - **`nucleo/tipos.ts`**: la forma de los datos (entradas, mensajes, avisos, comandos) que comparten todas las partes.
-- **`catalogo/catalogoFicticio.ts`**: las entradas de prueba y sus recursos de prueba. Aquí se cambiarán por el
-  Catálogo V1 aprobado.
+- **`catalogo/catalogoFicticio.ts`**: carga `catalogo/ficticio-dev.json` y lo entrega a la app solo si pasa la
+  validación. Si no la pasa, la app muestra los errores y no abre ninguna consulta.
+- **`catalogo/validarCatalogo.ts`**: el «revisor» del archivo de datos. Rechaza IDs repetidos, recursos inexistentes,
+  tipos desconocidos, textos vacíos, archivos de internet y recursos validados sin archivo o sin aprobación. También
+  revisa que los archivos de `public/recursos/` existan y no estén dañados. `documentoRecursos.ts` arma el inventario.
 - **`transporte/`**: el «cartero». Todos cumplen la misma interfaz (`tipos.ts`), por eso las vistas no cambian.
   `local.ts` lleva mensajes dentro de la misma ventana (modo de una pantalla). `broadcastChannel.ts` los lleva entre
   dos ventanas del mismo navegador. `websocket.ts` los lleva de la laptop del paciente a la del médico por Wi-Fi:

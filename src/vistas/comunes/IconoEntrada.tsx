@@ -29,6 +29,7 @@ import {
   VideoOff,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
+import type { ClaveIcono } from '../../catalogo/validarCatalogo';
 
 /** Estómago dibujado con el mismo trazo que Lucide (no existe en la librería). */
 function Estomago({ size = 24, strokeWidth = 2, className }: LucideProps) {
@@ -54,8 +55,9 @@ function Estomago({ size = 24, strokeWidth = 2, className }: LucideProps) {
 /**
  * Iconos provisionales de apoyo visual (no validados con personas Sordas).
  * Lucide (licencia ISC) con trazo uniforme, en lugar de emoji.
+ * Las claves deben coincidir con `CLAVES_ICONO` (validador del catálogo): el compilador lo comprueba.
  */
-const ICONOS: Record<string, ComponentType<LucideProps>> = {
+const ICONOS: Record<ClaveIcono, ComponentType<LucideProps>> = {
   cabeza: Brain,
   estomago: Estomago,
   garganta: Speech,
@@ -88,6 +90,6 @@ const ICONOS: Record<string, ComponentType<LucideProps>> = {
 };
 
 export function IconoEntrada({ clave, tamano = 24, className }: { clave?: string; tamano?: number; className?: string }) {
-  const Icono = (clave && ICONOS[clave]) || CircleDashed;
+  const Icono = (clave && (ICONOS as Partial<Record<string, ComponentType<LucideProps>>>)[clave]) || CircleDashed;
   return <Icono size={tamano} strokeWidth={1.75} className={className} aria-hidden="true" />;
 }

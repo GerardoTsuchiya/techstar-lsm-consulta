@@ -1,4 +1,6 @@
+import { ERRORES_CATALOGO } from './catalogo/catalogoFicticio';
 import { Inicio } from './modos/Inicio';
+import { CatalogoInvalido } from './vistas/comunes/CatalogoInvalido';
 import { ModoDemostracion, ModoMedico, ModoPaciente } from './modos/modos';
 import { ModoMedicoRed, ModoPacienteRed } from './modos/modosRed';
 import type { PoliticaRecursos } from './nucleo/tipos';
@@ -16,7 +18,8 @@ export function leerConfiguracion(search: string): { modo: string | null; politi
   };
 }
 
-export function App() {
+export function App({ erroresCatalogo = ERRORES_CATALOGO }: { erroresCatalogo?: readonly string[] }) {
+  if (erroresCatalogo.length > 0) return <CatalogoInvalido errores={erroresCatalogo} />;
   const { modo, politica } = leerConfiguracion(window.location.search);
   if (modo === 'demo') return <ModoDemostracion politica={politica} />;
   if (modo === 'medico') return <ModoMedico politica={politica} />;

@@ -1971,6 +1971,19 @@ p {
   color: inherit;
 }
 
+/* ------------------------------------------------------------ Catálogo con errores */
+
+.catalogo-invalido {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding-left: 2rem;
+  align-items: start;
+}
+.catalogo-invalido li {
+  list-style: disc;
+}
+
 /* ------------------------------------------------------------ Etapa C: captura en LSM */
 
 .captura {

@@ -13,6 +13,10 @@ capturas/
 *.mp4
 *.webm
 *.mov
+# Única excepción: recursos en LSM aprobados del catálogo (videos de referencia, no de consulta).
+# Solo esta carpeta; `npm run validar-catalogo` avisa de cualquier archivo que no esté en el catálogo.
+!public/recursos/*.mp4
+!public/recursos/*.webm
 
 # Entorno local
 .env
