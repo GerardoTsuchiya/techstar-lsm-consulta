@@ -1867,3 +1867,79 @@ p {
     transition: none !important;
   }
 }
+
+/* ------------------------------------------------------------ Etapa B: vinculación y estado de la red */
+
+.vinculo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1.1rem;
+  min-height: 40px;
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid var(--linea);
+  background: var(--crema-tarjeta);
+  color: var(--verde-texto);
+  font-size: 0.86rem;
+}
+.vinculo__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+}
+.vinculo__dato strong {
+  margin-left: 0.25rem;
+  font-family: var(--mono);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+.vinculo__codigo {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  letter-spacing: 0.12em;
+}
+.vinculo__rechazos {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--salvia-tenue);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.vinculo__equipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  font-size: 0.76rem;
+  color: var(--tinta-suave);
+}
+.vinculo--conectado {
+  background: var(--salvia-claro);
+}
+.vinculo--caido {
+  border-bottom-color: var(--ambar-borde);
+  background: var(--ambar-suave);
+  color: var(--ambar);
+}
+.vinculo--error {
+  background: var(--rosa);
+  color: var(--rojo-texto);
+}
+.vincular .inicio__titulo {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+.vincular__tarjeta {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 520px;
+  margin-top: 1.5rem;
+}
+.vincular__tarjeta .boton {
+  justify-self: start;
+  margin-top: 0.5rem;
+}
+.vincular .inicio__nota .vinculo__equipo {
+  margin-left: 0;
+  color: inherit;
+}

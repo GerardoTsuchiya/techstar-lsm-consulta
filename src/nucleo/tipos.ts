@@ -172,7 +172,9 @@ export type CodigoError =
   | 'intensidad-invalida'
   | 'contenido-no-coincide'
   | 'mensaje-no-encontrado'
-  | 'sin-conexion';
+  | 'sin-conexion'
+  /** Llegó por la red un comando con forma inválida (etapa B). */
+  | 'comando-invalido';
 
 export type Resultado =
   | { ok: true; id?: string; duplicado?: boolean }

@@ -13,6 +13,8 @@ import {
   FlaskConical,
   HeartPulse,
   Info,
+  Laptop,
+  Link,
   LogOut,
   MessageSquare,
   MessagesSquare,
@@ -21,6 +23,8 @@ import {
   ShieldCheck,
   Sparkles,
   Video,
+  Wifi,
+  WifiOff,
   X,
 } from 'lucide-react';
 
@@ -58,3 +62,7 @@ export const IconoReloj = () => <Clock size={40} strokeWidth={1.5} aria-hidden /
 export const IconoListo = () => <Sparkles size={40} strokeWidth={1.5} aria-hidden />;
 export const IconoMatraz = () => <FlaskConical size={15} {...trazo} />;
 export const IconoEscudo = () => <ShieldCheck size={15} {...trazo} />;
+export const IconoWifi = () => <Wifi size={16} {...trazo} />;
+export const IconoSinWifi = () => <WifiOff size={16} {...trazo} />;
+export const IconoVincular = () => <Link size={16} {...trazo} />;
+export const IconoLaptop = () => <Laptop size={16} {...trazo} />;

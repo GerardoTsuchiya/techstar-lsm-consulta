@@ -18,7 +18,7 @@ export function Inicio() {
         <p className="inicio__lema">
           Apoyo a la comunicación entre personas Sordas y personal médico en consultas generales.
           <br />
-          <strong>Etapa A</strong> · primera conversación en escritorio.
+          <strong>Etapa B</strong> · dos laptops por Wi-Fi local (app de escritorio).
         </p>
       </header>
 
@@ -62,11 +62,19 @@ export function Inicio() {
             <span className="modo__desc">Se conecta a la ventana del médico en esta computadora.</span>
           </a>
         </li>
+        <li>
+          <a className="modo" href="?modo=paciente-red" target="_blank" rel="noopener">
+            <span className="modo__num">04</span>
+            <span className="modo__nombre">Paciente por red</span>
+            <span className="modo__desc">Se vincula con la app de escritorio del médico (dirección y código).</span>
+          </a>
+        </li>
       </ol>
 
       <p className="inicio__nota">
         Catálogo ficticio de desarrollo. Ningún recurso está validado en LSM. Los modos 02 y 03 funcionan en
-        dos ventanas del mismo navegador; la conexión entre dos laptops llega en la etapa B.
+        dos ventanas del mismo navegador. Para dos laptops se usa la app de escritorio:{' '}
+        <code>npm run electron:medico</code> y <code>npm run electron:paciente</code> (ver README).
       </p>
     </main>
   );

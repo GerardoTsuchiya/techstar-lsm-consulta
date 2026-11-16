@@ -2,7 +2,7 @@
   "name": "techstar-lsm-consulta",
   "private": true,
   "version": "0.1.0",
-  "description": "TechStar · Apoyo a la comunicación en LSM para consultas médicas generales (MVP, etapa A)",
+  "description": "TechStar · Apoyo a la comunicación en LSM para consultas médicas generales (MVP, etapa B)",
   "type": "module",
   "engines": {
     "node": "^22.13.0 || >=24.0.0"
@@ -10,28 +10,40 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "build:main": "vite build -c vite.electron.config.ts && vite build -c vite.electron.config.ts --mode preload",
+    "build:electron": "vite build && npm run build:main",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.electron.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm run test && npm run build"
+    "check": "npm run typecheck && npm run test && npm run build && npm run build:main",
+    "electron:medico": "npm run build:electron && electron . --modo=medico --recursos=desarrollo",
+    "electron:paciente": "npm run build:electron && electron . --modo=paciente",
+    "electron:demo": "npm run build:electron && electron . --modo=demo --recursos=desarrollo",
+    "electron:medico-local": "npm run build:electron && electron . --modo=medico --recursos=desarrollo --solo-local",
+    "info-equipo": "node -e \"const o=require('os');console.log('Sistema:',o.type(),o.release(),'('+o.version()+')');console.log('Arquitectura:',o.arch());console.log('Node:',process.version)\""
   },
   "dependencies": {
     "@fontsource-variable/inter": "5.3.0",
     "@fontsource/cal-sans": "5.3.0",
     "lucide-react": "1.61.0",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "ws": "8.23.0"
   },
   "devDependencies": {
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.6.1",
+    "@types/node": "24.19.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "@types/ws": "8.18.2",
     "@vitejs/plugin-react": "6.1.2",
+    "electron": "45.3.3",
     "jsdom": "29.1.1",
     "typescript": "6.0.3",
     "vite": "8.3.5",
     "vitest": "5.1.0"
-  }
+  },
+  "main": "dist-electron/main.cjs"
 }

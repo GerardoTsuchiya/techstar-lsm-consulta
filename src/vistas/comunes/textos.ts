@@ -15,6 +15,7 @@ export const MENSAJES_ERROR: Record<CodigoError, string> = {
   'contenido-no-coincide': 'El contenido cambió desde la revisión. Revísalo de nuevo.',
   'mensaje-no-encontrado': 'No se encontró el mensaje.',
   'sin-conexion': 'Sin conexión con la computadora del médico. Intenta de nuevo.',
+  'comando-invalido': 'La computadora del médico no reconoció la solicitud.',
 };
 
 /** Título corto de una entrada, como en las tarjetas del prototipo («Dolor de cabeza»). */
