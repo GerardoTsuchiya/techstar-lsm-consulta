@@ -1,14 +1,19 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useId, useReducer, useRef, useState } from 'react';
+import type { AdaptadorCamara } from '../../camara/adaptador';
+import { crearCamaraNavegador } from '../../camara/camaraNavegador';
 import { useAcuses, useSesion } from '../../cliente/useSesion';
 import { generarId } from '../../nucleo/ids';
 import { textosRevisados } from '../../nucleo/mensajes';
 import { reducirTurno, turnoInicial } from '../../nucleo/turnoPaciente';
 import type { Catalogo, Comando, InstantaneaSesion, MensajeMedico, MensajePaciente, Resultado } from '../../nucleo/tipos';
+import { reconocedorPorPolitica, type FabricaReconocedor } from '../../reconocimiento/reconocedor';
 import type { ConexionCliente } from '../../transporte/tipos';
 import { AvisoAlcance } from '../comunes/AvisoAlcance';
 import { Cabecera, Pasos, TituloPantalla } from '../comunes/Cabecera';
 import { Dialogo } from '../comunes/Dialogo';
 import { IconoConversacion, IconoInfo, IconoListo, IconoReloj, IconoVideo } from '../comunes/Iconos';
+import { AvisoCamara, PanelCaptura, PanelNoReconocido, PanelProcesando } from './PanelCaptura';
+import { useCaptura } from './useCaptura';
 import { MENSAJES_ERROR } from '../comunes/textos';
 import { CatalogoPaciente } from './CatalogoPaciente';
 import { ConversacionPaciente, EstadoEnvio, MensajeMedicoDestacado } from './MensajesPaciente';
@@ -17,10 +22,19 @@ import { RevisionPaciente } from './RevisionPaciente';
 interface Props {
   conexion: ConexionCliente | null;
   catalogo: Catalogo;
+  /** Cámara de este equipo (etapa C). Por omisión, la del navegador o Electron. Las pruebas usan una falsa. */
+  crearCamara?: () => AdaptadorCamara;
+  /** Reconocedor según la política de la sesión. Por omisión: simulador solo en desarrollo; en producto, ninguno. */
+  crearReconocedor?: FabricaReconocedor;
 }
 
 /** Interfaz de la persona Sorda. Funciona igual con cualquier transporte. */
-export function VistaPaciente({ conexion, catalogo }: Props) {
+export function VistaPaciente({
+  conexion,
+  catalogo,
+  crearCamara = crearCamaraNavegador,
+  crearReconocedor = reconocedorPorPolitica,
+}: Props) {
   const { instantanea, conectado, ultimaCerrada, enviar } = useSesion(conexion);
 
   if (!instantanea) {
@@ -48,16 +62,30 @@ export function VistaPaciente({ conexion, catalogo }: Props) {
   }
 
   // La clave por sesión desmonta y borra todo el estado local al cambiar de sesión (RF-18).
-  return <SesionPaciente key={instantanea.sesionId} instantanea={instantanea} catalogo={catalogo} enviar={enviar} />;
+  return (
+    <SesionPaciente
+      key={instantanea.sesionId}
+      instantanea={instantanea}
+      catalogo={catalogo}
+      enviar={enviar}
+      crearCamara={crearCamara}
+      crearReconocedor={crearReconocedor}
+    />
+  );
 }
 
 function SesionPaciente(props: {
   instantanea: InstantaneaSesion;
   catalogo: Catalogo;
   enviar: (c: Comando) => Promise<Resultado>;
+  crearCamara: () => AdaptadorCamara;
+  crearReconocedor: FabricaReconocedor;
 }) {
   const { instantanea, catalogo, enviar } = props;
   const { sesionId, politica, mensajes, aclaraciones } = instantanea;
+  // Una cámara y un reconocedor por sesión: al cerrarla se desmontan y se liberan (RF-18).
+  const [camara] = useState(() => props.crearCamara());
+  const [reconocedor] = useState(() => props.crearReconocedor(politica, catalogo));
   const [avisoAbierto, setAvisoAbierto] = useState(true);
   const [confirmarCierre, setConfirmarCierre] = useState(false);
   const [verConversacion, setVerConversacion] = useState(false);
@@ -68,12 +96,17 @@ function SesionPaciente(props: {
   const enviando = useRef(false);
   const cuerpo = useRef<HTMLDivElement>(null);
   useAcuses(instantanea, 'paciente', enviar);
+  const captura = useCaptura({ turno, despachar, camara, reconocedor, catalogo });
 
   const ultimoMedico = [...mensajes].reverse().find((m): m is MensajeMedico => m.origen === 'medico');
   const ultimoPropio = [...mensajes].reverse().find((m): m is MensajePaciente => m.origen === 'paciente');
-  const mostrarMensajeMedico = ultimoMedico !== undefined && ultimoMedico.id !== respondidoHasta;
+  // Mientras la cámara graba o se interpreta la seña, el mensaje nuevo del médico se anuncia arriba
+  // sin ocultar la captura: la cámara nunca queda encendida detrás de otra pantalla (RF-17).
+  const enCaptura = turno.fase === 'capturando' || turno.fase === 'procesando';
+  const medicoPendiente = ultimoMedico !== undefined && ultimoMedico.id !== respondidoHasta;
+  const mostrarMensajeMedico = medicoPendiente && !enCaptura;
 
-  // Al cambiar de paso (catálogo ↔ revisión ↔ mensaje del médico) se muestra desde el principio.
+  // Al cambiar de paso (catálogo ↔ captura ↔ revisión ↔ mensaje del médico) se muestra desde el principio.
   const paso = mostrarMensajeMedico ? 'medico' : turno.fase === 'enviando' ? 'revision' : turno.fase;
   useEffect(() => {
     cuerpo.current?.scrollTo?.({ top: 0 });
@@ -87,7 +120,7 @@ function SesionPaciente(props: {
       tipo: 'confirmarMensajePaciente',
       sesionId,
       envioId: turno.envioId,
-      via: 'catalogo',
+      via: turno.via,
       selecciones: turno.selecciones,
       textosRevisados: textosRevisados(catalogo, turno.selecciones),
     });
@@ -141,16 +174,57 @@ function SesionPaciente(props: {
               titulo="¿Esto es lo que quieres comunicar?"
               rol="paciente"
               izquierda={
-                <button type="button" className="via-camara" disabled title="Se integra en la etapa C">
-                  <IconoVideo /> Captura en LSM · etapa C
-                </button>
+                turno.fase === 'seleccion' ? (
+                  <BotonCaptura
+                    disponible={reconocedor !== null}
+                    puedeIniciar={captura.puedeIniciar}
+                    onIniciar={captura.iniciar}
+                  />
+                ) : undefined
               }
             >
-              <Pasos actual={turno.fase === 'seleccion' ? 1 : turno.fase === 'enviando' ? 3 : 2} />
+              <Pasos actual={turno.fase === 'revision' ? 2 : turno.fase === 'enviando' ? 3 : 1} />
             </TituloPantalla>
+
+            {enCaptura && medicoPendiente && (
+              <p className="nota nota--info" role="status">
+                Llegó un mensaje del médico: «{ultimoMedico.texto}». Lo verás completo al terminar la captura.
+              </p>
+            )}
+
+            {turno.fase === 'capturando' && (
+              <PanelCaptura
+                camara={camara}
+                estadoCamara={captura.estadoCamara}
+                catalogo={catalogo}
+                politica={politica}
+                onListo={() => void captura.listo()}
+                onCancelar={captura.cancelar}
+              />
+            )}
+
+            {turno.fase === 'procesando' && (
+              <PanelProcesando
+                capturaId={turno.capturaId}
+                catalogo={catalogo}
+                politica={politica}
+                reconocedor={reconocedor}
+                onCancelar={captura.cancelar}
+              />
+            )}
+
+            {turno.fase === 'no-reconocido' && (
+              <PanelNoReconocido
+                catalogo={catalogo}
+                politica={politica}
+                onReintentar={captura.iniciar}
+                onCatalogo={captura.irAlCatalogo}
+              />
+            )}
 
             {turno.fase === 'seleccion' && (
               <>
+                {captura.aviso && <AvisoCamara aviso={captura.aviso} onCerrar={captura.cerrarAviso} />}
                 {ultimoPropio && <EstadoEnvio mensaje={ultimoPropio} />}
                 {error && (
                   <p className="nota nota--alerta" role="alert">
@@ -172,6 +246,8 @@ function SesionPaciente(props: {
 
             {(turno.fase === 'revision' || turno.fase === 'enviando') && (
               <RevisionPaciente
+                via={turno.via}
+                simulado={turno.via === 'camara' && reconocedor?.simulado === true}
                 catalogo={catalogo}
                 politica={politica}
                 selecciones={turno.selecciones}
@@ -229,5 +305,37 @@ function SesionPaciente(props: {
         </Dialogo>
       )}
     </section>
+  );
+}
+
+/**
+ * «Captura en LSM» (vía de la cámara, RF-17). Solo inicia con el catálogo sin opciones elegidas,
+ * para no perder una selección. En el flujo de producto no hay reconocedor real todavía: el
+ * botón se muestra deshabilitado con su explicación (el simulador nunca se ofrece ahí).
+ */
+function BotonCaptura(props: { disponible: boolean; puedeIniciar: boolean; onIniciar: () => void }) {
+  const idMotivo = useId();
+  const motivo = !props.disponible
+    ? 'El reconocimiento en LSM todavía no está disponible.'
+    : !props.puedeIniciar
+      ? 'Quita las opciones elegidas para usar la cámara.'
+      : null;
+  return (
+    <span className="via-camara__grupo">
+      <button
+        type="button"
+        className="via-camara"
+        disabled={motivo !== null}
+        onClick={props.onIniciar}
+        aria-describedby={motivo ? idMotivo : undefined}
+      >
+        <IconoVideo /> Captura en LSM
+      </button>
+      {motivo && (
+        <span id={idMotivo} className="via-camara__motivo">
+          {motivo}
+        </span>
+      )}
+    </span>
   );
 }

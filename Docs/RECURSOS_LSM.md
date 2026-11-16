@@ -68,8 +68,8 @@ Las entradas con contenido clínico (MED-P-03, MED-P-04 y las de síntomas) tamb
 | descartar | Control «Descartar mensaje» (RF-13) | REC-PRUEBA-SIS-DESCARTAR | prueba |
 | noEntendi | Control «No entendí» (RF-15) | REC-PRUEBA-SIS-NO-ENTENDI | prueba |
 | intensidadDolor | Escala 1–10 (RF-19). En producto bloquea enviar con intensidad | REC-PRUEBA-SIS-INTENSIDAD | prueba |
-| expresionDesconocida | Aviso de expresión no reconocida (RF-05, etapa C) | REC-PRUEBA-SIS-DESCONOCIDA | prueba (aún sin pantalla) |
-| cancelarCaptura | Control «Cancelar» de cámara (RF-17, etapa C) | **ninguno** | sin recurso |
+| expresionDesconocida | Aviso de expresión no reconocida (RF-05, etapa C) | REC-PRUEBA-SIS-DESCONOCIDA | prueba |
+| cancelarCaptura | Control «Cancelar» de cámara (RF-17, etapa C) | REC-PRUEBA-SIS-CANCELAR | prueba |
 
 ## Cómo registrar un recurso validado (cuando exista)
 

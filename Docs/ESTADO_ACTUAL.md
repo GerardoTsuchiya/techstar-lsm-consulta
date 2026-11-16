@@ -1,8 +1,10 @@
 # Estado actual · TechStar (LSM Consulta)
 
-**Fecha:** 16/11/2026 · **Etapa:** B (conectar dos laptops) · **Estado de la etapa:** implementada y **probada en una
-computadora** con dos procesos de Electron y un proxy que simula la red. **Pendiente de probar en dos laptops** reales
-(protocolo en [PRUEBA_DOS_LAPTOPS.md](PRUEBA_DOS_LAPTOPS.md)). La etapa A sigue vigente (§2 a §4.4). Las etapas C a E
+**Fecha:** 16/11/2026 · **Etapa:** C, primera parte (cámara y reconocedor simulado) · **Estado:** captura con la
+cámara implementada y probada en **una** computadora (Electron con una cámara del sistema, navegador con cámara
+bloqueada y pruebas automáticas con cámara falsa). **El reconocimiento es simulado**: falta el modelo real, el
+vocabulario y las muestras autorizadas (§2.3, §4.7, §6). La etapa B sigue **pendiente de probar en dos laptops**
+(protocolo en [PRUEBA_DOS_LAPTOPS.md](PRUEBA_DOS_LAPTOPS.md)). La etapa A sigue vigente (§2 a §4.4). Las etapas D y E
 siguen pendientes.
 
 En este documento: **probado** = ejecutado y conforme, con el entorno indicado; **pendiente de probar en dos laptops** =
@@ -50,7 +52,7 @@ No se consultaron entrevistas: no fue necesario aclarar el origen de ningún req
 | PS-Revisión opciones | «Sí, enviar mensaje» y «Quitar» | «Confirmar mensaje» y «Descartar mensaje» (con el estilo de «Quitar») | Nombres de control de RF-07 y RF-13 |
 | PM-Envío (confirmación) | Modal sin recurso en LSM | Revisión con texto **y** recurso, y botón «Enviar al paciente» | RF-02: el médico revisa el texto y el recurso antes de «Enviar» |
 | PS-Mensaje de médico | Sin «No entendí» | «No entendí» junto al mensaje, al lado de «Responder» | RF-15 |
-| PS-Captura señas/opciones | Captura con cámara | Indicador «Captura en LSM · etapa C» deshabilitado | La cámara corresponde a la etapa C |
+| PS-Captura señas/opciones | Captura con cámara | Panel «Captura en LSM» con video en espejo, «● Cámara activa» y tiempo, «Cancelar» y «Listo» lado a lado; «Interpretando tu seña…»; aviso «No reconocimos tu seña» con «Intentar de nuevo» y «Elegir lo que sientes» | Etapa C. Se agregaron el tiempo máximo (15 s), «La cámara ya está apagada» y el aviso de privacidad (RF-17, RF-18). En modo desarrollo se ve además el recuadro ámbar del simulador, que no es de Figma |
 | Videos de LSM | Persona señando | Silueta neutra con el icono de la entrada y etiqueta ámbar «Prueba · no es LSM» | No hay recursos validados (D1) |
 | Ilustraciones de síntomas | Figuras en verde salvia | Iconos de línea provisionales | Faltan apoyos visuales validados |
 | Catálogo | Solo síntomas | Además «Respuestas breves» marcadas «Provisional» | D7 |
@@ -75,6 +77,23 @@ No se consultaron entrevistas: no fue necesario aclarar el origen de ningún req
 | D26 | Puerto predeterminado **47100** (`--puerto=N` lo cambia). El médico muestra cada IPv4 con el nombre del adaptador (`192.168.1.20:47100 (Wi-Fi)`) | Facilita elegir la red correcta cuando hay adaptadores virtuales (WSL, VPN) |
 | D27 | No se empaqueta un instalador (`.exe`/`.dmg`); se ejecuta desde el código con `npm ci` y los scripts `electron:*` | Evita firmar y distribuir binarios en la etapa académica. Queda como opción si la entrega lo requiere |
 
+### 2.3 Decisiones de la etapa C, primera parte (16/11/2026)
+
+| # | Decisión | Motivo |
+|---|---|---|
+| D28 | **Cámara con API web estándar** (`getUserMedia` solo video, 640×480 ideal, 30 fps, cámara frontal; `MediaRecorder` en WebM) detrás de `AdaptadorCamara` (`src/camara/`). Las vistas nunca llaman a `getUserMedia` | §5 del encargo: encapsular la cámara. Funciona igual en el navegador y en Electron; en la etapa E se cambia por la cámara de la tableta sin tocar la vista |
+| D29 | La cámara **se enciende al pulsar «Captura en LSM» y se apaga** con «Listo», «Cancelar», al cerrar la sesión (la vista se desmonta) y al salir de la página (`pagehide`). Entre capturas está apagada. Si se cancela mientras se pide el permiso, la cámara se apaga en cuanto llega | RF-17 y RF-18: indicar cuándo está activa y liberarla. Así nunca queda encendida detrás de otra pantalla |
+| D30 | **Clip solo en memoria**, máximo **15 s**: al llegar al límite se deja de grabar y se pide «Listo» o «Cancelar». Tras entregarlo al reconocedor no se guarda referencia; al cancelar se descarta sin entregarse | RF-18 y §5: capturas solo para interpretar el turno, nunca para entrenamiento ni evidencias. El límite acota la memoria |
+| D31 | **Electron concede solo `media` con video** (nunca micrófono ni otros permisos) a la ventana propia con la página `file://`, y solo en los modos **paciente** y **demo**. El modo médico sigue sin permisos (`electron/permisos.ts`, con pruebas) | §5: vistas aisladas y permisos mínimos. La cámara de la entrega es la de la laptop del paciente |
+| D32 | **Reconocedor simulado** (`ReconocedorSimulado`): no lee el clip; espera a que el operador elija «reconocido como X» (solo entradas del paciente) o «desconocido». Lanza un error si se crea fuera de `desarrollo`. En pantalla: recuadro ámbar «Simulador · no es reconocimiento real» y etiqueta «Resultado simulado» en la revisión | No hay modelo, vocabulario ni muestras autorizadas (§6 del encargo). Permite probar la interfaz sin presentar nada como reconocimiento real |
+| D33 | **En el flujo de producto no hay reconocedor**: «Captura en LSM» aparece deshabilitado con «El reconocimiento en LSM todavía no está disponible». La interfaz `Reconocedor` queda lista para el modelo real (`reconocedorPorPolitica`) | El simulador nunca debe estar disponible en el producto |
+| D34 | El reconocimiento corre **en el equipo del paciente** (el clip no viaja). Al médico solo llega el texto confirmado, como en el catálogo | Con el simulador no hace falta enviar el clip. Dónde correrá el modelo real (laptop del paciente o computadora del médico con una transferencia limitada) queda pendiente (§6) |
+| D35 | El coordinador y el protocolo aceptan `via: 'camara'` con **todas** las validaciones de siempre (rol, sesión, tipo de entrada, recurso, intensidad, contenido revisado, envío único) y además exigen **una sola entrada** por la cámara; una vía desconocida se rechaza (`comando-invalido`) | RF-01 sin relajar ninguna regla. Un reconocimiento produce un candidato |
+| D36 | La captura solo inicia con el catálogo **sin opciones elegidas**; la propuesta de la cámara **se confirma o se descarta** (sin «Cambiar selección»; RF-08 está propuesto). La intensidad del dolor puede indicarse en la revisión, como en el catálogo | Evita perder una selección. Igual revisión para ambas vías (RF-03) |
+| D37 | **«Cancelar» también durante el procesamiento**: deja de esperar el resultado (aborta el reconocimiento) y vuelve al catálogo. Cualquier resultado tardío se descarta | RF-17 y RF-18: nada procesado tras cancelar aparece en pantalla |
+| D38 | Si llega un **mensaje del médico durante la captura**, se anuncia arriba («Llegó un mensaje del médico: «…»») sin ocultar la cámara; se ve completo al terminar o cancelar | RF-17: la cámara activa siempre está a la vista. El texto se muestra, así que el acuse «Recibido» sigue siendo cierto (RF-20) |
+| D39 | Recurso de prueba nuevo `REC-PRUEBA-SIS-CANCELAR` para el control «Cancelar» (en el catálogo ficticio) | §6.1 pide recursos de los controles de cancelación |
+
 ## 3. Requisitos cubiertos en la etapa A
 
 Tabla de la etapa A: «comprobado» significa comprobado **en una sola computadora** (modo de una pantalla y dos
@@ -94,7 +113,7 @@ ventanas del mismo navegador). La cobertura de la etapa B está en §3.1.
 | RF-15 «No entendí» | Aviso vinculado al identificador del mensaje. Se marca como atendido con el siguiente envío | Pendiente en Android |
 | RF-18 Cierre | Borra mensajes, avisos y borradores en ambas vistas. Rechaza envíos tardíos. La nueva sesión empieza vacía | Pendiente en Android |
 | RF-20 Sesión compartida | Coordinador con identificadores de sesión, mensaje y aviso, validación de rol y acuses. **Solo en una computadora** | Pendiente (etapas B y E) |
-| RF-01, RF-05, RF-17 Cámara | Solo lógica de estados con pruebas (captura, cancelar, procesando, no reconocido, resultados tardíos). Sin interfaz | Etapa C |
+| RF-01, RF-05, RF-17 Cámara | Solo lógica de estados con pruebas (captura, cancelar, procesando, no reconocido, resultados tardíos). Sin interfaz. **Etapa C: ver §3.2** | Etapa C |
 | RNF-01 Significado | No evaluado. Requiere la rúbrica y 30 intercambios | Etapa D |
 
 ### 3.1 Cobertura de la etapa B (dos laptops)
@@ -112,6 +131,18 @@ ventanas del mismo navegador). La cobertura de la etapa B está en §3.1.
 | §5: modo de una pantalla | `electron:demo` sin red y `npm run dev` en el navegador | **Probado** | — | — |
 | §4 B: registrar sistemas operativos | `npm run info-equipo` y «Este equipo» en la app | Registrado: Windows 10 Pro 10.0.19045 (x64) | Pendiente | — |
 
+### 3.2 Cobertura de la etapa C, primera parte (cámara)
+
+| Requisito | Qué se implementó | Una computadora | Laptop del paciente vinculada | Tableta Android |
+|---|---|---|---|---|
+| RF-17 Capturar | «Captura en LSM», «● Cámara activa» con tiempo, «Listo» (termina el clip, apaga la cámara y pide reconocimiento) y «Cancelar» (apaga, descarta sin reconocer, catálogo disponible) | **Probado** con una cámara del sistema en Electron (§4.7) y con cámara falsa | Pendiente de probar en dos laptops | Pendiente en Android |
+| RF-01 Interpretar (reconocido) | Candidato pendiente de revisión con `via: 'camara'`; el coordinador lo acepta con las mismas reglas | **Probado** con el reconocedor **simulado**. Sin modelo real | Pendiente | Pendiente en Android |
+| RF-05 Expresión desconocida | Aviso accesible (`role="alert"`) con recurso **de prueba**, «Intentar de nuevo» y «Elegir lo que sientes» | **Probado** con el simulador | Pendiente | Pendiente en Android |
+| RF-03, RF-04, RF-07 para la cámara | Misma revisión, borrador solo en el paciente, envío único | **Probado** | Pendiente | Pendiente en Android |
+| RF-18 Cámara y clips | Clip en memoria; cámara liberada al cancelar, al terminar la consulta (también durante captura y procesamiento) y al salir; resultados tardíos descartados; nada en disco | **Probado** (§4.7) | Pendiente | Pendiente en Android |
+| §4 C: cámara denegada | Aviso con indicación de permisos; catálogo disponible | **Probado** en el navegador (cámara bloqueada) y con cámara falsa | Pendiente | Pendiente en Android |
+| §4 C: modelo, vocabulario y resultados | **No hay modelo**. Interfaz `Reconocedor` lista | **Bloqueado**: faltan vocabulario y muestras autorizadas | — | — |
+
 ## 4. Pruebas ejecutadas
 
 **Entorno etapa A (07/11/2026):** Windows 10 Pro 10.0.19045 · Node 22.15.0 · npm 10.9.2 · una sola computadora ·
@@ -123,22 +154,33 @@ local (127.0.0.1:47101 → 47100) para simular corte y red muda · navegador int
 con dos laptops, cámara ni Android. No se probó la escucha en la red local (`0.0.0.0`) porque abre el aviso del
 firewall de Windows, que corresponde aceptar a la persona usuaria.
 
+**Entorno etapa C (16/11/2026):** la misma computadora (Windows 10 Pro 10.0.19045, x64, Node 22.15.0) · Electron 45.3.3
+en modo demostración manejado por el protocolo de depuración de Chromium · cámaras que ve Windows: **«Iriun Webcam»**
+(controlador de cámara **virtual** de la app Iriun; la app del celular no estaba abierta, por lo que entrega una imagen
+fija «Please start Iriun Webcam») y «GENERAL WEBCAM» (webcam USB física, **desconectada**: estado «Unknown») ·
+permiso de Windows «Cámara» en «Allow» · navegador integrado de la app de Claude (bloquea la cámara).
+
 ### 4.1 Automáticas (`npm run check`)
 
-Resultado (16/11/2026): **71 de 71 pruebas pasan** (46 de la etapa A + 25 de la etapa B), sin errores de tipos
-(vistas y proceso principal) y con las compilaciones de la vista y de Electron correctas. Las pruebas de red se
-repitieron 5 veces seguidas sin fallos.
+Resultado (16/11/2026, etapa C): **105 de 105 pruebas pasan** (46 de la etapa A + 25 de la etapa B + 34 de la etapa C),
+sin errores de tipos y con las compilaciones correctas. Resultado de la
+etapa B: 71 de 71. Las pruebas de red se repitieron 5 veces seguidas sin fallos.
 
 | Archivo | Qué comprueba |
 |---|---|
-| `src/nucleo/coordinador.test.ts` (16) | Entrega exacta, envío único, contenido distinto rechazado, bloqueo sin recurso en ambos modos, bloqueo de recursos de prueba en producto, recurso validado aceptado sin sustitución, intensidad 1–10 solo en dolor, permisos por rol, «No entendí» vinculado y atendido, acuses del destinatario, cierre con rechazo de envíos tardíos y sesión nueva vacía, otra sesión rechazada |
-| `src/nucleo/turnoPaciente.test.ts` (11) | Selección múltiple, intensidad opcional (también en la revisión, con `envioId` nuevo), modificar y descartar, seleccionar no envía, reintento con el mismo `envioId`, cámara: cancelar sin procesar, reconocido a revisión, no reconocido con reintento o catálogo, resultados de otra captura descartados |
+| `src/nucleo/coordinador.test.ts` (20) | Entrega exacta, envío único, contenido distinto rechazado, bloqueo sin recurso en ambos modos, bloqueo de recursos de prueba en producto, recurso validado aceptado sin sustitución, intensidad 1–10 solo en dolor, permisos por rol, «No entendí» vinculado y atendido, acuses del destinatario, cierre con rechazo de envíos tardíos y sesión nueva vacía, otra sesión rechazada |
+| `src/nucleo/turnoPaciente.test.ts` (15) | Selección múltiple, intensidad opcional (también en la revisión, con `envioId` nuevo), modificar y descartar, seleccionar no envía, reintento con el mismo `envioId`, cámara: cancelar sin procesar, reconocido a revisión, no reconocido con reintento o catálogo, resultados de otra captura descartados; **etapa C**: cancelar durante el procesamiento, aviso tardío de otra captura ignorado, no inicia con opciones elegidas, propuesta de la cámara sin «modificar» y confirmada con `via: 'camara'` |
 | `src/nucleo/busqueda.test.ts` (10) | Mayúsculas, tildes, coincidencia parcial, búsqueda vacía, «Sin resultados», ñ, política de recursos, integridad del catálogo |
 | `src/modos/recorrido.test.tsx` (6) | Recorridos con las vistas reales (ver matriz) |
 | `src/transporte/transporte.test.ts` (3) | Comandos entre ventanas, rol validado por canal, «sin conexión» sin coordinador, política estricta por defecto |
 | `electron/servidor/servidorRed.test.ts` (14) | **Etapa B**, servidor y transporte WebSocket reales en 127.0.0.1: vinculación y rol fijado a «paciente», equipo ajeno con código incorrecto (rechazo sin reintento ni datos), pareja ocupada, rol «médico» rechazado, cliente sin cifrar desconectado, misma laptop vuelve a entrar, desvincular y código nuevo, reconexión con instantánea y sin «Recibido» falso, respuesta perdida sin duplicado, doble envío durante la caída = 1 mensaje, red muda detectada, envío tardío tras cierre rechazado, «sin conexión» sin servidor, argumentos de arranque |
 | `src/transporte/canalSeguro.test.ts` (7) | **Etapa B**: código y normalización, cifrado en ambos sentidos, otro código no lee, trama alterada/repetida/fuera de orden rechazada, sentidos separados, dirección del WebSocket, forma de los comandos |
 | `src/modos/modosRed.test.tsx` (4) | **Etapa B**: validación del formulario de vinculación, transporte IPC del médico, acuse repetido tras caída, cierre perdido durante la caída |
+| `src/nucleo/coordinador.test.ts` (4 de las 20) | **Etapa C**: `via: 'camara'` aceptada y entregada una vez; recurso, intensidad, tipo, entrada, contenido, rol y sesión se validan igual; producto bloquea recursos de prueba; una sola entrada por la cámara y vía desconocida rechazada |
+| `src/modos/captura.test.tsx` (10) | **Etapa C**, vistas reales + coordinador real + cámara falsa + simulador: inicio y «Listo» con caso reconocido y envío `cámara`; desconocido con reintento y catálogo; «Cancelar» sin reconocimiento; «Cancelar» durante el procesamiento con resultado tardío descartado; cámara denegada; cámara desconectada; cierre durante el procesamiento (cámara liberada, reconocimiento abortado, sesión nueva vacía); mensaje del médico durante la captura; no inicia con opciones elegidas; sin simulador en producto |
+| `src/camara/camaraNavegador.test.ts` (9) | **Etapa C**, adaptador real con getUserMedia y MediaRecorder simulados: solo video, «activa», imagen conectada, «Listo» entrega el clip y apaga; «Cancelar» descarta; cancelar mientras termina; denegada / sin cámara / ocupada; sin `mediaDevices`; permiso concedido tras cancelar → se apaga; desconexión; límite de 15 s; nueva captura descarta la anterior |
+| `src/reconocimiento/reconocedor.test.ts` (4) | **Etapa C**: simulador imposible en producto; vocabulario = entradas del paciente; espera la decisión del operador para la captura en curso; abortar descarta decisiones tardías |
+| `electron/permisos.test.ts` (3) | **Etapa C**: cámara solo para la ventana propia `file://` en paciente y demo; negada al médico, a otro contenido, al micrófono y a cualquier otro permiso |
 
 ### 4.2 Matriz de casos de la etapa A
 
@@ -214,6 +256,31 @@ leyó el texto de cada pantalla. Capturas tomadas durante la prueba (no se versi
 | M (médico) | *pendiente* | | | |
 | P (paciente) | *pendiente* | | | |
 
+### 4.7 Matriz de la etapa C con hardware real (16/11/2026)
+
+Lo que acredita cada prueba: con **Electron** se ejercitó la cadena real (permiso de Electron → `getUserMedia` →
+controlador de cámara de Windows → `MediaRecorder`) con la cámara virtual «Iriun Webcam», que entrega una imagen fija.
+**No se probó una webcam física** (la USB estaba desconectada) ni una persona señando: eso no cambia la lógica, pero
+queda pendiente para acreditar formato, iluminación y encuadre en la laptop del paciente. Con el **navegador** se probó
+el permiso denegado real. El reconocimiento fue **siempre simulado**. Capturas de pantalla tomadas durante la prueba,
+fuera del repositorio (no se versionan).
+
+| Requisito | Caso | Resultado esperado | Resultado observado | Evidencia |
+|---|---|---|---|---|
+| RF-17 | «Captura en LSM» en `electron:demo` | Cámara encendida e indicada | «● Cámara activa 0:03 / 0:15»; pista «Iriun Webcam» `live`, 640×480 a 30 fps, **0 pistas de audio**; video reproduciéndose | Electron + captura de pantalla |
+| RF-17 | «Listo» | Cámara apagada y reconocimiento pedido | Pista `ended`; «Interpretando tu seña… La cámara ya está apagada.»; recuadro del simulador visible | Electron |
+| RF-01, RF-04 | Simulador «reconocido como Fiebre» | Candidato solo en el paciente; al confirmar llega una vez con vía cámara | Revisión «Esto es lo que entendimos de tu seña» + «Resultado simulado»; el médico no lo veía; tras confirmar: «Paciente · confirmado 01:17 a.m. · cámara — Tengo fiebre.» | Electron |
+| RF-17 | «Cancelar» durante la captura | Cámara apagada, sin reconocimiento, catálogo disponible | Pista `ended`, sin video ni simulador, catálogo visible, botón de captura habilitado | Electron |
+| RF-05 | Simulador «desconocido» | Aviso con recurso, reintento o catálogo | «No reconocimos tu seña… No se envió nada.» con `REC-PRUEBA-SIS-DESCONOCIDA`; «Intentar de nuevo» volvió a encender la cámara (`live`) | Electron + captura |
+| RF-17 | Seguir grabando 15 s | Deja de grabar y pide «Listo» o «Cancelar» | «Cámara activa 0:15 / 0:15» y «Llegaste al máximo de 15 segundos. Pulsa «Listo» o «Cancelar».» | Electron + captura |
+| RF-18 | El paciente termina la consulta **durante la captura** | Cámara liberada | Pista `ended`, 0 videos, «Consulta finalizada» | Electron |
+| RF-18 | El médico termina la consulta **durante el procesamiento** | Reconocimiento abortado, sin resultado tardío | Simulador y «Interpretando» desaparecen; «Consulta finalizada» | Electron + prueba automática |
+| RF-18 | Nueva consulta | Empieza vacía | «Conversación (0)», médico «Todavía no hay mensajes», sin revisión pendiente | Electron |
+| RF-18 | Cerrar la ventana con la cámara encendida | La app termina y suelta la cámara | Electron salió con código 0; ningún proceso `electron` vivo | Electron |
+| RF-18 | Almacenamiento tras las capturas | Nada guardado | `localStorage` 0, `sessionStorage` 0, IndexedDB 0; en `%APPDATA%\techstar-lsm-consulta\demo\` (64 archivos técnicos) **ningún** archivo con cabecera WebM ni con textos de la consulta | Electron + búsqueda en disco |
+| §4 C | Cámara denegada (navegador) | Aviso y catálogo disponible | «No hay permiso para usar la cámara. Para usarla, permite la cámara en el navegador o en Windows…»; catálogo usable | Navegador integrado + captura |
+| Diseño | Panel de captura a media pantalla (modo demo, 1366×860) | «Cancelar» y «Listo» visibles sin desplazarse | Al principio quedaban debajo del video; se limitó la altura del video y se pusieron lado a lado. Comprobado visible después | Electron + capturas |
+
 ## 5. Inventario de datos temporales (RF-18)
 
 | Dónde | Qué guarda | Cuándo se borra |
@@ -226,8 +293,10 @@ leyó el texto de cada pantalla. Capturas tomadas durante la prueba (no se versi
 | Red local | Tramas cifradas; en claro solo el saludo (números aleatorios, versión) y el motivo de un rechazo | No persiste |
 | Disco de Electron (`%APPDATA%\techstar-lsm-consulta\<modo>\`) | Cachés técnicas de Chromium (GPU, shaders, `Local State`, bases vacías). La vista usa una sesión **en memoria** | Persisten. Revisadas el 16/11/2026 tras una consulta completa: **ningún archivo contiene mensajes, códigos ni identificadores de sesión**. Se pueden borrar |
 | Disco, `localStorage`, `IndexedDB`, registros | **Nada** de la consulta. El código no usa almacenamiento ni `console.log`; el proceso principal no registra contenido | — |
+| Memoria de la vista del paciente: clip de la cámara (etapa C) | Trozos `Blob` del clip en curso (máx. 15 s, solo video) | Al cancelar o liberar se descartan. Con «Listo» se arma un `Blob`, se entrega al reconocedor del mismo equipo y no se guarda referencia. Al cerrar la sesión o la app, la cámara se libera. Comprobado en disco el 16/11/2026: sin archivos WebM (§4.7) |
+| Reconocedor simulado | Solo el identificador de la captura pendiente (no lee el clip) | Al decidir, al cancelar o al cerrar la sesión |
 
-Pendiente: revisar los temporales en las dos laptops y los clips de la cámara (etapa C).
+Pendiente: revisar los temporales en las dos laptops y, cuando exista, los del modelo real.
 
 ## 6. Materiales y decisiones pendientes
 
@@ -236,7 +305,16 @@ Pendiente: revisar los temporales en las dos laptops y los clips de la cámara (
 - Validar los iconos de apoyo visual con personas Sordas (o sustituirlos por las ilustraciones del prototipo).
 - Rúbrica de RNF-01 y protocolo de RNF-02.
 - Decidir si se mantiene el grupo «Respuestas breves» (D7).
-- Vocabulario y muestras autorizadas para el reconocedor (preparar en paralelo, §4 etapa C).
+- **Etapa C (reconocimiento real):** elegir el **modelo** (p. ej. MediaPipe con características de manos, rostro y
+  cuerpo según las expresiones) y dónde corre (laptop del paciente o computadora del médico con transferencia
+  limitada, D34); acordar el **vocabulario** y las variantes con personas usuarias de LSM y apoyo lingüístico, y
+  registrar por separado las entradas del catálogo y las que cubre el reconocedor (§6.3 del encargo); conseguir
+  **muestras autorizadas** para entrenar y evaluar, separadas por persona o sesión, con movimientos cotidianos y
+  expresiones fuera de vocabulario (§6.4); acordar el criterio de reconocimiento y registrar resultados por expresión,
+  falsas aceptaciones y tiempo de respuesta (§6.5). Hasta entonces solo hay simulador.
+- **Etapa C (cámara):** repetir §4.7 con una **webcam física** (o la app Iriun abierta) y una persona señando, y en la
+  laptop del paciente vinculada por Wi-Fi (`electron:paciente`). Recursos en LSM validados para «Captura en LSM»,
+  «Cancelar», los avisos de cámara y «No reconocimos tu seña».
 - **Etapa B:** ejecutar la prueba con dos laptops (§4.6) y registrar sus sistemas operativos. Comprobar la escucha en la
   red local con el aviso del firewall y en la red Wi-Fi que se usará en la entrega.
 - Decidir si se necesita un instalador empaquetado para la entrega (D27).
@@ -245,6 +323,9 @@ Pendiente: revisar los temporales en las dos laptops y los clips de la cámara (
 
 Todas las de RF-01, RF-03, RF-04, RF-05, RF-07, RF-13, RF-15, RF-16, RF-17, RF-18, RF-19, RF-20 y RI-01 en la tableta:
 captura, permisos y ciclo de vida de la cámara, catálogo táctil, envío, aclaración, reconexión y eliminación de datos.
+De la etapa C, en la tableta: implementación de `AdaptadorCamara` con la cámara frontal (Capacitor), permiso de cámara
+de Android, liberar la cámara al pasar a segundo plano o bloquear la pantalla, formato que acepte el reconocedor y
+casos de §4.7.
 De la etapa B, en la tableta: vinculación con el código, WebCrypto en la vista de Capacitor, conexión `ws://` en la red
 local (permisos de tráfico sin TLS en Android), reconexión al suspender y reanudar la app o al cambiar de red, y
 rechazo de un segundo equipo.
@@ -258,8 +339,7 @@ revise contra el código. Ver la guía breve en el README.
 
 1. **Cerrar la etapa B:** ejecutar [PRUEBA_DOS_LAPTOPS.md](PRUEBA_DOS_LAPTOPS.md) con dos laptops reales, registrar sus
    sistemas operativos y copiar los resultados a §4.6. Si algo falla, anotarlo como incidente con el caso (B1–B15).
-2. **Etapa C (cámara y reconocimiento limitado):** implementar el adaptador de cámara (`src/camara/adaptador.ts`) en
-   la laptop del paciente, conceder solo el permiso de cámara a la ventana del paciente en `electron/main.ts`
-   (hoy todos se niegan), conectar los estados de captura ya probados en `turnoPaciente.ts` y decidir dónde se procesa
-   el clip (en la laptop del paciente o enviado de forma limitada al médico, sin mostrarlo). Preparar vocabulario y
-   muestras autorizadas.
+2. **Etapa C, segunda parte (reconocimiento real):** con el vocabulario acordado y las muestras autorizadas (§6),
+   implementar un `Reconocedor` real en `src/reconocimiento/`, decidir dónde corre (D34) y evaluarlo. Repetir §4.7 con
+   una webcam física y en la laptop del paciente vinculada. La captura, los permisos, el ciclo de vida de la cámara y la
+   revisión ya están hechos y probados con el simulador.

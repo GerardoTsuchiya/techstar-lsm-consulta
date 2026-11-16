@@ -116,7 +116,11 @@ export class CoordinadorSesion {
     sesion: SesionInterna,
     c: Extract<Comando, { tipo: 'confirmarMensajePaciente' }>,
   ): Resultado {
+    // La vía se revisa aunque el tipo la limite: por la red o el IPC llegan datos sin tipos.
+    if (c.via !== 'catalogo' && c.via !== 'camara') return fallo('comando-invalido');
     if (c.selecciones.length === 0) return fallo('seleccion-vacia');
+    // Un reconocimiento produce una sola entrada (RF-01). Por la cámara no se aceptan varias a la vez.
+    if (c.via === 'camara' && c.selecciones.length !== 1) return fallo('comando-invalido');
     const vistos = new Set<string>();
     for (const s of c.selecciones) {
       if (vistos.has(s.entradaId)) return fallo('seleccion-repetida');

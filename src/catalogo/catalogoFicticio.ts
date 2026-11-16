@@ -69,6 +69,7 @@ const recursosSistema: Recurso[] = [
   recursoPrueba('SIS-NO-ENTENDI', 'Control «No entendí» en LSM (RF-15).'),
   recursoPrueba('SIS-INTENSIDAD', 'Escala de intensidad del dolor 1 a 10 en LSM (RF-19).'),
   recursoPrueba('SIS-DESCONOCIDA', 'Aviso de expresión no reconocida en LSM (RF-05).'),
+  recursoPrueba('SIS-CANCELAR', 'Control «Cancelar» de la captura en LSM (RF-17).'),
 ];
 
 export const catalogoFicticio: Catalogo = {
@@ -84,7 +85,7 @@ export const catalogoFicticio: Catalogo = {
     noEntendi: 'REC-PRUEBA-SIS-NO-ENTENDI',
     intensidadDolor: 'REC-PRUEBA-SIS-INTENSIDAD',
     expresionDesconocida: 'REC-PRUEBA-SIS-DESCONOCIDA',
-    // cancelarCaptura: sin recurso (etapa C).
+    cancelarCaptura: 'REC-PRUEBA-SIS-CANCELAR',
   },
 };
 

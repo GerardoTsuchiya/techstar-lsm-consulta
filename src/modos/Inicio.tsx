@@ -18,7 +18,8 @@ export function Inicio() {
         <p className="inicio__lema">
           Apoyo a la comunicación entre personas Sordas y personal médico en consultas generales.
           <br />
-          <strong>Etapa B</strong> · dos laptops por Wi-Fi local (app de escritorio).
+          <strong>Etapa B</strong> · dos laptops por Wi-Fi local (app de escritorio). <strong>Etapa C</strong> · captura
+          con cámara y reconocedor simulado (solo modo desarrollo).
         </p>
       </header>
 

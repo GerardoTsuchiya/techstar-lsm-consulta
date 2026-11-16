@@ -6,8 +6,10 @@ MVP académico de *Aseguramiento de la Calidad del Software* (2026-2).
 **Estado:** etapa B implementada: app de escritorio (Electron) con modos médico, paciente y demostración, y
 conexión entre dos laptops por Wi-Fi local con vinculación, canal cifrado y recuperación ante caídas de red.
 Probada en **una** computadora con dos procesos; la prueba con **dos laptops reales** está pendiente
-([Docs/PRUEBA_DOS_LAPTOPS.md](Docs/PRUEBA_DOS_LAPTOPS.md)). Detalle, pruebas y pendientes en
-[Docs/ESTADO_ACTUAL.md](Docs/ESTADO_ACTUAL.md).
+([Docs/PRUEBA_DOS_LAPTOPS.md](Docs/PRUEBA_DOS_LAPTOPS.md)). **Etapa C, primera parte:** captura con la cámara de
+la laptop del paciente («Captura en LSM», «Listo», «Cancelar») y un **reconocedor simulado** que *no* reconoce LSM
+(solo en modo desarrollo); el modelo real queda pendiente (sección [Captura en LSM](#captura-en-lsm-etapa-c)).
+Detalle, pruebas y pendientes en [Docs/ESTADO_ACTUAL.md](Docs/ESTADO_ACTUAL.md).
 
 > **Catálogo ficticio y recursos de prueba.** Ningún recurso está validado en LSM. Los marcadores con la etiqueta
 > ámbar «Prueba · no es LSM» (silueta neutra en lugar de un video) solo sirven para probar la interfaz. Inventario en
@@ -66,7 +68,7 @@ Abrir **http://127.0.0.1:5173**. El servidor de desarrollo solo escucha en esta 
 | `npm run electron:medico-local` | Médico escuchando solo en 127.0.0.1 (pruebas con dos procesos en una computadora) |
 | `npm run info-equipo` | Muestra sistema operativo, arquitectura y versión de Node (para registrar las laptops) |
 | `npm run dev` | Servidor de desarrollo en http://127.0.0.1:5173 (modo navegador) |
-| `npm test` | Ejecuta las pruebas automáticas (71) |
+| `npm test` | Ejecuta las pruebas automáticas (105) |
 | `npm run typecheck` | Revisa los tipos de TypeScript (vistas y proceso principal de Electron) |
 | `npm run build` | Revisa los tipos y genera la versión de producción en `dist/` |
 | `npm run build:electron` | Genera `dist/` y el proceso principal y preload de Electron en `dist-electron/` |
@@ -139,6 +141,37 @@ con recurso validado; como hoy no hay ninguno, todo queda bloqueado, que es lo e
 una computadora:** `npm run electron:medico-local` y `npm run electron:paciente` con la dirección `127.0.0.1`.
 **Dos pestañas del navegador:** modo **Médico** y luego **Paciente** en otra pestaña (como en la etapa A).
 
+## Captura en LSM (etapa C)
+
+> **El reconocimiento es SIMULADO.** No hay modelo ni muestras autorizadas todavía. En modo desarrollo, después de
+> «Listo» aparece un recuadro ámbar «Simulador · no es reconocimiento real» donde **quien dirige la prueba** elige
+> «reconocido como…» o «desconocido». El clip no se analiza. En el **flujo de producto** el simulador no existe:
+> «Captura en LSM» aparece deshabilitado con «El reconocimiento en LSM todavía no está disponible».
+
+**Dónde funciona la cámara.** En la app de escritorio (`npm run electron:demo` o `electron:paciente`): Electron concede
+**solo la cámara, sin micrófono**, a su propia ventana; el modo médico no tiene cámara. En Windows, además, debe estar
+activado *Configuración › Privacidad › Cámara › Permitir que las aplicaciones de escritorio accedan a la cámara*.
+En el navegador (`npm run dev`) el navegador pide permiso; el panel del navegador de la app de Claude la bloquea siempre
+(sirve para ver el aviso de cámara denegada).
+
+**Demostración (modo desarrollo, una pantalla):**
+
+1. `npm run electron:demo` → **Médico:** «Iniciar consulta» → **Paciente:** «Entendido, continuar».
+2. **Paciente:** «Captura en LSM». El recuadro del video muestra «● Cámara activa» y el tiempo (máximo 15 s).
+   *Comprobar:* el médico no ve nada.
+3. **«Cancelar»:** la cámara se apaga y se vuelve al catálogo; no se pide reconocimiento.
+4. Otra vez «Captura en LSM» → **«Listo»:** «Interpretando tu seña… La cámara ya está apagada.» En el recuadro del
+   simulador, elegir «Fiebre» → «Simular «reconocido»». **Paciente:** «Esto es lo que entendimos de tu seña» con la
+   etiqueta «Resultado simulado». Confirmar → el médico recibe «Tengo fiebre.» marcado «· cámara».
+5. «Captura en LSM» → «Listo» → «Simular «desconocido»»: aviso «No reconocimos tu seña» con su recurso (de prueba),
+   «Intentar de nuevo» o «Elegir lo que sientes».
+6. Cierre durante el procesamiento: «Listo» y, sin elegir resultado, el médico pulsa «Finalizar consulta» →
+   «Terminar y borrar». La pantalla del paciente se vacía; la nueva consulta empieza sin nada pendiente.
+
+Reglas: la captura solo empieza con el catálogo sin opciones elegidas (para no perder una selección); la propuesta de
+la cámara se confirma o se descarta (no hay «Cambiar selección»); si llega un mensaje del médico durante la captura, se
+anuncia arriba sin ocultar la cámara.
+
 ## Diseño
 
 El estilo sigue el prototipo Figma «Pinkies», página V2: fondo crema `#FCF9F2`, verdes `#364C3F`/`#395443`,
@@ -154,6 +187,7 @@ y el modo desarrollo.
 ```
 electron/        App de escritorio (proceso principal de Electron, Node)
   main.ts          Modos, ventana aislada, permisos, IPC con la vista del médico
+  permisos.ts      Qué permiso se concede a la vista (solo cámara sin micrófono, modos paciente y demo)
   preload.ts       Puente mínimo y aislado hacia la vista (window.techstar)
   argumentos.ts    Lee --modo, --recursos, --puerto, --solo-local
   servidor/        Servidor WebSocket que envuelve al coordinador (laptop del médico)
@@ -162,7 +196,8 @@ src/
   catalogo/      Catálogo ficticio y textos del aviso de alcance
   transporte/    Cómo viajan los mensajes entre vistas y coordinador
   cliente/       Conecta una vista con la sesión (hooks de React)
-  camara/        Interfaz del adaptador de cámara (etapa C)
+  camara/        Adaptador de cámara: interfaz y cámara real del navegador/Electron (etapa C)
+  reconocimiento/ Interfaz del reconocedor y reconocedor SIMULADO de desarrollo (etapa C)
   vistas/        Pantallas: paciente, médico y piezas comunes
   modos/         Modos de inicio (demostración, médico, paciente y los de red) y pantalla de inicio
 Docs/            Documentos de referencia (SRS, lista), estado actual, inventario de recursos y prueba con dos laptops
@@ -173,8 +208,9 @@ Docs/            Documentos de referencia (SRS, lista), estado actual, inventari
 - **`nucleo/coordinador.ts`**: el «árbitro» de la consulta. Vive en la computadora del médico. Solo acepta
   mensajes confirmados. Revisa que vengan de la sesión correcta y del rol correcto, que tengan recurso permitido y que el
   texto sea el que el paciente revisó. Aplica cada envío una sola vez y borra todo al cerrar.
-- **`nucleo/turnoPaciente.ts`**: los pasos del paciente (elegir → revisar → enviar). Es el borrador, que nunca sale de
-  la pantalla del paciente hasta confirmar. Ya incluye los pasos de cámara (capturar, cancelar, procesar) para la etapa C.
+- **`nucleo/turnoPaciente.ts`**: los pasos del paciente (elegir → revisar → enviar, o capturar → procesar → revisar o
+  «no reconocido»). Es el borrador, que nunca sale de la pantalla del paciente hasta confirmar. Descarta resultados de
+  una captura cancelada o de otra captura.
 - **`nucleo/recursos.ts`**: decide si un recurso en LSM se puede mostrar y enviar. Validado, sí. De prueba, solo en modo
   desarrollo. Sin recurso, nunca. Jamás pone otro recurso en su lugar.
 - **`nucleo/busqueda.ts`**: busca en el catálogo por parte del término, sin importar mayúsculas ni tildes.
@@ -194,13 +230,22 @@ Docs/            Documentos de referencia (SRS, lista), estado actual, inventari
   conoce el código, y a una sola; le fija el rol «paciente», entrega sus comandos al coordinador y le reenvía los
   cambios. Si la conexión se queda callada, la cierra y espera a que vuelva.
 - **`electron/main.ts`** y **`electron/preload.ts`**: arrancan la app en el modo pedido con la vista aislada de Node
-  (sin `require`, con `contextIsolation` y `sandbox`), sin permisos de cámara ni navegación a otras páginas.
+  (sin `require`, con `contextIsolation` y `sandbox`) y sin navegación a otras páginas. `electron/permisos.ts` niega
+  todo permiso salvo la cámara (solo video) para la ventana propia en los modos paciente y demostración.
 - **`cliente/useSesion.ts`**: conecta una pantalla con el cartero, guarda en memoria lo último que llegó y avisa
   «recibido» cuando un mensaje se mostró.
-- **`camara/adaptador.ts`**: el contrato que cumplirá la cámara real (iniciar, «Listo», cancelar, liberar). Hoy dice «no
-  disponible».
+- **`camara/adaptador.ts`**: el contrato de la cámara (iniciar, mostrar la imagen, «Listo», cancelar, liberar). La vista
+  solo conoce este contrato; en la etapa E se cambiará por la cámara de la tableta sin tocar la vista.
+- **`camara/camaraNavegador.ts`**: la cámara real. Pide solo video, enciende la cámara al empezar la captura y la apaga
+  con «Listo», «Cancelar» o al cerrar. Arma el clip en memoria (máximo 15 s) y lo descarta al cancelar.
+- **`reconocimiento/reconocedor.ts`**: el contrato del reconocedor (recibe el clip y responde «reconocido como X» o
+  «desconocido»). Aquí se conectará el modelo real. `reconocedorPorPolitica` da el simulador solo en modo desarrollo.
+- **`reconocimiento/reconocedorSimulado.ts`**: **no reconoce LSM**: espera a que una persona elija el resultado. Si se
+  intenta crear en el flujo de producto, falla a propósito.
 - **`vistas/paciente/`**: catálogo paginado con tarjetas «Elegir/Elegido», revisión con «¿Cuánto te duele?»,
-  confirmar o descartar, pantalla «Mensaje del médico» con «No entendí» y la conversación.
+  confirmar o descartar, pantalla «Mensaje del médico» con «No entendí» y la conversación. `useCaptura.ts` une la
+  cámara y el reconocedor con los pasos del turno; `PanelCaptura.tsx` dibuja «Captura en LSM», «Interpretando…», el
+  aviso de seña no reconocida y el recuadro del simulador.
 - **`vistas/medico/`**: «Mensaje del paciente», avisos de «No entendí», «Buscar en el catálogo», revisión antes de
   enviar y cierre.
 - **`vistas/comunes/`**: cabecera y pasos del prototipo, iconos (`Iconos.tsx` para la interfaz, `IconoEntrada.tsx`
@@ -217,6 +262,9 @@ Docs/            Documentos de referencia (SRS, lista), estado actual, inventari
   equipo sin el código no puede leerlo ni enviar mensajes.
 - La app de escritorio usa una sesión de Chromium en memoria. En disco solo quedan cachés técnicas de Chromium sin
   contenido de la consulta (`%APPDATA%\techstar-lsm-consulta\`); ver [Docs/ESTADO_ACTUAL.md](Docs/ESTADO_ACTUAL.md) §5.
+- **Capturas de la cámara:** el clip vive solo en memoria mientras se interpreta y se descarta después; al cancelar no
+  se entrega a nadie. No se guarda en disco ni en el navegador, no se envía a la computadora del médico y **no se usa
+  para entrenamiento ni telemetría**. La cámara se apaga con «Listo», «Cancelar», al terminar la consulta y al salir.
 - Usar solo datos ficticios.
 - La carpeta `Entrevistas/` está excluida en `.gitignore` y no debe subirse al repositorio.
 
@@ -224,7 +272,9 @@ Docs/            Documentos de referencia (SRS, lista), estado actual, inventari
 
 - **Etapa B:** ejecutar la prueba con dos laptops reales y registrar sus sistemas operativos
   ([Docs/PRUEBA_DOS_LAPTOPS.md](Docs/PRUEBA_DOS_LAPTOPS.md)).
-- **Etapa C:** cámara de la laptop del paciente y reconocimiento limitado.
+- **Etapa C:** captura con cámara hecha con reconocedor simulado. Falta el **modelo real**, el **vocabulario**
+  acordado con personas usuarias de LSM y las **muestras autorizadas** para entrenar y evaluar; probar con una webcam
+  física y en la laptop del paciente vinculada por Wi-Fi.
 - **Etapa D:** verificación de la entrega (incluye RNF-01 con 30 intercambios).
 - **Etapa E:** tableta Android.
 - Catálogo V1 aprobado y recursos en LSM validados.

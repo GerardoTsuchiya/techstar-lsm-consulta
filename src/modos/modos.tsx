@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { catalogoFicticio } from '../catalogo/catalogoFicticio';
 import { CoordinadorSesion } from '../nucleo/coordinador';
+import type { AdaptadorCamara } from '../camara/adaptador';
 import type { Catalogo, PoliticaRecursos } from '../nucleo/tipos';
+import type { FabricaReconocedor } from '../reconocimiento/reconocedor';
 import { conectarPorBroadcastChannel, servirPorBroadcastChannel } from '../transporte/broadcastChannel';
 import { conectarLocal } from '../transporte/local';
 import type { ConexionCliente } from '../transporte/tipos';
@@ -14,6 +16,12 @@ interface PropsModo {
   catalogo?: Catalogo;
 }
 
+/** Solo para pruebas automáticas: cámara y reconocedor falsos en lugar de los del equipo. */
+interface PropsCaptura {
+  crearCamara?: () => AdaptadorCamara;
+  crearReconocedor?: FabricaReconocedor;
+}
+
 function useCoordinador(catalogo: Catalogo, politica: PoliticaRecursos) {
   // Un coordinador por ventana y por arranque; vive solo en memoria.
   const [coordinador] = useState(() => new CoordinadorSesion({ catalogo, politica }));
@@ -24,7 +32,7 @@ function useCoordinador(catalogo: Catalogo, politica: PoliticaRecursos) {
  * Modo «demostración en una pantalla» (respaldo de la entrega).
  * Las dos vistas usan el mismo coordinador mediante el transporte en memoria.
  */
-export function ModoDemostracion({ politica, catalogo = catalogoFicticio }: PropsModo) {
+export function ModoDemostracion({ politica, catalogo = catalogoFicticio, crearCamara, crearReconocedor }: PropsModo & PropsCaptura) {
   const coordinador = useCoordinador(catalogo, politica);
   const paciente = useMemo(() => conectarLocal(coordinador, 'paciente'), [coordinador]);
   const medico = useMemo(() => conectarLocal(coordinador, 'medico'), [coordinador]);
@@ -38,7 +46,12 @@ export function ModoDemostracion({ politica, catalogo = catalogoFicticio }: Prop
             Pantalla del paciente
           </span>
           <div className="marco marco--paciente">
-            <VistaPaciente conexion={paciente} catalogo={catalogo} />
+            <VistaPaciente
+              conexion={paciente}
+              catalogo={catalogo}
+              crearCamara={crearCamara}
+              crearReconocedor={crearReconocedor}
+            />
           </div>
         </div>
         <div className="demo__lado">

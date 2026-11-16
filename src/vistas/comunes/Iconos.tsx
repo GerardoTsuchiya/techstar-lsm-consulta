@@ -23,6 +23,9 @@ import {
   ShieldCheck,
   Sparkles,
   Video,
+  VideoOff,
+  LoaderCircle,
+  RotateCcw,
   Wifi,
   WifiOff,
   X,
@@ -51,6 +54,9 @@ export function IconoChevron({ direccion = 'derecha' }: { direccion?: 'derecha' 
 }
 export const IconoGlobo = () => <MessageSquare size={17} {...trazo} />;
 export const IconoVideo = () => <Video size={20} {...trazo} />;
+export const IconoVideoApagado = ({ tamano = 20 }: { tamano?: number }) => <VideoOff size={tamano} {...trazo} />;
+export const IconoCargando = () => <LoaderCircle size={34} strokeWidth={1.75} className="girar" aria-hidden />;
+export const IconoReintentar = () => <RotateCcw size={18} {...trazo} />;
 export const IconoReproducir = ({ tamano = 18 }: { tamano?: number }) => (
   <Play size={tamano} strokeWidth={0} fill="currentColor" aria-hidden />
 );

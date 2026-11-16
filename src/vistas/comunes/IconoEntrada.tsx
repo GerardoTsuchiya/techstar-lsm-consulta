@@ -25,6 +25,8 @@ import {
   Wind,
   X,
   type LucideProps,
+  ScanSearch,
+  VideoOff,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
 
@@ -81,6 +83,8 @@ const ICONOS: Record<string, ComponentType<LucideProps>> = {
   confirmar: Check,
   descartar: X,
   'no-entendi': CircleHelp,
+  desconocida: ScanSearch,
+  'cancelar-captura': VideoOff,
 };
 
 export function IconoEntrada({ clave, tamano = 24, className }: { clave?: string; tamano?: number; className?: string }) {

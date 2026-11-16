@@ -72,7 +72,7 @@ describe('Turno del paciente', () => {
     expect(reducirTurno(enviando, { tipo: 'confirmado' })).toEqual(turnoInicial);
   });
 
-  describe('captura (preparado para la etapa C)', () => {
+  describe('captura (etapa C)', () => {
     it('cancelar descarta sin pasar por procesamiento (RF-17)', () => {
       const e = aplicar([{ tipo: 'iniciarCaptura', capturaId: 'c1' }, { tipo: 'cancelarCaptura' }]);
       expect(e).toEqual(turnoInicial);
@@ -100,6 +100,38 @@ describe('Turno del paciente', () => {
       expect(e.fase).toBe('no-reconocido');
       expect(reducirTurno(e, { tipo: 'iniciarCaptura', capturaId: 'c2' })).toEqual({ fase: 'capturando', capturaId: 'c2' });
       expect(reducirTurno(e, { tipo: 'irAlCatalogo' })).toEqual(turnoInicial);
+    });
+
+    it('cancelar durante el procesamiento descarta el resultado que llegue después', () => {
+      const procesando = aplicar([{ tipo: 'iniciarCaptura', capturaId: 'c1' }, { tipo: 'capturaLista' }]);
+      const e = reducirTurno(procesando, { tipo: 'cancelarCaptura' });
+      expect(e).toEqual(turnoInicial);
+      expect(reducirTurno(e, { tipo: 'resultadoReconocimiento', capturaId: 'c1', entradaId: 'A', envioId: 'x' })).toBe(e);
+    });
+
+    it('un aviso tardío de otra captura no cancela la captura en curso', () => {
+      const e = aplicar([{ tipo: 'iniciarCaptura', capturaId: 'c2' }]);
+      expect(reducirTurno(e, { tipo: 'cancelarCaptura', capturaId: 'c1' })).toBe(e);
+      expect(reducirTurno(e, { tipo: 'cancelarCaptura', capturaId: 'c2' })).toEqual(turnoInicial);
+    });
+
+    it('no inicia una captura con opciones elegidas ni durante una revisión', () => {
+      const sel = aplicar([{ tipo: 'alternarSeleccion', entradaId: 'A' }]);
+      expect(reducirTurno(sel, { tipo: 'iniciarCaptura', capturaId: 'c1' })).toBe(sel);
+      const rev = reducirTurno(sel, { tipo: 'revisar', envioId: 'e1' });
+      expect(reducirTurno(rev, { tipo: 'iniciarCaptura', capturaId: 'c1' })).toBe(rev);
+    });
+
+    it('una propuesta de la cámara se revisa: no se modifica como catálogo, se descarta o se confirma con via «camara»', () => {
+      const rev = aplicar([
+        { tipo: 'iniciarCaptura', capturaId: 'c1' },
+        { tipo: 'capturaLista' },
+        { tipo: 'resultadoReconocimiento', capturaId: 'c1', entradaId: 'A', envioId: 'e1' },
+      ]);
+      expect(reducirTurno(rev, { tipo: 'modificar' })).toBe(rev);
+      expect(reducirTurno(rev, { tipo: 'descartar' })).toEqual(turnoInicial);
+      const enviando = reducirTurno(rev, { tipo: 'confirmarIniciado' });
+      expect(enviando).toEqual({ fase: 'enviando', via: 'camara', selecciones: [{ entradaId: 'A' }], envioId: 'e1' });
     });
 
     it('descarta resultados de otra captura', () => {

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { catalogoFicticio } from '../catalogo/catalogoFicticio';
 import { CoordinadorSesion } from './coordinador';
 import { textosRevisados } from './mensajes';
-import type { Catalogo, Evento, MensajeMedico, PoliticaRecursos, Seleccion } from './tipos';
+import type { Catalogo, Comando, Evento, MensajeMedico, PoliticaRecursos, Seleccion, ViaPaciente } from './tipos';
 
 function nuevo(politica: PoliticaRecursos = 'desarrollo', catalogo: Catalogo = catalogoFicticio) {
   let n = 0;
@@ -14,12 +14,18 @@ function nuevo(politica: PoliticaRecursos = 'desarrollo', catalogo: Catalogo = c
   return { c, sesionId: r.id, eventos };
 }
 
-function confirmar(c: CoordinadorSesion, sesionId: string, selecciones: Seleccion[], envioId = 'env-1') {
+function confirmar(
+  c: CoordinadorSesion,
+  sesionId: string,
+  selecciones: Seleccion[],
+  envioId = 'env-1',
+  via: ViaPaciente = 'catalogo',
+) {
   return c.procesar('paciente', {
     tipo: 'confirmarMensajePaciente',
     sesionId,
     envioId,
-    via: 'catalogo',
+    via,
     selecciones,
     textosRevisados: textosRevisados(catalogoFicticio, selecciones),
   });
@@ -218,5 +224,57 @@ describe('Coordinador de sesión', () => {
     const copia = c.instantanea()!;
     copia.mensajes.length = 0;
     expect(c.instantanea()!.mensajes).toHaveLength(1);
+  });
+
+  describe('mensajes por la cámara (etapa C, RF-01)', () => {
+    it('acepta un candidato revisado con via «camara» y lo entrega igual que uno del catálogo', () => {
+      const { c, sesionId } = nuevo();
+      const r = confirmar(c, sesionId, [{ entradaId: 'PAC-S-04' }], 'env-cam', 'camara');
+      expect(r.ok).toBe(true);
+      const m = c.instantanea()!.mensajes[0]!;
+      expect(m.origen === 'paciente' && m.via).toBe('camara');
+      expect(m.origen === 'paciente' && m.items).toEqual([{ entradaId: 'PAC-S-04', texto: 'Tengo fiebre.' }]);
+      // Doble toque: un solo mensaje (RF-07)
+      expect(confirmar(c, sesionId, [{ entradaId: 'PAC-S-04' }], 'env-cam', 'camara')).toMatchObject({ ok: true, duplicado: true });
+      expect(c.instantanea()!.mensajes).toHaveLength(1);
+    });
+
+    it('no relaja ninguna validación: recurso, intensidad, tipo, contenido, rol y sesión', () => {
+      const { c, sesionId } = nuevo();
+      expect(confirmar(c, sesionId, [{ entradaId: 'PAC-S-06' }], 'a', 'camara')).toEqual({ ok: false, error: 'recurso-no-disponible' });
+      expect(confirmar(c, sesionId, [{ entradaId: 'PAC-S-04', intensidad: 5 }], 'b', 'camara')).toEqual({ ok: false, error: 'intensidad-invalida' });
+      expect(confirmar(c, sesionId, [{ entradaId: 'MED-P-01' }], 'c', 'camara')).toEqual({ ok: false, error: 'tipo-no-permitido' });
+      expect(confirmar(c, sesionId, [{ entradaId: 'NO-EXISTE' }], 'd', 'camara')).toEqual({ ok: false, error: 'entrada-desconocida' });
+      const distinto: Comando = {
+        tipo: 'confirmarMensajePaciente',
+        sesionId,
+        envioId: 'e',
+        via: 'camara',
+        selecciones: [{ entradaId: 'PAC-S-04' }],
+        textosRevisados: ['Tengo tos.'],
+      };
+      expect(c.procesar('paciente', distinto)).toEqual({ ok: false, error: 'contenido-no-coincide' });
+      expect(c.procesar('medico', { ...distinto, textosRevisados: ['Tengo fiebre.'] })).toEqual({ ok: false, error: 'rol-no-autorizado' });
+      expect(c.procesar('paciente', { ...distinto, sesionId: 'ses-otra', textosRevisados: ['Tengo fiebre.'] })).toEqual({
+        ok: false,
+        error: 'sesion-incorrecta',
+      });
+      expect(c.instantanea()!.mensajes).toHaveLength(0);
+    });
+
+    it('en el flujo de producto un candidato de la cámara con recurso de prueba se bloquea', () => {
+      const { c, sesionId } = nuevo('producto');
+      expect(confirmar(c, sesionId, [{ entradaId: 'PAC-S-04' }], 'a', 'camara')).toEqual({ ok: false, error: 'recurso-no-disponible' });
+    });
+
+    it('por la cámara solo se acepta una entrada, y una vía desconocida se rechaza', () => {
+      const { c, sesionId } = nuevo();
+      expect(confirmar(c, sesionId, [{ entradaId: 'PAC-S-04' }, { entradaId: 'PAC-S-05' }], 'a', 'camara')).toEqual({
+        ok: false,
+        error: 'comando-invalido',
+      });
+      expect(confirmar(c, sesionId, [{ entradaId: 'PAC-S-04' }], 'b', 'voz' as ViaPaciente)).toEqual({ ok: false, error: 'comando-invalido' });
+      expect(c.instantanea()!.mensajes).toHaveLength(0);
+    });
   });
 });

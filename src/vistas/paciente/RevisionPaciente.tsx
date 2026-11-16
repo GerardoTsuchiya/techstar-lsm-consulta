@@ -1,12 +1,16 @@
 import { textosRevisados } from '../../nucleo/mensajes';
 import { buscarEntrada, recursoDeEntrada, recursoDeSistema, sePuedeEnviar } from '../../nucleo/recursos';
-import type { Catalogo, PoliticaRecursos, Seleccion } from '../../nucleo/tipos';
-import { IconoCheck, IconoChevron, IconoGlobo, IconoX } from '../comunes/Iconos';
+import type { Catalogo, PoliticaRecursos, Seleccion, ViaPaciente } from '../../nucleo/tipos';
+import { IconoCheck, IconoChevron, IconoGlobo, IconoMatraz, IconoVideo, IconoX } from '../comunes/Iconos';
 import { RecursoLSM } from '../comunes/RecursoLSM';
 import { tituloDe } from '../comunes/textos';
 import { SelectorIntensidad } from './SelectorIntensidad';
 
 interface Props {
+  /** Catálogo o cámara: las dos vías se revisan igual (RF-03). */
+  via: ViaPaciente;
+  /** El candidato de la cámara lo eligió el simulador (modo desarrollo), no un reconocedor real. */
+  simulado?: boolean;
   catalogo: Catalogo;
   politica: PoliticaRecursos;
   selecciones: Seleccion[];
@@ -38,6 +42,20 @@ export function RevisionPaciente(p: Props) {
 
   return (
     <div className="revision" aria-label="Revisión del mensaje">
+      {p.via === 'camara' && (
+        <p className="nota nota--info revision__via" data-via="camara">
+          <IconoVideo />
+          <span>
+            <strong>Esto es lo que entendimos de tu seña.</strong> Revisa que sea lo que quieres decir antes de
+            confirmar.
+          </span>
+          {p.simulado && (
+            <span className="chip chip--prueba">
+              <IconoMatraz /> Resultado simulado · no es reconocimiento real
+            </span>
+          )}
+        </p>
+      )}
       <div className="dos-columnas">
         <div className="panel-salvia">
           <h3 className="panel-salvia__titulo">Opciones seleccionadas ({selecciones.length})</h3>
@@ -106,9 +124,12 @@ export function RevisionPaciente(p: Props) {
       </div>
 
       <div className="acciones-centradas">
-        <button type="button" className="boton boton--secundario boton--alto" onClick={p.onModificar} disabled={p.enviando}>
-          <IconoChevron direccion="izquierda" /> Cambiar selección
-        </button>
+        {/* La propuesta de la cámara no se edita como una selección del catálogo: se confirma o se descarta. */}
+        {p.via === 'catalogo' && (
+          <button type="button" className="boton boton--secundario boton--alto" onClick={p.onModificar} disabled={p.enviando}>
+            <IconoChevron direccion="izquierda" /> Cambiar selección
+          </button>
+        )}
         <button type="button" className="boton boton--primario boton--alto" onClick={p.onConfirmar} disabled={!puedeConfirmar}>
           <RecursoLSM
             disponibilidad={recursoDeSistema(catalogo, 'confirmar', politica)}

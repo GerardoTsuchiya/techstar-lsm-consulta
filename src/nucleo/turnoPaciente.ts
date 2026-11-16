@@ -5,8 +5,9 @@ import type { Seleccion } from './tipos';
  * Turno del paciente: borrador local que NUNCA sale del equipo del paciente
  * hasta que se confirma (RF-04). Estados explícitos según TECHSTAR_MVP.md §5.
  *
- * Etapa A usa: seleccion → revision → enviando → seleccion.
- * Etapa C usará: capturando → procesando → revision | no-reconocido.
+ * Catálogo (etapa A): seleccion → revision → enviando → seleccion.
+ * Cámara (etapa C):   seleccion → capturando → procesando → revision | no-reconocido.
+ *   «Cancelar» (en capturando o procesando) vuelve a seleccion sin resultado (RF-17).
  */
 export type EstadoTurno =
   | { fase: 'seleccion'; selecciones: Seleccion[] }
@@ -25,9 +26,10 @@ export type AccionTurno =
   | { tipo: 'confirmarIniciado' }
   | { tipo: 'confirmacionFallida' }
   | { tipo: 'confirmado' }
-  // Etapa C (cámara). La lógica ya está probada; la interfaz aún no la usa.
+  // Etapa C (cámara)
   | { tipo: 'iniciarCaptura'; capturaId: string }
-  | { tipo: 'cancelarCaptura' }
+  /** Con `capturaId`, solo cancela esa captura (avisos asíncronos que pueden llegar tarde). */
+  | { tipo: 'cancelarCaptura'; capturaId?: string }
   | { tipo: 'capturaLista' }
   | { tipo: 'resultadoReconocimiento'; capturaId: string; entradaId: string | null; envioId: string }
   | { tipo: 'irAlCatalogo' };
@@ -98,7 +100,9 @@ export function reducirTurno(estado: EstadoTurno, accion: AccionTurno): EstadoTu
 
     case 'cancelarCaptura':
       // Detiene y descarta sin pedir reconocimiento; el catálogo sigue disponible (RF-17).
-      if (estado.fase !== 'capturando') return estado;
+      // Durante el procesamiento también se puede cancelar: el resultado que llegue después se descarta.
+      if (estado.fase !== 'capturando' && estado.fase !== 'procesando') return estado;
+      if (accion.capturaId !== undefined && accion.capturaId !== estado.capturaId) return estado;
       return turnoInicial;
 
     case 'capturaLista':

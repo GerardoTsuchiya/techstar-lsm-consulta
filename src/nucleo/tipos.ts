@@ -96,11 +96,14 @@ export interface ItemMensajePaciente {
   intensidad?: number;
 }
 
+/** Catálogo (RF-19) o cámara con reconocimiento (RF-01). */
+export type ViaPaciente = 'catalogo' | 'camara';
+
 export interface MensajePaciente {
   id: string;
   sesionId: string;
   origen: 'paciente';
-  via: 'catalogo' | 'camara';
+  via: ViaPaciente;
   items: ItemMensajePaciente[];
   confirmadoEn: number;
   /** Momento en que la vista del médico lo mostró (acuse). */
@@ -148,7 +151,8 @@ export type Comando =
       sesionId: string;
       /** Identificador del envío: un doble toque o reintento usa el mismo. */
       envioId: string;
-      via: 'catalogo';
+      /** Vía por la que se compuso el mensaje. Las dos pasan por la misma revisión y las mismas reglas. */
+      via: ViaPaciente;
       selecciones: Seleccion[];
       /** Textos exactamente como se mostraron en la revisión. */
       textosRevisados: string[];

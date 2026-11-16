@@ -1,13 +1,14 @@
 import { randomUUID } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
-import { app, BrowserWindow, ipcMain, type IpcMainInvokeEvent, session } from 'electron';
+import { app, BrowserWindow, ipcMain, type IpcMainInvokeEvent, session, type WebContents } from 'electron';
 import { catalogoFicticio } from '../src/catalogo/catalogoFicticio';
 import { CoordinadorSesion } from '../src/nucleo/coordinador';
 import type { Evento } from '../src/nucleo/tipos';
 import { esComando } from '../src/transporte/protocoloRed';
 import { CANALES_IPC, type EstadoVinculacion, type InfoEquipo, type PuenteTechStar } from '../src/transporte/puente';
 import { leerArgumentos } from './argumentos';
+import { permisoConcedido } from './permisos';
 import { iniciarServidorRed, type ServidorRed } from './servidor/servidorRed';
 
 /**
@@ -144,10 +145,22 @@ app.on('web-contents-created', (_e, contenido) => {
 });
 
 void app.whenReady().then(async () => {
-  // Ningún permiso (cámara, micrófono, notificaciones…) hasta la etapa C.
+  // Solo la cámara (video, sin micrófono) para la ventana propia en los modos paciente y demo (etapa C).
+  const esPropia = (wc: WebContents | null) => wc !== null && wc === ventana?.webContents;
   for (const s of [session.defaultSession, session.fromPartition(PARTICION)]) {
-    s.setPermissionRequestHandler((_wc, _permiso, responder) => responder(false));
-    s.setPermissionCheckHandler(() => false);
+    s.setPermissionRequestHandler((wc, permiso, responder, detalles) => {
+      const tiposMedia = 'mediaTypes' in detalles ? detalles.mediaTypes : undefined;
+      responder(permisoConcedido({ modo: args.modo, permiso, ventanaPropia: esPropia(wc), url: wc.getURL(), tiposMedia }));
+    });
+    s.setPermissionCheckHandler((wc, permiso, _origen, detalles) =>
+      permisoConcedido({
+        modo: args.modo,
+        permiso,
+        ventanaPropia: esPropia(wc),
+        url: wc?.getURL() ?? '',
+        tiposMedia: detalles.mediaType ? [detalles.mediaType] : undefined,
+      }),
+    );
   }
   if (args.modo === 'medico') await prepararMedico();
   crearVentana();

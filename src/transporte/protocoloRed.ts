@@ -86,7 +86,7 @@ export function esComando(x: unknown): x is Comando {
       return (
         esTexto(x.sesionId) &&
         esTexto(x.envioId) &&
-        x.via === 'catalogo' &&
+        (x.via === 'catalogo' || x.via === 'camara') &&
         Array.isArray(x.selecciones) &&
         x.selecciones.length <= 50 &&
         x.selecciones.every(

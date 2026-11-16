@@ -79,6 +79,8 @@ describe('Protocolo de red', () => {
     expect(esComando({ tipo: 'acuseRecibo', sesionId: 's', mensajeId: 'm' })).toBe(true);
     expect(esComando({ tipo: 'confirmarMensajePaciente', sesionId: 's', envioId: 'e', via: 'catalogo', selecciones: [{ entradaId: 'x' }], textosRevisados: ['t'] })).toBe(true);
     expect(esComando({ tipo: 'confirmarMensajePaciente', sesionId: 's', envioId: 'e', via: 'catalogo', selecciones: 'x', textosRevisados: [] })).toBe(false);
+    expect(esComando({ tipo: 'confirmarMensajePaciente', sesionId: 's', envioId: 'e', via: 'camara', selecciones: [{ entradaId: 'x' }], textosRevisados: ['t'] })).toBe(true);
+    expect(esComando({ tipo: 'confirmarMensajePaciente', sesionId: 's', envioId: 'e', via: 'voz', selecciones: [{ entradaId: 'x' }], textosRevisados: ['t'] })).toBe(false);
     expect(esComando({ tipo: 'borrarTodo' })).toBe(false);
     expect(esComando(null)).toBe(false);
   });
