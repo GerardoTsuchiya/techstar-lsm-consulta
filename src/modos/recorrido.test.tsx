@@ -105,6 +105,19 @@ describe('Recorrido de ida y vuelta (etapa A)', () => {
     expect(medico().queryByText(/Intensidad/)).toBeNull();
   });
 
+  it('el paciente responde con un síntoma y desde cuándo en un solo mensaje (respuestas breves, §6.3)', async () => {
+    const { user, paciente, medico } = await abrir();
+    await cerrarAviso(user, paciente);
+    await user.click(paciente().getByRole('button', { name: 'Fiebre' }));
+    await user.click(paciente().getByRole('button', { name: 'Página siguiente' }));
+    await user.click(paciente().getByRole('button', { name: 'Página siguiente' }));
+    await user.click(paciente().getByRole('button', { name: 'Desde ayer' }));
+    await user.click(paciente().getByRole('button', { name: /Revisar selección/ }));
+    await user.click(paciente().getByRole('button', { name: /Confirmar mensaje/ }));
+    expect(await medico().findByText('Tengo fiebre.')).toBeTruthy();
+    expect(medico().getByText('Desde ayer.')).toBeTruthy();
+  });
+
   it('«Cambiar selección» conserva la selección y «Descartar» la elimina sin enviar (RF-13)', async () => {
     const { user, paciente, medico } = await abrir();
     await cerrarAviso(user, paciente);

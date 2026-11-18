@@ -59,6 +59,18 @@ PLAN = [
                         ("IZT", "¿Tienes dolor?"), ("IZT", "¿Te duele la cabeza?"), ("IZT", "¿Tienes náuseas?"),
                         ("IZT", "¿Tienes tos?"), ("IZT", "Gracias"), ("IND", "Gracias"), ("IZT", "Hola"),
                         ("IZT", "Ayudar"), ("IND", "Ayudar"), ("IZT", "Equivocar"), ("IZT", "Descansar")]),
+    # Respuestas breves del paciente a las preguntas del médico (agregadas el 17/11/2026, §6.3).
+    ("PAC-R-04", "parcial", [("IZT", "Hoy")]),
+    ("PAC-R-05", "parcial", [("IZT", "Ayer")]),
+    ("PAC-R-06", "parcial", [("IZT", "Antier")]),
+    ("PAC-R-07", "parcial", [("IZT", "Semana")]),
+    ("PAC-R-08", "parcial", [("IZT", "Mes")]),
+    ("PAC-R-09", "completa", [("IZT", "A veces")]),
+    ("PAC-R-10", "completa", [("IZT", "Nunca")]),
+    ("PAC-R-11", "completa", [("IZT", "Analgésico")]),
+    ("PAC-R-12", "completa", [("IZT", "Antibiótico")]),
+    ("PAC-R-13", "completa", [("IZT", "Jarabe (medicamento)")]),
+    ("PAC-R-14", "completa", [("IZT", "Vitaminas")]),
 ]
 
 salida, vistos = [], {}

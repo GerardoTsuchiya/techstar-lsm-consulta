@@ -94,6 +94,17 @@ No se consultaron entrevistas: no fue necesario aclarar el origen de ningún req
 | D38 | Si llega un **mensaje del médico durante la captura**, se anuncia arriba («Llegó un mensaje del médico: «…»») sin ocultar la cámara; se ve completo al terminar o cancelar | RF-17: la cámara activa siempre está a la vista. El texto se muestra, así que el acuse «Recibido» sigue siendo cierto (RF-20) |
 | D39 | Recurso de prueba nuevo `REC-PRUEBA-SIS-CANCELAR` para el control «Cancelar» (en `catalogo/ficticio-dev.json`) | §6.1 pide recursos de los controles de cancelación |
 
+### 2.4 Videos en LSM de fuentes externas (16/11/2026)
+
+| # | Decisión | Motivo |
+|---|---|---|
+| D40 | **13 videos de Iztacala Enseña** conectados a sus recursos `REC-PRUEBA-*` (mismo ID), copiados a `public/recursos/` con el ID de la entrada: PAC-S-01, -03, -04, -05, -07, -08, PAC-R-03, MED-P-02 a MED-P-05, «No entendí» e intensidad del dolor. Siguen en **estado `prueba`**: en el flujo de producto continúan bloqueados | No hay revisión lingüística, permiso de uso ni aprobación registrada (§6.2); marcarlos `validado` sería inventar esa aprobación. Inventario completo y procedencia en [recursos-candidatos/](../recursos-candidatos/README.md) |
+| D41 | No se conectaron: PAC-S-02 (no existe la seña «estómago»; «Dolor» solo cambia el sentido), MED-P-01 (no hay «desde cuándo»), MED-R-01 a MED-R-04 (requieren combinar varias señas y la app muestra un solo recurso), PAC-R-01/02 («Sí» y «No» no están en ninguna fuente), los avisos del sistema y «Confirmar/Descartar» | Solo se conectó un video si transmite el mensaje o su concepto sin cambiar el sentido |
+| D42 | PAC-S-06 y MED-P-06 **siguen sin recurso a propósito** aunque hay candidatos («Mareo», «¿Vomitaste?») | Son las entradas que prueban el bloqueo en las pruebas automáticas y en el recorrido. Si se conectan, hay que mover ese papel a otra entrada |
+| D43 | Un recurso de prueba **con archivo** se reproduce en modo desarrollo con la etiqueta ámbar «Prueba · LSM sin validar» (en tarjetas: «Sin validar»); el marcador sin archivo sigue como silueta «Prueba · no es LSM». Si el archivo falla: «Recurso dañado o faltante», igual que un validado | Distingue LSM real sin validar de un marcador que no es LSM, sin presentarlo como validado |
+| D44 | Los videos se muestran con `object-fit: contain` (antes `cover`). Dentro de la tarjeta del paciente (un `<button>`) el video corre solo, en bucle y sin controles, y el clic elige la tarjeta | Los videos de Iztacala son verticales: `cover` recortaba las manos. Un `<video controls>` dentro de un botón no es válido y su clic también elegía la tarjeta |
+| D45 | **11 respuestas breves nuevas del paciente** (17/11/2026), cada una con su video de Iztacala como recurso de prueba: tiempo para «¿Desde cuándo?» (PAC-R-04 a -08: desde hoy, ayer, antier, hace una semana, hace un mes), frecuencia (PAC-R-09 «A veces», PAC-R-10 «Nunca») y medicamentos para las preguntas de alergia y tratamiento (PAC-R-11 a -14: analgésico, antibiótico, jarabe, vitaminas). Van en el grupo provisional «Respuestas breves» (D7) | Ninguna fuente tiene «Sí» ni «No». Como el paciente puede elegir varias tarjetas, «Tengo fiebre.» + «Desde ayer.» llega en un solo mensaje sin cambiar código. Las de tiempo muestran solo la seña («Ayer», «Semana»), sin «desde»/«hace»: revisión lingüística pendiente. Decidir qué respuestas quedan en el Catálogo V1 sigue siendo §6.3 |
+
 ## 3. Requisitos cubiertos en la etapa A
 
 Tabla de la etapa A: «comprobado» significa comprobado **en una sola computadora** (modo de una pantalla y dos
@@ -302,6 +313,10 @@ Pendiente: revisar los temporales en las dos laptops y, cuando exista, los del m
 
 - **Catálogo V1** aprobado: entradas del paciente y del médico, y qué puede responder el paciente a cada pregunta (§6.3).
 - **Recursos en LSM validados** para cada entrada y para los controles del sistema. Ver [RECURSOS_LSM.md](RECURSOS_LSM.md).
+  Hay 24 videos de Iztacala Enseña conectados como recursos de prueba (D40, D45). Para validarlos falta: **permiso de uso por
+  escrito** de la fuente, **revisión lingüística** (la mayoría muestra solo el concepto, p. ej. «Fiebre» para «Tengo
+  fiebre»), aprobación entrada–recurso y probar la reproducción en **Electron** y en **Android**. Faltan por grabar o
+  conseguir «Sí», «No», «estómago» y los avisos del sistema (D41).
 - Validar los iconos de apoyo visual con personas Sordas (o sustituirlos por las ilustraciones del prototipo).
 - Rúbrica de RNF-01 y protocolo de RNF-02.
 - Decidir si se mantiene el grupo «Respuestas breves» (D7).

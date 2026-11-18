@@ -90,10 +90,14 @@ export function generarDocumentoRecursos(cargado: CatalogoCargado, archivoDatos:
   if (catalogo.ficticio) {
     l.push('- El contenido del catálogo es **ficticio**. El Catálogo V1 sigue pendiente de definir y aprobar (SRS 1.6 §1.3).');
   }
+  const pruebaConArchivo = catalogo.recursos.filter((r) => r.estado === 'prueba' && r.tipo !== 'marcador-prueba').length;
+  const marcadores = catalogo.recursos.filter((r) => r.tipo === 'marcador-prueba').length;
   l.push(
-    '- Los recursos de prueba se muestran como marcadores (silueta neutra, icono y etiqueta ámbar «Prueba · no es LSM»). Solo prueban la interfaz y **no acreditan comprensión en LSM**.',
+    `- Recursos de prueba con archivo (video o imagen en LSM de una fuente externa, **sin validar**): **${pruebaConArchivo}**. En modo desarrollo se reproducen con la etiqueta ámbar «Prueba · LSM sin validar»; en el flujo de producto siguen bloqueados.`,
+    `- Marcadores de prueba (sin archivo): **${marcadores}**. Se muestran como silueta neutra con icono y etiqueta ámbar «Prueba · no es LSM».`,
+    '- Ningún recurso de prueba **acredita comprensión en LSM** hasta su revisión lingüística y aprobación.',
     '- Los iconos de apoyo visual (Lucide, licencia ISC; el del estómago es propio) son provisionales y no están validados con personas Sordas. Están en `src/vistas/comunes/IconoEntrada.tsx`.',
-    '- Fuente candidata del plan original: Iztacala Enseña. Antes de usar un recurso, falta comprobar que corresponde al mensaje completo, que funciona en la app, que el uso está permitido, y registrar la aprobación entrada–recurso.',
+    '- Fuentes candidatas: Iztacala Enseña (la del plan original) y el Portal LSM de Indiscapacidad CDMX. Inventario de videos candidatos en [recursos-candidatos/](../recursos-candidatos/README.md). Antes de validar un recurso, falta comprobar que corresponde al mensaje completo, que funciona en la app, que el uso está permitido, y registrar la aprobación entrada–recurso.',
     '- Las entradas con contenido clínico (síntomas, alergias, medicamentos) también requieren revisión del personal médico.',
     '',
   );

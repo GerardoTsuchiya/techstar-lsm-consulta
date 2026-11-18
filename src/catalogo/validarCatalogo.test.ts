@@ -38,6 +38,9 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
     expect(catalogoFicticio.entradas.map((e) => e.id)).toEqual([
       'PAC-S-01', 'PAC-S-02', 'PAC-S-03', 'PAC-S-04', 'PAC-S-05', 'PAC-S-06', 'PAC-S-07', 'PAC-S-08',
       'PAC-R-01', 'PAC-R-02', 'PAC-R-03',
+      // Respuestas breves a las preguntas del médico (tiempo, frecuencia y medicamentos), §6.3.
+      'PAC-R-04', 'PAC-R-05', 'PAC-R-06', 'PAC-R-07', 'PAC-R-08', 'PAC-R-09', 'PAC-R-10',
+      'PAC-R-11', 'PAC-R-12', 'PAC-R-13', 'PAC-R-14',
       'MED-P-01', 'MED-P-02', 'MED-P-03', 'MED-P-04', 'MED-P-05', 'MED-P-06',
       'MED-R-01', 'MED-R-02', 'MED-R-03', 'MED-R-04',
     ]);
@@ -46,7 +49,26 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
     expect(catalogoFicticio.entradas.filter((e) => e.esDolor).map((e) => e.id)).toEqual(['PAC-S-01', 'PAC-S-02', 'PAC-S-03']);
     // 19 de entradas + controles del sistema (la etapa C agrega los suyos).
     expect(catalogoFicticio.recursos.length).toBeGreaterThanOrEqual(26);
-    expect(catalogoFicticio.recursos.every((r) => r.estado === 'prueba' && !r.src)).toBe(true);
+    // Ninguno validado: los videos de fuentes externas siguen «prueba» hasta su revisión y aprobación (§6.2).
+    expect(catalogoFicticio.recursos.every((r) => r.estado === 'prueba' && !r.aprobacion)).toBe(true);
+  });
+
+  it('los videos de fuentes externas son locales, de tipo video y solo en recursos de prueba', () => {
+    const conArchivo = catalogoFicticio.recursos.filter((r) => r.archivo);
+    expect(conArchivo.map((r) => r.id)).toEqual([
+      'REC-PRUEBA-PAC-S-01', 'REC-PRUEBA-PAC-S-03', 'REC-PRUEBA-PAC-S-04', 'REC-PRUEBA-PAC-S-05',
+      'REC-PRUEBA-PAC-S-07', 'REC-PRUEBA-PAC-S-08', 'REC-PRUEBA-PAC-R-03',
+      'REC-PRUEBA-PAC-R-04', 'REC-PRUEBA-PAC-R-05', 'REC-PRUEBA-PAC-R-06', 'REC-PRUEBA-PAC-R-07',
+      'REC-PRUEBA-PAC-R-08', 'REC-PRUEBA-PAC-R-09', 'REC-PRUEBA-PAC-R-10', 'REC-PRUEBA-PAC-R-11',
+      'REC-PRUEBA-PAC-R-12', 'REC-PRUEBA-PAC-R-13', 'REC-PRUEBA-PAC-R-14',
+      'REC-PRUEBA-MED-P-02', 'REC-PRUEBA-MED-P-03', 'REC-PRUEBA-MED-P-04', 'REC-PRUEBA-MED-P-05',
+      'REC-PRUEBA-SIS-NO-ENTENDI', 'REC-PRUEBA-SIS-INTENSIDAD',
+    ]);
+    for (const r of conArchivo) {
+      expect(r.tipo).toBe('video');
+      expect(r.src).toBe(`recursos/${r.archivo}`);
+      expect(r.procedencia).toMatch(/^(Iztacala Enseña|Indiscapacidad CDMX)/);
+    }
   });
 
   it('Docs/RECURSOS_LSM.md está generado a partir del archivo de datos', () => {
@@ -223,6 +245,9 @@ describe('Archivos de los recursos en public/recursos/ (RNF-03)', () => {
     expect(e).toContain('Recurso REC-PRUEBA-PAC-S-05 (validado): el archivo public/recursos/PAC-S-05.mp4 está dañado o no es MP4 (su contenido es PNG');
   });
   it('los marcadores de prueba no necesitan archivo', () => {
-    expect(comprobarArchivos(catalogoFicticio, () => null)).toEqual([]);
+    const errores = comprobarArchivos(catalogoFicticio, () => null).join('\n');
+    for (const r of catalogoFicticio.recursos.filter((x) => x.tipo === 'marcador-prueba')) {
+      expect(errores).not.toContain(`Recurso ${r.id} `);
+    }
   });
 });

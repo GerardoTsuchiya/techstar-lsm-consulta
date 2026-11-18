@@ -1,9 +1,10 @@
 # Recursos candidatos en LSM (sin validar)
 
-Videos descargados el 16/11/2026 de las dos fuentes públicas. **Son candidatos, no recursos validados**:
-no se copiaron a `public/recursos/` ni se tocaron en `catalogo/ficticio-dev.json`. Antes de usar uno en el
-producto falta lo que pide `TECHSTAR_MVP.md` §6.2: que corresponda al mensaje completo, que el uso esté
-permitido por la fuente y registrar la aprobación entrada–recurso.
+Videos descargados el 16/11/2026 de las dos fuentes públicas. **Son candidatos, no recursos validados.**
+24 de ellos ya están conectados a la app como **recursos de prueba** (copiados a `public/recursos/` con el ID de la
+entrada; ver D40–D45 en `Docs/ESTADO_ACTUAL.md`): se ven en modo desarrollo con la etiqueta «LSM sin validar» y en el
+flujo de producto siguen bloqueados. Antes de validarlos falta lo que pide `TECHSTAR_MVP.md` §6.2: que corresponda al
+mensaje completo, que el uso esté permitido por la fuente y registrar la aprobación entrada–recurso.
 
 | Fuente | Página | Señas en el sitio | Dónde aloja los videos |
 |---|---|---|---|
@@ -12,7 +13,7 @@ permitido por la fuente y registrar la aprobación entrada–recurso.
 
 ## Contenido
 
-- `videos/` — 85 videos `.mp4` (49 MB en total; H.264 a 720p, **sin audio**: solo la pista de video).
+- `videos/` — 96 videos `.mp4` (56 MB en total; 85 del 16/11/2026 y 11 respuestas breves del 17/11/2026; H.264 a 720p, **sin audio**: solo la pista de video).
   Iztacala son verticales (720×1280) e Indiscapacidad horizontales (1280×720). Nombre:
   `<IZT|IND>_<seña>_<idYouTube>.mp4`.
 - `procedencia.json` — por cada video: fuente, nombre de la seña en el sitio, página de origen, URL del video,
@@ -51,6 +52,21 @@ tiempo verbal); falta decidir con apoyo lingüístico si basta o si hay que grab
 | MED-R-03 | Para continuar se necesita un intérprete de LSM. | parcial | IZT «¿Necesitas intérprete?», «Intérprete» IZT/IND |
 | MED-R-04 | Hemos terminado la consulta. | parcial | IZT «Acabar», IND «Consulta Médica» |
 
+### Respuestas breves del paciente (agregadas el 17/11/2026)
+
+Entradas nuevas PAC-R-04 a PAC-R-14, para responder a las preguntas del médico. El paciente puede elegirlas junto con un
+síntoma («Tengo fiebre.» + «Desde ayer.»).
+
+| Entradas | Responden a | Cobertura | Seña (Iztacala) |
+|---|---|---|---|
+| PAC-R-04 a -06: Desde hoy / ayer / antier | MED-P-01 | parcial (sin «desde») | «Hoy», «Ayer», «Antier» |
+| PAC-R-07, -08: Desde hace una semana / un mes | MED-P-01 | parcial (solo la unidad) | «Semana», «Mes» |
+| PAC-R-09 A veces, PAC-R-10 Nunca | MED-P-03, -05, -06 | completa | «A veces», «Nunca» |
+| PAC-R-11 a -14: Analgésico, Antibiótico, Jarabe, Vitaminas | MED-P-03, -04 | completa | mismas señas |
+
+Siguen sin candidato «Sí» y «No» (no existen en ninguna fuente) y las partes del cuerpo (solo hay boca, diente,
+lengua, corazón y pulmones; la pregunta MED-P-02 pide señalar, así que no hacen falta).
+
 ### Controles y avisos del sistema
 
 | Clave | Cobertura | Candidatos |
@@ -73,6 +89,8 @@ Vocabulario de apoyo (útil para el reconocedor o futuras entradas): «¿Cuáles
 2. **Revisión lingüística** de la cobertura parcial con una persona usuaria de LSM: si la seña del concepto basta o
    hay que grabar la frase completa.
 3. **Grabar o conseguir** «Sí», «No», «estómago» y los avisos del sistema.
-4. Al aprobar un recurso: copiar el video a `public/recursos/` con el nombre del campo `archivo` y correr
-   `npm run validar-catalogo` (ver README del proyecto, «Editar el catálogo»).
-5. **No subir los videos a git** sin decidirlo: son 49 MB y su redistribución no está autorizada.
+4. Al aprobar un recurso ya conectado: cambiar su `estado` a `validado` y llenar `revisionLinguistica`,
+   `condicionesUso` y `aprobacion` en `catalogo/ficticio-dev.json`. Para uno nuevo: copiar el video a
+   `public/recursos/` con el nombre del campo `archivo`. En ambos casos, `npm run validar-catalogo` (ver README del
+   proyecto, «Editar el catálogo»).
+5. **No subir los videos a git** sin decidirlo: son 56 MB y su redistribución no está autorizada.

@@ -11,6 +11,11 @@ interface Props {
   tamano?: 'ancho' | 'grande' | 'mediano' | 'mini';
   /** Para lectores de pantalla: qué mensaje acompaña. */
   etiqueta: string;
+  /**
+   * Va dentro de un botón (tarjeta del catálogo). El video se reproduce solo, en bucle y sin controles:
+   * un control interactivo dentro de un botón no es válido y su clic también elegiría la tarjeta.
+   */
+  enBoton?: boolean;
 }
 
 /** Silueta neutra de intérprete: indica «aquí va un video en LSM» sin simular una seña real. */
@@ -23,19 +28,28 @@ function Silueta() {
   );
 }
 
+/** Se reproduce el archivo si es validado, o si es de prueba con archivo y no va dentro de un botón (mini). */
+function reproduceArchivo(d: Disponibilidad, tamano: NonNullable<Props['tamano']>): boolean {
+  if (d.estado === 'bloqueado' || d.recurso.tipo === 'marcador-prueba' || !d.recurso.src) return false;
+  return d.estado === 'validado' || tamano !== 'mini';
+}
+
 /**
  * Presenta el recurso en LSM asociado a un mensaje (RI-01).
  * - validado: reproduce el archivo registrado.
- * - prueba: marcador con etiqueta «Recurso de prueba». Nunca se presenta como LSM.
+ * - prueba con archivo (video o imagen de una fuente externa, sin validar): lo reproduce con la etiqueta
+ *   «Prueba · LSM sin validar». Solo llega aquí en modo desarrollo (en producto queda bloqueado).
+ * - prueba sin archivo (marcador): silueta con etiqueta «Prueba · no es LSM». Nunca se presenta como LSM.
  * - bloqueado: informa que falta; no muestra otro recurso en su lugar.
  * Usa solo elementos en línea para poder ir dentro de botones.
  */
-export function RecursoLSM({ disponibilidad: d, icono, tamano = 'mediano', etiqueta }: Props) {
+export function RecursoLSM({ disponibilidad: d, icono, tamano = 'mediano', etiqueta, enBoton = false }: Props) {
   const clase = `recurso recurso--${tamano}`;
   // Archivo que no se pudo cargar (falta en public/recursos/ o está dañado, RNF-03).
   const [srcFallido, setSrcFallido] = useState<string>();
+  const conArchivo = reproduceArchivo(d, tamano);
 
-  if (d.estado === 'validado' && d.recurso.src && d.recurso.src === srcFallido) {
+  if (conArchivo && d.estado !== 'bloqueado' && d.recurso.src === srcFallido) {
     // Se informa del fallo y no se muestra otro recurso en su lugar (RI-01).
     return (
       <span
@@ -55,15 +69,35 @@ export function RecursoLSM({ disponibilidad: d, icono, tamano = 'mediano', etiqu
     );
   }
 
-  if (d.estado === 'validado' && d.recurso.src) {
+  if (conArchivo && d.estado !== 'bloqueado') {
     const { recurso } = d;
     const alFallar = () => setSrcFallido(recurso.src);
+    const sinValidar = d.estado === 'prueba';
+    const nombre = sinValidar ? 'en LSM sin validar' : 'en LSM';
     return (
-      <span className={`${clase} recurso--validado`} data-recurso={recurso.id}>
+      <span
+        className={`${clase} ${sinValidar ? 'recurso--prueba recurso--sin-validar' : 'recurso--validado'}`}
+        data-recurso={recurso.id}
+        title={sinValidar ? `${recurso.id}: LSM de una fuente externa, pendiente de validar` : undefined}
+      >
         {recurso.tipo === 'video' ? (
-          <video src={recurso.src} controls loop muted playsInline aria-label={`Video en LSM: ${etiqueta}`} onError={alFallar} />
+          <video
+            src={recurso.src}
+            controls={!enBoton}
+            autoPlay={enBoton}
+            loop
+            muted
+            playsInline
+            aria-label={`Video ${nombre}: ${etiqueta}`}
+            onError={alFallar}
+          />
         ) : (
-          <img src={recurso.src} alt={`Apoyo visual en LSM: ${etiqueta}`} onError={alFallar} />
+          <img src={recurso.src} alt={`Apoyo visual ${nombre}: ${etiqueta}`} onError={alFallar} />
+        )}
+        {sinValidar && (
+          <span className="recurso__etiqueta" aria-hidden="true">
+            {tamano === 'mediano' || enBoton ? 'Sin validar' : 'Prueba · LSM sin validar'}
+          </span>
         )}
       </span>
     );

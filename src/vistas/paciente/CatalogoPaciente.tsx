@@ -92,7 +92,7 @@ function Tarjeta(props: {
       aria-label={titulo}
       onClick={props.onAlternar}
     >
-      <RecursoLSM disponibilidad={recurso} icono={e.icono} tamano="ancho" etiqueta={e.texto} />
+      <RecursoLSM disponibilidad={recurso} icono={e.icono} tamano="ancho" etiqueta={e.texto} enBoton />
       {e.tipo === 'respuesta-paciente' && <span className="tarjeta__provisional">Provisional</span>}
       <span className="tarjeta__pie">
         <span className="tarjeta__titulo">{titulo}</span>

@@ -1188,5 +1188,159 @@
   "archivo": "videos/IZT_descansar_wj2JzqHEbd0.mp4",
   "bytes": 755250,
   "fechaDescarga": "2026-11-16"
+ },
+ {
+  "youtubeId": "gGVDwWLKcoI",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Hoy",
+  "paginaOrigen": "https://www.iztacalaensena.org/tiempo.html",
+  "urlVideo": "https://www.youtube.com/watch?v=gGVDwWLKcoI",
+  "entradas": [
+   "PAC-R-04"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_hoy_gGVDwWLKcoI.mp4",
+  "bytes": 295380,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "5o85hwZxwx4",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Ayer",
+  "paginaOrigen": "https://www.iztacalaensena.org/tiempo.html",
+  "urlVideo": "https://www.youtube.com/watch?v=5o85hwZxwx4",
+  "entradas": [
+   "PAC-R-05"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_ayer_5o85hwZxwx4.mp4",
+  "bytes": 693701,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "M1HbrnY_krg",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Antier",
+  "paginaOrigen": "https://www.iztacalaensena.org/tiempo.html",
+  "urlVideo": "https://www.youtube.com/watch?v=M1HbrnY_krg",
+  "entradas": [
+   "PAC-R-06"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_antier_M1HbrnY_krg.mp4",
+  "bytes": 614353,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "LgNz_-qDesc",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Semana",
+  "paginaOrigen": "https://www.iztacalaensena.org/tiempo.html",
+  "urlVideo": "https://www.youtube.com/watch?v=LgNz_-qDesc",
+  "entradas": [
+   "PAC-R-07"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_semana_LgNz_-qDesc.mp4",
+  "bytes": 645870,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "5U5qhTKG-ws",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Mes",
+  "paginaOrigen": "https://www.iztacalaensena.org/tiempo.html",
+  "urlVideo": "https://www.youtube.com/watch?v=5U5qhTKG-ws",
+  "entradas": [
+   "PAC-R-08"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_mes_5U5qhTKG-ws.mp4",
+  "bytes": 538965,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "vxv9gqp1Fps",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "A veces",
+  "paginaOrigen": "https://www.iztacalaensena.org/tiempo.html",
+  "urlVideo": "https://www.youtube.com/watch?v=vxv9gqp1Fps",
+  "entradas": [
+   "PAC-R-09"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_a-veces_vxv9gqp1Fps.mp4",
+  "bytes": 697195,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "5ECyIBijkgM",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Nunca",
+  "paginaOrigen": "https://www.iztacalaensena.org/tiempo.html",
+  "urlVideo": "https://www.youtube.com/watch?v=5ECyIBijkgM",
+  "entradas": [
+   "PAC-R-10"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_nunca_5ECyIBijkgM.mp4",
+  "bytes": 790773,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "UaE0gajgbBU",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Analgésico",
+  "paginaOrigen": "https://www.iztacalaensena.org/medicamentos-curas-tratamientos-y-procedimientos.html",
+  "urlVideo": "https://www.youtube.com/watch?v=UaE0gajgbBU",
+  "entradas": [
+   "PAC-R-11"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_analgesico_UaE0gajgbBU.mp4",
+  "bytes": 1030703,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "wM5SuZZY09I",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Antibiótico",
+  "paginaOrigen": "https://www.iztacalaensena.org/medicamentos-curas-tratamientos-y-procedimientos.html",
+  "urlVideo": "https://www.youtube.com/watch?v=wM5SuZZY09I",
+  "entradas": [
+   "PAC-R-12"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_antibiotico_wM5SuZZY09I.mp4",
+  "bytes": 902883,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "Gjnj8mQtrck",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Jarabe (medicamento)",
+  "paginaOrigen": "https://www.iztacalaensena.org/medicamentos-curas-tratamientos-y-procedimientos.html",
+  "urlVideo": "https://www.youtube.com/watch?v=Gjnj8mQtrck",
+  "entradas": [
+   "PAC-R-13"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_jarabe-medicamento_Gjnj8mQtrck.mp4",
+  "bytes": 847092,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "QZppkNvbqxU",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Vitaminas",
+  "paginaOrigen": "https://www.iztacalaensena.org/medicamentos-curas-tratamientos-y-procedimientos.html",
+  "urlVideo": "https://www.youtube.com/watch?v=QZppkNvbqxU",
+  "entradas": [
+   "PAC-R-14"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_vitaminas_QZppkNvbqxU.mp4",
+  "bytes": 597689,
+  "fechaDescarga": "2026-11-17"
  }
 ]

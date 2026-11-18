@@ -13,6 +13,10 @@ from datetime import date
 manifiesto, ytdlp, destino = sys.argv[1], sys.argv[2], sys.argv[3]
 os.makedirs(os.path.join(destino, "videos"), exist_ok=True)
 items = json.load(open(manifiesto, encoding="utf-8"))
+# Conserva la fecha de descarga de los videos que ya estaban registrados.
+_previa = os.path.join(destino, "procedencia.json")
+FECHAS = ({e["youtubeId"]: e.get("fechaDescarga") for e in json.load(open(_previa, encoding="utf-8"))}
+          if os.path.exists(_previa) else {})
 FORMATO = "bv*[vcodec^=avc1][height<=1280][width<=1280][ext=mp4]/b[ext=mp4]/18"
 
 
@@ -39,7 +43,7 @@ for i, it in enumerate(items, 1):
             it["archivo"] = None
             continue
     it["bytes"] = os.path.getsize(ruta)
-    it["fechaDescarga"] = date.today().isoformat()
+    it["fechaDescarga"] = FECHAS.get(it["youtubeId"]) or date.today().isoformat()
 
 json.dump(items, open(os.path.join(destino, "procedencia.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("fallos:", len(fallos))
