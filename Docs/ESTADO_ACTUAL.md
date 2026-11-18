@@ -104,6 +104,7 @@ No se consultaron entrevistas: no fue necesario aclarar el origen de ningún req
 | D43 | Un recurso de prueba **con archivo** se reproduce en modo desarrollo con la etiqueta ámbar «Prueba · LSM sin validar» (en tarjetas: «Sin validar»); el marcador sin archivo sigue como silueta «Prueba · no es LSM». Si el archivo falla: «Recurso dañado o faltante», igual que un validado | Distingue LSM real sin validar de un marcador que no es LSM, sin presentarlo como validado |
 | D44 | Los videos se muestran con `object-fit: contain` (antes `cover`). Dentro de la tarjeta del paciente (un `<button>`) el video corre solo, en bucle y sin controles, y el clic elige la tarjeta | Los videos de Iztacala son verticales: `cover` recortaba las manos. Un `<video controls>` dentro de un botón no es válido y su clic también elegía la tarjeta |
 | D45 | **11 respuestas breves nuevas del paciente** (17/11/2026), cada una con su video de Iztacala como recurso de prueba: tiempo para «¿Desde cuándo?» (PAC-R-04 a -08: desde hoy, ayer, antier, hace una semana, hace un mes), frecuencia (PAC-R-09 «A veces», PAC-R-10 «Nunca») y medicamentos para las preguntas de alergia y tratamiento (PAC-R-11 a -14: analgésico, antibiótico, jarabe, vitaminas). Van en el grupo provisional «Respuestas breves» (D7) | Ninguna fuente tiene «Sí» ni «No». Como el paciente puede elegir varias tarjetas, «Tengo fiebre.» + «Desde ayer.» llega en un solo mensaje sin cambiar código. Las de tiempo muestran solo la seña («Ayer», «Semana»), sin «desde»/«hace»: revisión lingüística pendiente. Decidir qué respuestas quedan en el Catálogo V1 sigue siendo §6.3 |
+| D46 | **«Sí» (PAC-R-01) y «No» (PAC-R-02)** conectados con videos del canal de YouTube de Sol Lara (Lsm_by_Sol), propuestos por el equipo (17/11/2026). Recurso de prueba, como los demás; el video trae el logo «By Sol» y el subtítulo de la palabra, que no tapan las manos | Eran las dos respuestas breves sin video: no existen en Iztacala ni en Indiscapacidad. Es una **fuente individual**, no institucional: para validarlos hace falta el permiso de la autora y, con más razón, la revisión lingüística |
 
 ## 3. Requisitos cubiertos en la etapa A
 
@@ -313,10 +314,10 @@ Pendiente: revisar los temporales en las dos laptops y, cuando exista, los del m
 
 - **Catálogo V1** aprobado: entradas del paciente y del médico, y qué puede responder el paciente a cada pregunta (§6.3).
 - **Recursos en LSM validados** para cada entrada y para los controles del sistema. Ver [RECURSOS_LSM.md](RECURSOS_LSM.md).
-  Hay 24 videos de Iztacala Enseña conectados como recursos de prueba (D40, D45). Para validarlos falta: **permiso de uso por
+  Hay 26 videos conectados como recursos de prueba: 24 de Iztacala Enseña y «Sí»/«No» de Sol Lara (D40, D45, D46). Para validarlos falta: **permiso de uso por
   escrito** de la fuente, **revisión lingüística** (la mayoría muestra solo el concepto, p. ej. «Fiebre» para «Tengo
   fiebre»), aprobación entrada–recurso y probar la reproducción en **Electron** y en **Android**. Faltan por grabar o
-  conseguir «Sí», «No», «estómago» y los avisos del sistema (D41).
+  conseguir «estómago» y los avisos del sistema (D41).
 - Validar los iconos de apoyo visual con personas Sordas (o sustituirlos por las ilustraciones del prototipo).
 - Rúbrica de RNF-01 y protocolo de RNF-02.
 - Decidir si se mantiene el grupo «Respuestas breves» (D7).

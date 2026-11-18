@@ -27,7 +27,7 @@ def slug(s):
 
 fallos = []
 for i, it in enumerate(items, 1):
-    pref = "IZT" if it["fuente"].startswith("Izt") else "IND"
+    pref = "IZT" if it["fuente"].startswith("Izt") else "IND" if it["fuente"].startswith("Indis") else "SOL"
     nombre = f"{pref}_{slug(it['senaEnSitio'])}_{it['youtubeId']}.mp4"
     ruta = os.path.join(destino, "videos", nombre)
     it["archivo"] = "videos/" + nombre

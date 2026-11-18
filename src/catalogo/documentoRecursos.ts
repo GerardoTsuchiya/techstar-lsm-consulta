@@ -97,7 +97,7 @@ export function generarDocumentoRecursos(cargado: CatalogoCargado, archivoDatos:
     `- Marcadores de prueba (sin archivo): **${marcadores}**. Se muestran como silueta neutra con icono y etiqueta ámbar «Prueba · no es LSM».`,
     '- Ningún recurso de prueba **acredita comprensión en LSM** hasta su revisión lingüística y aprobación.',
     '- Los iconos de apoyo visual (Lucide, licencia ISC; el del estómago es propio) son provisionales y no están validados con personas Sordas. Están en `src/vistas/comunes/IconoEntrada.tsx`.',
-    '- Fuentes candidatas: Iztacala Enseña (la del plan original) y el Portal LSM de Indiscapacidad CDMX. Inventario de videos candidatos en [recursos-candidatos/](../recursos-candidatos/README.md). Antes de validar un recurso, falta comprobar que corresponde al mensaje completo, que funciona en la app, que el uso está permitido, y registrar la aprobación entrada–recurso.',
+    '- Fuentes candidatas: Iztacala Enseña (la del plan original) y el Portal LSM de Indiscapacidad CDMX; «Sí» y «No» vienen del canal de YouTube de Sol Lara (fuente individual). Inventario de videos candidatos en [recursos-candidatos/](../recursos-candidatos/README.md). Antes de validar un recurso, falta comprobar que corresponde al mensaje completo, que funciona en la app, que el uso está permitido, y registrar la aprobación entrada–recurso.',
     '- Las entradas con contenido clínico (síntomas, alergias, medicamentos) también requieren revisión del personal médico.',
     '',
   );

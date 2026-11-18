@@ -1342,5 +1342,33 @@
   "archivo": "videos/IZT_vitaminas_QZppkNvbqxU.mp4",
   "bytes": 597689,
   "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "o_uJTNHtJ2Q",
+  "fuente": "Sol Lara (YouTube, Lsm_by_Sol)",
+  "senaEnSitio": "Seña de «Sí» en LSM",
+  "paginaOrigen": "https://www.youtube.com/channel/UCGqU2txiO1oabaRLOdQSgBw",
+  "urlVideo": "https://www.youtube.com/watch?v=o_uJTNHtJ2Q",
+  "entradas": [
+   "PAC-R-01"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/SOL_sena-de-si-en-lsm_o_uJTNHtJ2Q.mp4",
+  "bytes": 385458,
+  "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "Ltg8txV9goA",
+  "fuente": "Sol Lara (YouTube, Lsm_by_Sol)",
+  "senaEnSitio": "Seña de «No» en LSM",
+  "paginaOrigen": "https://www.youtube.com/channel/UCGqU2txiO1oabaRLOdQSgBw",
+  "urlVideo": "https://www.youtube.com/watch?v=Ltg8txV9goA",
+  "entradas": [
+   "PAC-R-02"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/SOL_sena-de-no-en-lsm_Ltg8txV9goA.mp4",
+  "bytes": 708923,
+  "fechaDescarga": "2026-11-17"
  }
 ]

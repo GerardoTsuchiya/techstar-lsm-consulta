@@ -57,7 +57,8 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
     const conArchivo = catalogoFicticio.recursos.filter((r) => r.archivo);
     expect(conArchivo.map((r) => r.id)).toEqual([
       'REC-PRUEBA-PAC-S-01', 'REC-PRUEBA-PAC-S-03', 'REC-PRUEBA-PAC-S-04', 'REC-PRUEBA-PAC-S-05',
-      'REC-PRUEBA-PAC-S-07', 'REC-PRUEBA-PAC-S-08', 'REC-PRUEBA-PAC-R-03',
+      'REC-PRUEBA-PAC-S-07', 'REC-PRUEBA-PAC-S-08',
+      'REC-PRUEBA-PAC-R-01', 'REC-PRUEBA-PAC-R-02', 'REC-PRUEBA-PAC-R-03',
       'REC-PRUEBA-PAC-R-04', 'REC-PRUEBA-PAC-R-05', 'REC-PRUEBA-PAC-R-06', 'REC-PRUEBA-PAC-R-07',
       'REC-PRUEBA-PAC-R-08', 'REC-PRUEBA-PAC-R-09', 'REC-PRUEBA-PAC-R-10', 'REC-PRUEBA-PAC-R-11',
       'REC-PRUEBA-PAC-R-12', 'REC-PRUEBA-PAC-R-13', 'REC-PRUEBA-PAC-R-14',
@@ -67,7 +68,7 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
     for (const r of conArchivo) {
       expect(r.tipo).toBe('video');
       expect(r.src).toBe(`recursos/${r.archivo}`);
-      expect(r.procedencia).toMatch(/^(Iztacala Enseña|Indiscapacidad CDMX)/);
+      expect(r.procedencia).toMatch(/^(Iztacala Enseña|Indiscapacidad CDMX|Sol Lara \(YouTube, Lsm_by_Sol\))/);
     }
   });
 

@@ -450,27 +450,27 @@
     },
     {
       "id": "REC-PRUEBA-PAC-R-01",
-      "tipo": "marcador-prueba",
+      "tipo": "video",
       "estado": "prueba",
       "descripcion": "Seña o explicación en LSM de: «Sí.»",
-      "archivo": null,
-      "procedencia": "Marcador generado por la app (sin video).",
-      "condicionesUso": "Solo desarrollo. No usar en demostraciones como LSM.",
-      "revisionLinguistica": "Pendiente: no existe recurso en LSM.",
+      "archivo": "PAC-R-01.mp4",
+      "procedencia": "Sol Lara (YouTube, Lsm_by_Sol), video «Seña de «Sí» en LSM» (https://www.youtube.com/channel/UCGqU2txiO1oabaRLOdQSgBw), alojado en https://www.youtube.com/watch?v=o_uJTNHtJ2Q. Descargado el 2026-11-17: solo video H.264 720p, sin audio. Fuente individual, no institucional. El video trae el logo «By Sol» y el subtítulo de la palabra; no tapan las manos.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia. Solo desarrollo y uso académico interno hasta obtener autorización por escrito de la autora.",
+      "revisionLinguistica": "Pendiente. Muestra la seña «Sí». Al ser una fuente individual, la revisión con apoyo lingüístico es indispensable.",
       "aprobacion": null,
-      "estadoReproduccion": "Marcador visible en laptops (navegador). Sin archivo de video que reproducir."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-17: carga desde public/recursos/ y se reproduce sin audio en la tarjeta del paciente; el médico recibe el mensaje. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-PAC-R-02",
-      "tipo": "marcador-prueba",
+      "tipo": "video",
       "estado": "prueba",
       "descripcion": "Seña o explicación en LSM de: «No.»",
-      "archivo": null,
-      "procedencia": "Marcador generado por la app (sin video).",
-      "condicionesUso": "Solo desarrollo. No usar en demostraciones como LSM.",
-      "revisionLinguistica": "Pendiente: no existe recurso en LSM.",
+      "archivo": "PAC-R-02.mp4",
+      "procedencia": "Sol Lara (YouTube, Lsm_by_Sol), video «Seña de «No» en LSM» (https://www.youtube.com/channel/UCGqU2txiO1oabaRLOdQSgBw), alojado en https://www.youtube.com/watch?v=Ltg8txV9goA. Descargado el 2026-11-17: solo video H.264 720p, sin audio. Fuente individual, no institucional. El video trae el logo «By Sol» y el subtítulo de la palabra; no tapan las manos.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia. Solo desarrollo y uso académico interno hasta obtener autorización por escrito de la autora.",
+      "revisionLinguistica": "Pendiente. Muestra la seña «No». Al ser una fuente individual, la revisión con apoyo lingüístico es indispensable.",
       "aprobacion": null,
-      "estadoReproduccion": "Marcador visible en laptops (navegador). Sin archivo de video que reproducir."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-17: carga desde public/recursos/ y se reproduce sin audio en la tarjeta del paciente; el médico recibe el mensaje. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-PAC-R-03",

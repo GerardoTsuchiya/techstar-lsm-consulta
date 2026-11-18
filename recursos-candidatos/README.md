@@ -1,8 +1,8 @@
 # Recursos candidatos en LSM (sin validar)
 
 Videos descargados el 16/11/2026 de las dos fuentes públicas. **Son candidatos, no recursos validados.**
-24 de ellos ya están conectados a la app como **recursos de prueba** (copiados a `public/recursos/` con el ID de la
-entrada; ver D40–D45 en `Docs/ESTADO_ACTUAL.md`): se ven en modo desarrollo con la etiqueta «LSM sin validar» y en el
+26 de ellos ya están conectados a la app como **recursos de prueba** (copiados a `public/recursos/` con el ID de la
+entrada; ver D40–D46 en `Docs/ESTADO_ACTUAL.md`): se ven en modo desarrollo con la etiqueta «LSM sin validar» y en el
 flujo de producto siguen bloqueados. Antes de validarlos falta lo que pide `TECHSTAR_MVP.md` §6.2: que corresponda al
 mensaje completo, que el uso esté permitido por la fuente y registrar la aprobación entrada–recurso.
 
@@ -10,10 +10,11 @@ mensaje completo, que el uso esté permitido por la fuente y registrar la aproba
 |---|---|---|---|
 | Iztacala Enseña (FES Iztacala, UNAM) | https://www.iztacalaensena.org/iacutendice-de-categoriacuteas.html | 758 en 30 categorías | YouTube Shorts |
 | Indiscapacidad CDMX · Portal LSM | https://lsm.indiscapacidad.cdmx.gob.mx/ | 1 050 en 24 ejes | YouTube |
+| Sol Lara (canal Lsm_by_Sol) · fuente individual, propuesta por el equipo | https://www.youtube.com/channel/UCGqU2txiO1oabaRLOdQSgBw | solo se tomaron «Sí» y «No» | YouTube Shorts (con logo «By Sol» y subtítulo) |
 
 ## Contenido
 
-- `videos/` — 96 videos `.mp4` (56 MB en total; 85 del 16/11/2026 y 11 respuestas breves del 17/11/2026; H.264 a 720p, **sin audio**: solo la pista de video).
+- `videos/` — 98 videos `.mp4` (57 MB en total; 85 del 16/11/2026, 11 respuestas breves y «Sí»/«No» del 17/11/2026; H.264 a 720p, **sin audio**: solo la pista de video).
   Iztacala son verticales (720×1280) e Indiscapacidad horizontales (1280×720). Nombre:
   `<IZT|IND>_<seña>_<idYouTube>.mp4`.
 - `procedencia.json` — por cada video: fuente, nombre de la seña en el sitio, página de origen, URL del video,
@@ -38,8 +39,8 @@ tiempo verbal); falta decidir con apoyo lingüístico si basta o si hay que grab
 | PAC-S-06 | Me siento mareado o mareada. | parcial | IZT «Mareo» (2), IND «Mareos», IZT «¿Estás mareado/a?» |
 | PAC-S-07 | Tengo náuseas. | parcial | IZT «Nauseas» (2), IND «Asco (Náuseas)» |
 | PAC-S-08 | Me siento muy cansado o cansada. | parcial | IZT «Cansado», IND «Cansancio» |
-| PAC-R-01 | Sí. | **sin candidato** | Ninguno de los dos sitios tiene la seña |
-| PAC-R-02 | No. | **sin candidato** | Ninguno de los dos sitios tiene la seña |
+| PAC-R-01 | Sí. | completa | Sol Lara «Seña de “Sí” en LSM» (no está en los dos sitios institucionales) |
+| PAC-R-02 | No. | completa | Sol Lara «Seña de “No” en LSM» (no está en los dos sitios institucionales) |
 | PAC-R-03 | No lo sé. | parcial | IZT y IND «No saber» |
 | MED-P-01 | ¿Desde cuándo tiene este síntoma? | parcial | IZT «¿Cuándo?», IZT «Tiempo» |
 | MED-P-02 | ¿Puede señalar dónde le duele? | completa | IZT «¿Dónde te duele?» |
@@ -64,7 +65,7 @@ síntoma («Tengo fiebre.» + «Desde ayer.»).
 | PAC-R-09 A veces, PAC-R-10 Nunca | MED-P-03, -05, -06 | completa | «A veces», «Nunca» |
 | PAC-R-11 a -14: Analgésico, Antibiótico, Jarabe, Vitaminas | MED-P-03, -04 | completa | mismas señas |
 
-Siguen sin candidato «Sí» y «No» (no existen en ninguna fuente) y las partes del cuerpo (solo hay boca, diente,
+«Sí» y «No» no existen en los dos sitios institucionales; se tomaron del canal de Sol Lara. Siguen sin candidato las partes del cuerpo (solo hay boca, diente,
 lengua, corazón y pulmones; la pregunta MED-P-02 pide señalar, así que no hacen falta).
 
 ### Controles y avisos del sistema
@@ -93,4 +94,4 @@ Vocabulario de apoyo (útil para el reconocedor o futuras entradas): «¿Cuáles
    `condicionesUso` y `aprobacion` en `catalogo/ficticio-dev.json`. Para uno nuevo: copiar el video a
    `public/recursos/` con el nombre del campo `archivo`. En ambos casos, `npm run validar-catalogo` (ver README del
    proyecto, «Editar el catálogo»).
-5. **No subir los videos a git** sin decidirlo: son 56 MB y su redistribución no está autorizada.
+5. **No subir los videos a git** sin decidirlo: son 57 MB y su redistribución no está autorizada.

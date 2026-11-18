@@ -94,5 +94,22 @@ for entrada, cobertura, candidatos in PLAN:
             vistos[vid] = item
             salida.append(item)
 
+# Videos sueltos de otras fuentes (sin índice de sitio), propuestos por el equipo.
+# (entrada, cobertura, id de YouTube, fuente, seña tal como la titula la fuente, página de origen)
+SUELTOS = [
+    ("PAC-R-01", "completa", "o_uJTNHtJ2Q", "Sol Lara (YouTube, Lsm_by_Sol)", "Seña de «Sí» en LSM",
+     "https://www.youtube.com/channel/UCGqU2txiO1oabaRLOdQSgBw"),
+    ("PAC-R-02", "completa", "Ltg8txV9goA", "Sol Lara (YouTube, Lsm_by_Sol)", "Seña de «No» en LSM",
+     "https://www.youtube.com/channel/UCGqU2txiO1oabaRLOdQSgBw"),
+]
+for entrada, cobertura, vid, fuente, sena, pagina in SUELTOS:
+    if vid in vistos:
+        vistos[vid]["entradas"].append(entrada)
+        continue
+    item = {"youtubeId": vid, "fuente": fuente, "senaEnSitio": sena, "paginaOrigen": pagina,
+            "urlVideo": "https://www.youtube.com/watch?v=" + vid, "entradas": [entrada], "cobertura": cobertura}
+    vistos[vid] = item
+    salida.append(item)
+
 json.dump(salida, open(sys.argv[3], "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(len(salida), "videos")
