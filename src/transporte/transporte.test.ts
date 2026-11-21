@@ -64,8 +64,10 @@ describe('Transporte entre ventanas (BroadcastChannel)', () => {
 
 describe('Configuración por dirección', () => {
   it('ante un valor desconocido usa la política estricta', () => {
-    expect(leerConfiguracion('?modo=demo&recursos=desarrollo')).toEqual({ modo: 'demo', politica: 'desarrollo' });
-    expect(leerConfiguracion('?modo=demo&recursos=otra')).toEqual({ modo: 'demo', politica: 'producto' });
-    expect(leerConfiguracion('')).toEqual({ modo: null, politica: 'producto' });
+    expect(leerConfiguracion('?modo=demo&recursos=desarrollo')).toEqual({ modo: 'demo', politica: 'desarrollo', reconocedor: 'simulado' });
+    expect(leerConfiguracion('?modo=demo&recursos=otra')).toEqual({ modo: 'demo', politica: 'producto', reconocedor: 'simulado' });
+    expect(leerConfiguracion('')).toEqual({ modo: null, politica: 'producto', reconocedor: 'simulado' });
+    expect(leerConfiguracion('?modo=demo&recursos=desarrollo&reconocedor=experimental').reconocedor).toBe('experimental');
+    expect(leerConfiguracion('?reconocedor=otro').reconocedor).toBe('simulado');
   });
 });

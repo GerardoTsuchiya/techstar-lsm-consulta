@@ -19,6 +19,11 @@ mensaje completo, que el uso esté permitido por la fuente y registrar la aproba
   `<IZT|IND>_<seña>_<idYouTube>.mp4`.
 - `procedencia.json` — por cada video: fuente, nombre de la seña en el sitio, página de origen, URL del video,
   entradas del catálogo para las que es candidato, cobertura, tamaño y fecha de descarga.
+- `inventario-reconocedor.json` — vocabulario del reconocedor experimental: por video, fuente, seña, entrada del
+  catálogo, si la seña es palabra suelta o mensaje completo, y uso (plantilla, desconocida o excluido). Ver
+  [Docs/RECONOCEDOR.md](../Docs/RECONOCEDOR.md).
+- `evaluacion-reconocedor.json` — resultados por video de la evaluación preliminar (`npm run evaluar-reconocedor`).
+- `puntos/` — puntos de hombros y manos extraídos de cada video (`npm run herramienta-puntos`); **ignorada por git**.
 - `indices/` — lista completa de señas de cada sitio (nombre, categoría, URL del video), por si se necesitan más.
 - `armar_manifiesto.py` y `descargar.py` — scripts que generaron todo. Requieren `pip install "yt-dlp[default]"`
   (el extra `default` instala `yt-dlp-ejs`; sin él YouTube niega los videos de Indiscapacidad) y Node.js.
@@ -84,9 +89,10 @@ Vocabulario de apoyo (útil para el reconocedor o futuras entradas): «¿Cuáles
 
 ## Pendientes antes de usarlos
 
-1. **Permiso de uso.** Ningún sitio publica una licencia que permita redistribuir los videos. Para la entrega
-   académica, pedir autorización por escrito (Iztacala Enseña tiene página de contacto; Indiscapacidad, directorio
-   del instituto) y registrar la respuesta en las «condiciones de uso» de cada recurso.
+1. **Permiso de uso.** Ningún sitio publica una licencia que permita redistribuir los videos. Según informó el equipo
+   el 20/11/2026, las tres fuentes autorizaron usarlos **para entrenar** el reconocedor y **para mostrarlos en la
+   app**. Falta archivar la constancia escrita en la trazabilidad y registrarla en las «condiciones de uso» de cada
+   recurso.
 2. **Revisión lingüística** de la cobertura parcial con una persona usuaria de LSM: si la seña del concepto basta o
    hay que grabar la frase completa.
 3. **Grabar o conseguir** «Sí», «No», «estómago» y los avisos del sistema.

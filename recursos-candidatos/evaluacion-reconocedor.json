@@ -1,0 +1,1217 @@
+{
+  "fecha": "2026-11-20",
+  "aviso": "PRELIMINAR. Videos web de estudio, 1 o 2 personas por fuente, sin personas Sordas de la asociación ni otra cámara. Umbrales calibrados con los mismos videos (LOO + mitad A de desconocidas).",
+  "metodo": {
+    "pasos": 20,
+    "dimension": 86,
+    "pesos": {
+      "presencia": 0.7,
+      "posicion": 1,
+      "forma": 0.35
+    },
+    "banda": 5,
+    "pesoFalsaAceptacion": 2
+  },
+  "umbrales": {
+    "distancia": 0.4714,
+    "margen": 0.7
+  },
+  "noEvaluablesPorValidacionCruzada": [
+    {
+      "archivo": "SOL_sena-de-si-en-lsm_o_uJTNHtJ2Q.mp4",
+      "entrada": "PAC-R-01",
+      "motivo": "Única muestra de su seña"
+    },
+    {
+      "archivo": "SOL_sena-de-no-en-lsm_Ltg8txV9goA.mp4",
+      "entrada": "PAC-R-02",
+      "motivo": "Única muestra de su seña"
+    }
+  ],
+  "dejandoUnoFuera": {
+    "resumen": [
+      {
+        "entrada": "PAC-S-01",
+        "muestras": 2,
+        "aciertos": 0,
+        "rechazos": 2,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-S-04",
+        "muestras": 2,
+        "aciertos": 0,
+        "rechazos": 2,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-S-05",
+        "muestras": 4,
+        "aciertos": 2,
+        "rechazos": 2,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-S-07",
+        "muestras": 3,
+        "aciertos": 0,
+        "rechazos": 3,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-S-08",
+        "muestras": 2,
+        "aciertos": 0,
+        "rechazos": 2,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-R-03",
+        "muestras": 2,
+        "aciertos": 0,
+        "rechazos": 2,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-R-01",
+        "muestras": 0,
+        "aciertos": 0,
+        "rechazos": 0,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-R-02",
+        "muestras": 0,
+        "aciertos": 0,
+        "rechazos": 0,
+        "confusiones": []
+      }
+    ],
+    "filas": [
+      {
+        "archivo": "IND_no-saber_76L6t79x1Qo.mp4",
+        "fuente": "IND",
+        "sena": "No Saber",
+        "esperado": "PAC-R-03",
+        "masParecida": "PAC-R-03",
+        "distancia": 2.434,
+        "margen": 0.926,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_no-saber_sP5Rqv9ywRg.mp4",
+        "fuente": "IZT",
+        "sena": "No saber",
+        "esperado": "PAC-R-03",
+        "masParecida": "PAC-R-01",
+        "distancia": 2.342,
+        "margen": 0.962,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_dolor-de-cabeza_6lUTzqJZo2o.mp4",
+        "fuente": "IZT",
+        "sena": "Dolor de cabeza",
+        "esperado": "PAC-S-01",
+        "masParecida": "PAC-R-01",
+        "distancia": 1.19,
+        "margen": 0.905,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_dolor-de-cabeza__DZIK3D3Hoc.mp4",
+        "fuente": "IZT",
+        "sena": "Dolor de cabeza",
+        "esperado": "PAC-S-01",
+        "masParecida": "PAC-S-01",
+        "distancia": 2.543,
+        "margen": 0.941,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_fiebre_xTzmQOiP0Xw.mp4",
+        "fuente": "IND",
+        "sena": "Fiebre",
+        "esperado": "PAC-S-04",
+        "masParecida": "PAC-S-07",
+        "distancia": 1.336,
+        "margen": 0.894,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_fiebre_hUSMSmo0vjU.mp4",
+        "fuente": "IZT",
+        "sena": "Fiebre",
+        "esperado": "PAC-S-04",
+        "masParecida": "PAC-R-01",
+        "distancia": 1.269,
+        "margen": 0.965,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_tos-1_8gJpNlN_0uU.mp4",
+        "fuente": "IND",
+        "sena": "Tos (1)",
+        "esperado": "PAC-S-05",
+        "masParecida": "PAC-S-05",
+        "distancia": 1.474,
+        "margen": 0.986,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_tos-2_H7KwVeZrP4k.mp4",
+        "fuente": "IND",
+        "sena": "Tos (2)",
+        "esperado": "PAC-S-05",
+        "masParecida": "PAC-S-05",
+        "distancia": 1.474,
+        "margen": 0.8,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_tos_hZ31kPkR2Ek.mp4",
+        "fuente": "IZT",
+        "sena": "Tos",
+        "esperado": "PAC-S-05",
+        "masParecida": "PAC-S-05",
+        "distancia": 0.471,
+        "margen": 0.693,
+        "resultado": "acierto"
+      },
+      {
+        "archivo": "IZT_tos_uckmooIUUaU.mp4",
+        "fuente": "IZT",
+        "sena": "Tos",
+        "esperado": "PAC-S-05",
+        "masParecida": "PAC-S-05",
+        "distancia": 0.471,
+        "margen": 0.485,
+        "resultado": "acierto"
+      },
+      {
+        "archivo": "IND_asco-nauseas_E9a92aqS8GU.mp4",
+        "fuente": "IND",
+        "sena": "Asco (Náuseas)",
+        "esperado": "PAC-S-07",
+        "masParecida": "PAC-S-04",
+        "distancia": 1.336,
+        "margen": 0.817,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_nauseas_FuhKrTiwU70.mp4",
+        "fuente": "IZT",
+        "sena": "Nauseas",
+        "esperado": "PAC-S-07",
+        "masParecida": "PAC-S-05",
+        "distancia": 0.68,
+        "margen": 0.389,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_nauseas_Hdu7TQqdUlk.mp4",
+        "fuente": "IZT",
+        "sena": "Nauseas",
+        "esperado": "PAC-S-07",
+        "masParecida": "PAC-S-07",
+        "distancia": 1.932,
+        "margen": 0.999,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_cansancio_DVBQ0brVcSo.mp4",
+        "fuente": "IND",
+        "sena": "Cansancio",
+        "esperado": "PAC-S-08",
+        "masParecida": "PAC-S-07",
+        "distancia": 1.672,
+        "margen": 0.845,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_cansado_NPNwh1YSuiI.mp4",
+        "fuente": "IZT",
+        "sena": "Cansado",
+        "esperado": "PAC-S-08",
+        "masParecida": "PAC-S-08",
+        "distancia": 2.295,
+        "margen": 0.946,
+        "resultado": "rechazo"
+      }
+    ]
+  },
+  "entreFuentes": {
+    "resumen": [
+      {
+        "entrada": "PAC-S-01",
+        "muestras": 0,
+        "aciertos": 0,
+        "rechazos": 0,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-S-04",
+        "muestras": 2,
+        "aciertos": 0,
+        "rechazos": 2,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-S-05",
+        "muestras": 4,
+        "aciertos": 0,
+        "rechazos": 4,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-S-07",
+        "muestras": 3,
+        "aciertos": 0,
+        "rechazos": 3,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-S-08",
+        "muestras": 2,
+        "aciertos": 0,
+        "rechazos": 2,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-R-03",
+        "muestras": 2,
+        "aciertos": 0,
+        "rechazos": 2,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-R-01",
+        "muestras": 0,
+        "aciertos": 0,
+        "rechazos": 0,
+        "confusiones": []
+      },
+      {
+        "entrada": "PAC-R-02",
+        "muestras": 0,
+        "aciertos": 0,
+        "rechazos": 0,
+        "confusiones": []
+      }
+    ],
+    "filas": [
+      {
+        "archivo": "IND_no-saber_76L6t79x1Qo.mp4",
+        "fuente": "IND",
+        "sena": "No Saber",
+        "esperado": "PAC-R-03",
+        "masParecida": "PAC-R-03",
+        "distancia": 2.434,
+        "margen": 0.876,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_no-saber_sP5Rqv9ywRg.mp4",
+        "fuente": "IZT",
+        "sena": "No saber",
+        "esperado": "PAC-R-03",
+        "masParecida": "PAC-R-01",
+        "distancia": 2.342,
+        "margen": 0.962,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_fiebre_xTzmQOiP0Xw.mp4",
+        "fuente": "IND",
+        "sena": "Fiebre",
+        "esperado": "PAC-S-04",
+        "masParecida": "PAC-S-05",
+        "distancia": 2.858,
+        "margen": 0.98,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_fiebre_hUSMSmo0vjU.mp4",
+        "fuente": "IZT",
+        "sena": "Fiebre",
+        "esperado": "PAC-S-04",
+        "masParecida": "PAC-R-01",
+        "distancia": 1.269,
+        "margen": 0.622,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_tos-1_8gJpNlN_0uU.mp4",
+        "fuente": "IND",
+        "sena": "Tos (1)",
+        "esperado": "PAC-S-05",
+        "masParecida": "PAC-S-07",
+        "distancia": 2.559,
+        "margen": 0.98,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_tos-2_H7KwVeZrP4k.mp4",
+        "fuente": "IND",
+        "sena": "Tos (2)",
+        "esperado": "PAC-S-05",
+        "masParecida": "PAC-S-05",
+        "distancia": 1.899,
+        "margen": 0.967,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_tos_hZ31kPkR2Ek.mp4",
+        "fuente": "IZT",
+        "sena": "Tos",
+        "esperado": "PAC-S-05",
+        "masParecida": "PAC-R-01",
+        "distancia": 1.941,
+        "margen": 0.998,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_tos_uckmooIUUaU.mp4",
+        "fuente": "IZT",
+        "sena": "Tos",
+        "esperado": "PAC-S-05",
+        "masParecida": "PAC-R-01",
+        "distancia": 1.888,
+        "margen": 0.994,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_asco-nauseas_E9a92aqS8GU.mp4",
+        "fuente": "IND",
+        "sena": "Asco (Náuseas)",
+        "esperado": "PAC-S-07",
+        "masParecida": "PAC-S-07",
+        "distancia": 1.932,
+        "margen": 0.797,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_nauseas_FuhKrTiwU70.mp4",
+        "fuente": "IZT",
+        "sena": "Nauseas",
+        "esperado": "PAC-S-07",
+        "masParecida": "PAC-R-01",
+        "distancia": 2.002,
+        "margen": 0.901,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_nauseas_Hdu7TQqdUlk.mp4",
+        "fuente": "IZT",
+        "sena": "Nauseas",
+        "esperado": "PAC-S-07",
+        "masParecida": "PAC-S-07",
+        "distancia": 1.932,
+        "margen": 0.984,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IND_cansancio_DVBQ0brVcSo.mp4",
+        "fuente": "IND",
+        "sena": "Cansancio",
+        "esperado": "PAC-S-08",
+        "masParecida": "PAC-S-08",
+        "distancia": 2.295,
+        "margen": 0.808,
+        "resultado": "rechazo"
+      },
+      {
+        "archivo": "IZT_cansado_NPNwh1YSuiI.mp4",
+        "fuente": "IZT",
+        "sena": "Cansado",
+        "esperado": "PAC-S-08",
+        "masParecida": "PAC-S-08",
+        "distancia": 2.295,
+        "margen": 0.946,
+        "resultado": "rechazo"
+      }
+    ]
+  },
+  "desconocidasCalibracion": {
+    "total": 39,
+    "falsasAceptaciones": 0,
+    "filas": [
+      {
+        "archivo": "IND_1_zcd4GfYz-fA.mp4",
+        "fuente": "IND",
+        "sena": "1",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.646,
+        "margen": 0.892,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_2_1Fau1Nh7rPY.mp4",
+        "fuente": "IND",
+        "sena": "2",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.537,
+        "margen": 0.871,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_4_wedKjwNQYgw.mp4",
+        "fuente": "IND",
+        "sena": "4",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.568,
+        "margen": 0.849,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_6_yQ5GJzVxUYQ.mp4",
+        "fuente": "IND",
+        "sena": "6",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.728,
+        "margen": 0.904,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_8_QzkfbPIdXAI.mp4",
+        "fuente": "IND",
+        "sena": "8",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.647,
+        "margen": 0.802,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_ahora_rFQFK-dOgpA.mp4",
+        "fuente": "IND",
+        "sena": "Ahora",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.915,
+        "margen": 0.909,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_ayudar_bOoOX_IsWpU.mp4",
+        "fuente": "IND",
+        "sena": "Ayudar",
+        "esperado": null,
+        "masParecida": "PAC-S-07",
+        "distancia": 3.162,
+        "margen": 0.994,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_dolor_61NSOq-fpL8.mp4",
+        "fuente": "IND",
+        "sena": "Dolor",
+        "esperado": null,
+        "masParecida": "PAC-S-04",
+        "distancia": 1.502,
+        "margen": 0.92,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_enviar-1_sFAmiMgcxHQ.mp4",
+        "fuente": "IND",
+        "sena": "Enviar (1)",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.879,
+        "margen": 0.862,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_enviar-3_OYIDHdXX5PM.mp4",
+        "fuente": "IND",
+        "sena": "Enviar (3)",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.007,
+        "margen": 0.887,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_gracias_jAvN4wvvpgY.mp4",
+        "fuente": "IND",
+        "sena": "Gracias",
+        "esperado": null,
+        "masParecida": "PAC-S-07",
+        "distancia": 2.062,
+        "margen": 0.907,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_mareos_RUBKTdIwbP0.mp4",
+        "fuente": "IND",
+        "sena": "Mareos",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 2.226,
+        "margen": 0.833,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_mucho_aVhLLKcJuTI.mp4",
+        "fuente": "IND",
+        "sena": "Mucho",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 2.717,
+        "margen": 0.974,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_poco-2_kLHFuNYu5-U.mp4",
+        "fuente": "IND",
+        "sena": "Poco (2)",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 1.101,
+        "margen": 0.705,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_sintomas_wlBs2mdwwio.mp4",
+        "fuente": "IND",
+        "sena": "Síntomas",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 1.153,
+        "margen": 0.936,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_a-veces_vxv9gqp1Fps.mp4",
+        "fuente": "IZT",
+        "sena": "A veces",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.751,
+        "margen": 0.8,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_ahora_b4_B0Kakodo.mp4",
+        "fuente": "IZT",
+        "sena": "Ahora",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 3.8,
+        "margen": 0.999,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_analgesico_UaE0gajgbBU.mp4",
+        "fuente": "IZT",
+        "sena": "Analgésico",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.935,
+        "margen": 0.762,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_antier_M1HbrnY_krg.mp4",
+        "fuente": "IZT",
+        "sena": "Antier",
+        "esperado": null,
+        "masParecida": "PAC-R-02",
+        "distancia": 1.961,
+        "margen": 0.835,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_ayudar_GE-aA8pjlRs.mp4",
+        "fuente": "IZT",
+        "sena": "Ayudar",
+        "esperado": null,
+        "masParecida": "PAC-R-02",
+        "distancia": 2.795,
+        "margen": 0.975,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_cuales-son-tus-sintomas_837wg8XVV_E.mp4",
+        "fuente": "IZT",
+        "sena": "¿Cuáles son tus síntomas?",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.453,
+        "margen": 0.867,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_descansar_wj2JzqHEbd0.mp4",
+        "fuente": "IZT",
+        "sena": "Descansar",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 3.426,
+        "margen": 0.946,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_dolor-de-garganta_MfcVpEjklko.mp4",
+        "fuente": "IZT",
+        "sena": "Dolor de garganta",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 2.402,
+        "margen": 0.917,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_entender_ZE5UhgNLk7I.mp4",
+        "fuente": "IZT",
+        "sena": "Entender",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.301,
+        "margen": 0.849,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_eres-alergico-a-a-algun-medicamento_l8W3yNtDKTc.mp4",
+        "fuente": "IZT",
+        "sena": "¿Eres alérgico/a a algún medicamento?",
+        "esperado": null,
+        "masParecida": "PAC-S-01",
+        "distancia": 2.42,
+        "margen": 0.99,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_estas-tomando-medicamento_G4dsxVz47wU.mp4",
+        "fuente": "IZT",
+        "sena": "¿Estás tomando medicamento?",
+        "esperado": null,
+        "masParecida": "PAC-S-04",
+        "distancia": 2.097,
+        "margen": 0.992,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_hola_9MDuO3qpqOI.mp4",
+        "fuente": "IZT",
+        "sena": "Hola",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.595,
+        "margen": 0.886,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_interprete_5kdPzH8J5-E.mp4",
+        "fuente": "IZT",
+        "sena": "Interprete",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.012,
+        "margen": 0.939,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_mareo_m9nsZzmyQCE.mp4",
+        "fuente": "IZT",
+        "sena": "Mareo",
+        "esperado": null,
+        "masParecida": "PAC-R-01",
+        "distancia": 1.516,
+        "margen": 0.999,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_medicamento_zluP4dzBD4A.mp4",
+        "fuente": "IZT",
+        "sena": "Medicamento",
+        "esperado": null,
+        "masParecida": "PAC-R-01",
+        "distancia": 2.102,
+        "margen": 0.932,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_mucho_MnUZLrW2XyY.mp4",
+        "fuente": "IZT",
+        "sena": "Mucho",
+        "esperado": null,
+        "masParecida": "PAC-S-01",
+        "distancia": 3.664,
+        "margen": 0.924,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_no-entender_CbeauWxL3k8.mp4",
+        "fuente": "IZT",
+        "sena": "No entender",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.987,
+        "margen": 0.734,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_poco-forma-1-y-2_E91OA2j1RTI.mp4",
+        "fuente": "IZT",
+        "sena": "Poco (forma 1 y 2)",
+        "esperado": null,
+        "masParecida": "PAC-R-01",
+        "distancia": 2.062,
+        "margen": 0.987,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_que-sientes_K9IWDHFu1e4.mp4",
+        "fuente": "IZT",
+        "sena": "¿Qué sientes?",
+        "esperado": null,
+        "masParecida": "PAC-S-01",
+        "distancia": 3.459,
+        "margen": 0.977,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_quitar_7bpyKu2iVOQ.mp4",
+        "fuente": "IZT",
+        "sena": "Quitar",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.266,
+        "margen": 0.761,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_semana_LgNz_-qDesc.mp4",
+        "fuente": "IZT",
+        "sena": "Semana",
+        "esperado": null,
+        "masParecida": "PAC-R-01",
+        "distancia": 2.495,
+        "margen": 0.975,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_tiempo_z5YwJbqPhIc.mp4",
+        "fuente": "IZT",
+        "sena": "Tiempo",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.293,
+        "margen": 0.742,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_vitaminas_QZppkNvbqxU.mp4",
+        "fuente": "IZT",
+        "sena": "Vitaminas",
+        "esperado": null,
+        "masParecida": "PAC-R-02",
+        "distancia": 1.611,
+        "margen": 0.984,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_vomitaste_zAiENF3ITCc.mp4",
+        "fuente": "IZT",
+        "sena": "¿Vomitaste?",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.209,
+        "margen": 0.818,
+        "resultado": "rechazo-correcto"
+      }
+    ]
+  },
+  "desconocidasPrueba": {
+    "total": 38,
+    "falsasAceptaciones": 0,
+    "filas": [
+      {
+        "archivo": "IND_10_EabGQcQOTQM.mp4",
+        "fuente": "IND",
+        "sena": "10",
+        "esperado": null,
+        "masParecida": "PAC-R-02",
+        "distancia": 1.97,
+        "margen": 0.954,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_3_EYEMXK7Eeq0.mp4",
+        "fuente": "IND",
+        "sena": "3",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.561,
+        "margen": 0.905,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_5_d3MvmWXK3HE.mp4",
+        "fuente": "IND",
+        "sena": "5",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.88,
+        "margen": 0.852,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_7_ynp7TLZIEYc.mp4",
+        "fuente": "IND",
+        "sena": "7",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.74,
+        "margen": 0.714,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_9_MgnvumQM-cQ.mp4",
+        "fuente": "IND",
+        "sena": "9",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.514,
+        "margen": 0.94,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_alergia_i3Xcbwg4dls.mp4",
+        "fuente": "IND",
+        "sena": "Alergia",
+        "esperado": null,
+        "masParecida": "PAC-S-04",
+        "distancia": 1.857,
+        "margen": 0.995,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_consulta-medica_e9O3KT-_tyU.mp4",
+        "fuente": "IND",
+        "sena": "Consulta Médica",
+        "esperado": null,
+        "masParecida": "PAC-S-08",
+        "distancia": 7.089,
+        "margen": 0.996,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_entender_f7RzPWBSEoU.mp4",
+        "fuente": "IND",
+        "sena": "Entender",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 2.895,
+        "margen": 0.994,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_enviar-2_fNQcIivLr58.mp4",
+        "fuente": "IND",
+        "sena": "Enviar (2)",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.016,
+        "margen": 0.969,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_esperar_S_yttzy0Ppk.mp4",
+        "fuente": "IND",
+        "sena": "Esperar",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.302,
+        "margen": 0.881,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_interprete_mE4MtejtVaM.mp4",
+        "fuente": "IND",
+        "sena": "Intérprete",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.603,
+        "margen": 0.725,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_medicamento_-na_HejIPyE.mp4",
+        "fuente": "IND",
+        "sena": "Medicamento",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 0.865,
+        "margen": 0.581,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_poco-1_-jQz3JjCC_s.mp4",
+        "fuente": "IND",
+        "sena": "Poco (1)",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 2.147,
+        "margen": 0.845,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_por-favor_M5FowymHDx8.mp4",
+        "fuente": "IND",
+        "sena": "Por favor",
+        "esperado": null,
+        "masParecida": "PAC-S-07",
+        "distancia": 2.083,
+        "margen": 0.821,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IND_vomito_Hy5_QZdCH-I.mp4",
+        "fuente": "IND",
+        "sena": "Vómito",
+        "esperado": null,
+        "masParecida": "PAC-S-07",
+        "distancia": 2.249,
+        "margen": 0.938,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_acabar__Q3cn5IwIpU.mp4",
+        "fuente": "IZT",
+        "sena": "Acabar",
+        "esperado": null,
+        "masParecida": "PAC-S-08",
+        "distancia": 2.306,
+        "margen": 0.902,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_alergia_VN7oU-16qg8.mp4",
+        "fuente": "IZT",
+        "sena": "Alergia",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.121,
+        "margen": 0.896,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_antibiotico_wM5SuZZY09I.mp4",
+        "fuente": "IZT",
+        "sena": "Antibiótico",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2,
+        "margen": 0.77,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_ayer_5o85hwZxwx4.mp4",
+        "fuente": "IZT",
+        "sena": "Ayer",
+        "esperado": null,
+        "masParecida": "PAC-R-01",
+        "distancia": 1.135,
+        "margen": 0.796,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_cambiar_IW3RD5NzVP8.mp4",
+        "fuente": "IZT",
+        "sena": "Cambiar",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.628,
+        "margen": 0.907,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_cuando_203_kFKIaZU.mp4",
+        "fuente": "IZT",
+        "sena": "¿Cuándo?",
+        "esperado": null,
+        "masParecida": "PAC-R-02",
+        "distancia": 1.492,
+        "margen": 0.717,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_dolor_LrNHMvclyr0.mp4",
+        "fuente": "IZT",
+        "sena": "Dolor",
+        "esperado": null,
+        "masParecida": "PAC-S-08",
+        "distancia": 4.492,
+        "margen": 0.947,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_donde-te-duele_fEpyoeFYeRU.mp4",
+        "fuente": "IZT",
+        "sena": "¿Dónde te duele?",
+        "esperado": null,
+        "masParecida": "PAC-S-08",
+        "distancia": 3.221,
+        "margen": 0.932,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_equivocar_9p8SYLZzv6E.mp4",
+        "fuente": "IZT",
+        "sena": "Equivocar",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.746,
+        "margen": 0.895,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_estas-mareado-a_Y3O7HFJH8gs.mp4",
+        "fuente": "IZT",
+        "sena": "¿Estás mareado/a?",
+        "esperado": null,
+        "masParecida": "PAC-R-01",
+        "distancia": 1.396,
+        "margen": 1,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_gracias_bQMnHvFg0UU.mp4",
+        "fuente": "IZT",
+        "sena": "Gracias",
+        "esperado": null,
+        "masParecida": "PAC-S-08",
+        "distancia": 2.517,
+        "margen": 0.93,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_hoy_gGVDwWLKcoI.mp4",
+        "fuente": "IZT",
+        "sena": "Hoy",
+        "esperado": null,
+        "masParecida": "PAC-S-01",
+        "distancia": 2.741,
+        "margen": 0.956,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_jarabe-medicamento_Gjnj8mQtrck.mp4",
+        "fuente": "IZT",
+        "sena": "Jarabe (medicamento)",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 2.091,
+        "margen": 0.993,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_mareo_zAgsjNZzzE8.mp4",
+        "fuente": "IZT",
+        "sena": "Mareo",
+        "esperado": null,
+        "masParecida": "PAC-R-01",
+        "distancia": 1.544,
+        "margen": 0.923,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_mes_5U5qhTKG-ws.mp4",
+        "fuente": "IZT",
+        "sena": "Mes",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 2.072,
+        "margen": 0.916,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_necesitas-interprete_z2a7sdMnDu0.mp4",
+        "fuente": "IZT",
+        "sena": "¿Necesitas intérprete?",
+        "esperado": null,
+        "masParecida": "PAC-R-01",
+        "distancia": 1.759,
+        "margen": 0.975,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_nunca_5ECyIBijkgM.mp4",
+        "fuente": "IZT",
+        "sena": "Nunca",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.763,
+        "margen": 0.875,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_por-favor_z2wR9JNBXXI.mp4",
+        "fuente": "IZT",
+        "sena": "Por favor",
+        "esperado": null,
+        "masParecida": "PAC-S-01",
+        "distancia": 2.553,
+        "margen": 0.856,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_que-tanto-te-duele_d444MtGdCPs.mp4",
+        "fuente": "IZT",
+        "sena": "¿Qué tanto te duele?",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 2.51,
+        "margen": 0.993,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_revision-general-medica_OBmna7wmyOo.mp4",
+        "fuente": "IZT",
+        "sena": "Revisión general médica",
+        "esperado": null,
+        "masParecida": "PAC-R-03",
+        "distancia": 1.954,
+        "margen": 0.967,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_te-duele-mucho_iMhmzcHdj9I.mp4",
+        "fuente": "IZT",
+        "sena": "¿Te duele mucho?",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 3.066,
+        "margen": 0.98,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_tienes-dolor_1Eo-ltr6Wg4.mp4",
+        "fuente": "IZT",
+        "sena": "¿Tienes dolor?",
+        "esperado": null,
+        "masParecida": "PAC-S-08",
+        "distancia": 3.882,
+        "margen": 0.997,
+        "resultado": "rechazo-correcto"
+      },
+      {
+        "archivo": "IZT_vomitar_mg9MOO4DtTE.mp4",
+        "fuente": "IZT",
+        "sena": "Vomitar",
+        "esperado": null,
+        "masParecida": "PAC-S-05",
+        "distancia": 2.239,
+        "margen": 0.829,
+        "resultado": "rechazo-correcto"
+      }
+    ]
+  }
+}

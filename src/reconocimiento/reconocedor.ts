@@ -27,6 +27,11 @@ export interface Reconocedor {
    * Solo puede existir con la política `desarrollo` y la pantalla lo marca siempre.
    */
   readonly simulado: boolean;
+  /**
+   * `true` = reconoce, pero es un prototipo NO validado (p. ej. con videos web y sin personas
+   * Sordas). Solo con la política `desarrollo`; la pantalla lo marca siempre.
+   */
+  readonly experimental?: boolean;
   /** Entradas que el reconocedor cubre de verdad (puede ser menos que el catálogo, §6.3). */
   readonly vocabulario: readonly string[];
   reconocer(clip: ClipTemporal, senal: AbortSignal): Promise<ResultadoReconocimiento>;

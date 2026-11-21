@@ -3,6 +3,7 @@ import { buscarEntrada, recursoDeEntrada, recursoDeSistema, sePuedeEnviar } from
 import type { Catalogo, PoliticaRecursos, Seleccion, ViaPaciente } from '../../nucleo/tipos';
 import { IconoCheck, IconoChevron, IconoGlobo, IconoMatraz, IconoVideo, IconoX } from '../comunes/Iconos';
 import { RecursoLSM } from '../comunes/RecursoLSM';
+import { EtiquetaExperimental } from './PanelCaptura';
 import { tituloDe } from '../comunes/textos';
 import { SelectorIntensidad } from './SelectorIntensidad';
 
@@ -11,6 +12,9 @@ interface Props {
   via: ViaPaciente;
   /** El candidato de la cámara lo eligió el simulador (modo desarrollo), no un reconocedor real. */
   simulado?: boolean;
+  /** El candidato lo dio el reconocedor experimental (no validado), con su detalle para desarrollo. */
+  experimental?: boolean;
+  detalleExperimental?: string | null;
   catalogo: Catalogo;
   politica: PoliticaRecursos;
   selecciones: Seleccion[];
@@ -54,6 +58,7 @@ export function RevisionPaciente(p: Props) {
               <IconoMatraz /> Resultado simulado · no es reconocimiento real
             </span>
           )}
+          {p.experimental && <EtiquetaExperimental detalle={p.detalleExperimental} />}
         </p>
       )}
       <div className="dos-columnas">

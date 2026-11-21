@@ -118,6 +118,7 @@ export function PanelProcesando(props: {
         <p className="captura__privacidad">Nada se envía al médico hasta que confirmes.</p>
         <BotonCancelar catalogo={catalogo} politica={politica} onCancelar={props.onCancelar} />
         {esSimulado(reconocedor) && <OperadorSimulado reconocedor={reconocedor} capturaId={props.capturaId} catalogo={catalogo} />}
+        {reconocedor?.experimental && <EtiquetaExperimental />}
       </div>
     </div>
   );
@@ -125,6 +126,8 @@ export function PanelProcesando(props: {
 
 /** Aviso accesible de expresión desconocida con reintento o catálogo (RF-05). */
 export function PanelNoReconocido(props: {
+  experimental?: boolean;
+  detalleExperimental?: string | null;
   catalogo: Catalogo;
   politica: PoliticaRecursos;
   onReintentar: () => void;
@@ -146,6 +149,7 @@ export function PanelNoReconocido(props: {
           <h3 className="tarjeta-crema__titulo">No reconocimos tu seña</h3>
           <p>Puede que no esté en el catálogo o que no se haya visto bien. No se envió nada.</p>
         </div>
+        {props.experimental && <EtiquetaExperimental detalle={props.detalleExperimental} />}
         <button type="button" className="boton boton--primario boton--alto" onClick={props.onReintentar}>
           <IconoReintentar /> Intentar de nuevo
         </button>
@@ -212,6 +216,21 @@ function BotonCancelar(props: { catalogo: Catalogo; politica: PoliticaRecursos; 
       />
       <IconoX /> Cancelar
     </button>
+  );
+}
+
+/**
+ * ⚠ Solo modo desarrollo. Marca del reconocedor EXPERIMENTAL (reconoce, pero no está validado),
+ * con el detalle técnico del último resultado (distancia, umbral y tiempo de respuesta).
+ */
+export function EtiquetaExperimental({ detalle }: { detalle?: string | null }) {
+  return (
+    <span className="experimental" data-reconocedor="experimental">
+      <span className="chip chip--prueba">
+        <IconoMatraz /> Reconocedor experimental · no validado
+      </span>
+      {detalle && <span className="experimental__detalle">{detalle}</span>}
+    </span>
   );
 }
 

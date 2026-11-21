@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { mediapipeSinInternet } from './vite.mediapipe.ts';
 
 /**
  * Política de contenido de la versión compilada (la que carga Electron): solo código propio,
@@ -8,11 +9,13 @@ import react from '@vitejs/plugin-react';
  */
 const CSP = [
   "default-src 'self'",
-  "script-src 'self'",
+  // 'wasm-unsafe-eval': solo permite compilar WebAssembly (MediaPipe del reconocedor experimental), no eval de JS.
+  "script-src 'self' 'wasm-unsafe-eval'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   // Videos en LSM instalados en `public/recursos/` (RNF-03). Nunca desde internet.
-  "media-src 'self'",
+  // `blob:`: el reconocedor experimental lee el clip de la cámara que está en memoria (nunca en disco).
+  "media-src 'self' blob:",
   "font-src 'self' data:",
   "connect-src 'self' ws:",
   "object-src 'none'",
@@ -34,7 +37,7 @@ function politicaDeContenido(): Plugin {
 // `base: './'`: Electron carga `dist/index.html` desde disco.
 export default defineConfig({
   base: './',
-  plugins: [react(), politicaDeContenido()],
+  plugins: [react(), politicaDeContenido(), mediapipeSinInternet()],
   server: { host: '127.0.0.1', port: 5173, strictPort: true },
   preview: { host: '127.0.0.1', port: 4173, strictPort: true },
   test: {

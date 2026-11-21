@@ -20,6 +20,8 @@ capturas/
 # Videos candidatos descargados de Iztacala Enseña e Indiscapacidad: sin permiso de redistribución.
 # Se regeneran con recursos-candidatos/descargar.py; README, procedencia e índices sí se versionan.
 recursos-candidatos/videos/
+# Puntos de hombros y manos extraídos de esos videos (se regeneran con `npm run herramienta-puntos`).
+recursos-candidatos/puntos/
 
 # Entorno local
 .env

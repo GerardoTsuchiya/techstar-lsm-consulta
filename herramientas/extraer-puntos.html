@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Extracción de puntos · reconocedor experimental</title>
+    <style>
+      body { font: 15px/1.5 system-ui, sans-serif; margin: 24px; background: #fcf9f2; color: #1f2a24; }
+      h1 { font-size: 20px; margin: 0 0 4px; }
+      .aviso { background: #fff3d6; border: 1px solid #e0b44a; padding: 8px 12px; border-radius: 8px; max-width: 70ch; }
+      button { font: inherit; padding: 6px 14px; margin-right: 8px; }
+      table { border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+      td, th { border-bottom: 1px solid #ddd; padding: 2px 8px; text-align: left; }
+      .error { color: #a12; }
+    </style>
+  </head>
+  <body>
+    <h1>Extracción de puntos · reconocedor experimental (solo equipo)</h1>
+    <p class="aviso">
+      Lee los videos de <code>recursos-candidatos/videos/</code> (permiso de entrenamiento de sus fuentes) y guarda solo
+      los puntos de hombros y manos en <code>recursos-candidatos/puntos/</code>, ignorada por git. Nunca usa capturas de
+      consulta (RF-18).
+    </p>
+    <p>
+      <label><input type="checkbox" id="repetir" /> Repetir los ya extraídos</label>
+    </p>
+    <p><button id="iniciar">Extraer</button> <span id="estado" role="status"></span></p>
+    <table>
+      <thead><tr><th>Video</th><th>Uso</th><th>Modo</th><th>Cuadros</th><th>Con manos</th><th>Con hombros</th><th>Segundos</th></tr></thead>
+      <tbody id="filas"></tbody>
+    </table>
+    <script type="module" src="/src/herramientas/extraerPuntos.ts"></script>
+  </body>
+</html>

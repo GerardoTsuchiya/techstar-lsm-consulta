@@ -134,7 +134,7 @@ function crearVentana() {
 
   const modoVista = { medico: 'medico-red', paciente: 'paciente-red', demo: 'demo' }[args.modo];
   void ventana.loadFile(path.join(__dirname, '..', 'dist', 'index.html'), {
-    query: { modo: modoVista, recursos: args.politica },
+    query: { modo: modoVista, recursos: args.politica, reconocedor: args.reconocedor },
   });
   ventana.on('closed', () => {
     ventana = null;

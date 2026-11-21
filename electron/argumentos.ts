@@ -1,4 +1,5 @@
 import type { PoliticaRecursos } from '../src/nucleo/tipos';
+import { leerTipoReconocedor, type TipoReconocedor } from '../src/reconocimiento/tipoReconocedor';
 import { PUERTO_PREDETERMINADO } from '../src/transporte/protocoloRed';
 
 export type ModoApp = 'medico' | 'paciente' | 'demo';
@@ -9,11 +10,13 @@ export interface Argumentos {
   puerto: number;
   /** Escuchar solo en 127.0.0.1 (pruebas con dos procesos en una computadora). */
   soloLocal: boolean;
+  /** Reconocedor del modo desarrollo: simulador (por omisión) o experimental no validado. */
+  reconocedor: TipoReconocedor;
 }
 
 /**
  * Lee la línea de órdenes: `--modo=medico|paciente|demo --recursos=desarrollo|producto
- * --puerto=47100 --solo-local`. Ante un valor desconocido elige la opción segura.
+ * --puerto=47100 --solo-local --reconocedor=simulado|experimental`. Ante un valor desconocido elige la opción segura.
  */
 export function leerArgumentos(argv: readonly string[]): Argumentos {
   const valor = (nombre: string) => {
@@ -27,5 +30,6 @@ export function leerArgumentos(argv: readonly string[]): Argumentos {
     politica: valor('recursos') === 'desarrollo' ? 'desarrollo' : 'producto',
     puerto: Number.isInteger(puerto) && puerto > 0 && puerto < 65536 ? puerto : PUERTO_PREDETERMINADO,
     soloLocal: argv.includes('--solo-local'),
+    reconocedor: leerTipoReconocedor(valor('reconocedor')),
   };
 }

@@ -7,8 +7,10 @@ MVP académico de *Aseguramiento de la Calidad del Software* (2026-2).
 conexión entre dos laptops por Wi-Fi local con vinculación, canal cifrado y recuperación ante caídas de red.
 Probada en **una** computadora con dos procesos; la prueba con **dos laptops reales** está pendiente
 ([Docs/PRUEBA_DOS_LAPTOPS.md](Docs/PRUEBA_DOS_LAPTOPS.md)). **Etapa C, primera parte:** captura con la cámara de
-la laptop del paciente («Captura en LSM», «Listo», «Cancelar») y un **reconocedor simulado** que *no* reconoce LSM
-(solo en modo desarrollo); el modelo real queda pendiente (sección [Captura en LSM](#captura-en-lsm-etapa-c)).
+la laptop del paciente («Captura en LSM», «Listo», «Cancelar»). **Etapa C, segunda parte:** un **reconocedor
+experimental, no validado** de 8 señas (MediaPipe + DTW con plantillas de videos web) y el reconocedor simulado, ambos
+solo en modo desarrollo. El experimental rechaza lo que no conoce, pero casi no reconoce a una persona nueva
+([Docs/RECONOCEDOR.md](Docs/RECONOCEDOR.md); sección [Captura en LSM](#captura-en-lsm-etapa-c)).
 Detalle, pruebas y pendientes en [Docs/ESTADO_ACTUAL.md](Docs/ESTADO_ACTUAL.md).
 
 > **Catálogo ficticio y recursos de prueba.** Ningún recurso está validado en LSM. Los marcadores con la etiqueta
@@ -64,11 +66,12 @@ Abrir **http://127.0.0.1:5173**. El servidor de desarrollo solo escucha en esta 
 |---|---|
 | `npm run electron:medico` | Compila y abre la app en modo **médico**: coordinador + servidor de red en el puerto 47100 |
 | `npm run electron:paciente` | Compila y abre la app en modo **paciente**: pantalla para vincularse con el médico |
-| `npm run electron:demo` | Compila y abre las dos interfaces en una pantalla (sin red). **Respaldo** |
+| `npm run electron:demo` | Compila y abre las dos interfaces en una pantalla (sin red) con el **reconocedor experimental**. **Respaldo** |
+| `npm run electron:demo-simulado` | Igual, pero con el reconocedor **simulado** (una persona elige el resultado) |
 | `npm run electron:medico-local` | Médico escuchando solo en 127.0.0.1 (pruebas con dos procesos en una computadora) |
 | `npm run info-equipo` | Muestra sistema operativo, arquitectura y versión de Node (para registrar las laptops) |
 | `npm run dev` | Servidor de desarrollo en http://127.0.0.1:5173 (modo navegador) |
-| `npm test` | Ejecuta las pruebas automáticas (127) |
+| `npm test` | Ejecuta las pruebas automáticas (152) |
 | `npm run typecheck` | Revisa los tipos de TypeScript (vistas y proceso principal de Electron) |
 | `npm run build` | Revisa los tipos y genera la versión de producción en `dist/` |
 | `npm run build:electron` | Genera `dist/` y el proceso principal y preload de Electron en `dist-electron/` |
@@ -76,11 +79,14 @@ Abrir **http://127.0.0.1:5173**. El servidor de desarrollo solo escucha en esta 
 | `npm run validar-catalogo` | Revisa `catalogo/*.json`, los archivos de `public/recursos/` y que el inventario esté al día |
 | `npm run docs-recursos` | Regenera [Docs/RECURSOS_LSM.md](Docs/RECURSOS_LSM.md) a partir del catálogo |
 | `npm run check` | Tipos, catálogo, pruebas y compilaciones (lo que hay que correr antes de entregar) |
+| `npm run herramienta-puntos` | Herramienta del equipo en http://127.0.0.1:5174/herramientas/extraer-puntos.html: extrae los puntos de los videos de `recursos-candidatos/videos/` ([Docs/RECONOCEDOR.md](Docs/RECONOCEDOR.md)) |
+| `npm run evaluar-reconocedor` | Entrena y evalúa el reconocedor experimental; escribe `public/modelos/plantillas-lsm.json` |
 
 Opciones de la app de escritorio (después de `--`, p. ej. `npm run electron:medico -- --puerto=47200`):
 `--recursos=desarrollo|producto` (sin la opción o con otro valor: producto), `--puerto=N` (médico; el paciente lo
-escribe junto a la IP), `--solo-local`. Los scripts `electron:medico` y `electron:demo` ya usan `--recursos=desarrollo`
-porque todavía no hay recursos validados.
+escribe junto a la IP), `--solo-local`, `--reconocedor=simulado|experimental` (solo cuenta en modo desarrollo; sin la
+opción, el simulador). Los scripts `electron:medico` y `electron:demo` ya usan `--recursos=desarrollo` porque todavía no
+hay recursos validados.
 
 ## Cómo vincular las dos laptops
 
@@ -145,10 +151,13 @@ una computadora:** `npm run electron:medico-local` y `npm run electron:paciente`
 
 ## Captura en LSM (etapa C)
 
-> **El reconocimiento es SIMULADO.** No hay modelo ni muestras autorizadas todavía. En modo desarrollo, después de
-> «Listo» aparece un recuadro ámbar «Simulador · no es reconocimiento real» donde **quien dirige la prueba** elige
-> «reconocido como…» o «desconocido». El clip no se analiza. En el **flujo de producto** el simulador no existe:
-> «Captura en LSM» aparece deshabilitado con «El reconocimiento en LSM todavía no está disponible».
+> **Dos reconocedores, solo en modo desarrollo.** El **experimental** (`npm run electron:demo`) analiza el clip con
+> MediaPipe y lo compara con plantillas de 8 señas sacadas de videos web: Dolor de cabeza, Fiebre, Tos, Náuseas,
+> Cansado, Sí, No y No sé. **No está validado**: con una persona nueva casi siempre responde «No reconocimos tu seña»
+> (resultados en [Docs/RECONOCEDOR.md](Docs/RECONOCEDOR.md)). El **simulador** (`npm run electron:demo-simulado`) no
+> analiza el clip: **quien dirige la prueba** elige «reconocido como…» o «desconocido» en un recuadro ámbar. En el
+> **flujo de producto** no hay ninguno: «Captura en LSM» aparece deshabilitado con «El reconocimiento en LSM todavía no
+> está disponible».
 
 **Dónde funciona la cámara.** En la app de escritorio (`npm run electron:demo` o `electron:paciente`): Electron concede
 **solo la cámara, sin micrófono**, a su propia ventana; el modo médico no tiene cámara. En Windows, además, debe estar
@@ -162,11 +171,16 @@ En el navegador (`npm run dev`) el navegador pide permiso; el panel del navegado
 2. **Paciente:** «Captura en LSM». El recuadro del video muestra «● Cámara activa» y el tiempo (máximo 15 s).
    *Comprobar:* el médico no ve nada.
 3. **«Cancelar»:** la cámara se apaga y se vuelve al catálogo; no se pide reconocimiento.
-4. Otra vez «Captura en LSM» → **«Listo»:** «Interpretando tu seña… La cámara ya está apagada.» En el recuadro del
-   simulador, elegir «Fiebre» → «Simular «reconocido»». **Paciente:** «Esto es lo que entendimos de tu seña» con la
-   etiqueta «Resultado simulado». Confirmar → el médico recibe «Tengo fiebre.» marcado «· cámara».
-5. «Captura en LSM» → «Listo» → «Simular «desconocido»»: aviso «No reconocimos tu seña» con su recurso (de prueba),
-   «Intentar de nuevo» o «Elegir lo que sientes».
+4. Otra vez «Captura en LSM», hacer una seña del vocabulario de frente, con hombros y manos a la vista, y **«Listo»:**
+   «Interpretando tu seña… La cámara ya está apagada.» y la marca «Reconocedor experimental · no validado». En unos
+   segundos (más o menos la mitad de lo que duró el clip):
+   - si la reconoce, **Paciente:** «Esto es lo que entendimos de tu seña», la marca experimental, la distancia, el
+     umbral y el tiempo. Confirmar → el médico recibe el texto marcado «· cámara»;
+   - si no, aviso «No reconocimos tu seña» con el motivo («no se parece lo suficiente…», «no se vieron las manos»…),
+     «Intentar de nuevo» o «Elegir lo que sientes». **Es el resultado más probable** y es el comportamiento correcto
+     (RF-05: nunca adivinar).
+5. Una seña que no está en el vocabulario (p. ej. «Gracias») debe terminar en «No reconocimos tu seña».
+   Con `electron:demo-simulado`, los pasos 4 y 5 se hacen eligiendo el resultado en el recuadro del simulador.
 6. Cierre durante el procesamiento: «Listo» y, sin elegir resultado, el médico pulsa «Finalizar consulta» →
    «Terminar y borrar». La pantalla del paciente se vacía; la nueva consulta empieza sin nada pendiente.
 
@@ -282,7 +296,7 @@ electron/        App de escritorio (proceso principal de Electron, Node)
   main.ts          Modos, ventana aislada, permisos, IPC con la vista del médico
   permisos.ts      Qué permiso se concede a la vista (solo cámara sin micrófono, modos paciente y demo)
   preload.ts       Puente mínimo y aislado hacia la vista (window.techstar)
-  argumentos.ts    Lee --modo, --recursos, --puerto, --solo-local
+  argumentos.ts    Lee --modo, --recursos, --puerto, --solo-local, --reconocedor
   servidor/        Servidor WebSocket que envuelve al coordinador (laptop del médico)
 src/
   nucleo/        Reglas de la sesión (TypeScript puro, sin React ni red)
@@ -290,12 +304,15 @@ src/
   transporte/    Cómo viajan los mensajes entre vistas y coordinador
   cliente/       Conecta una vista con la sesión (hooks de React)
   camara/        Adaptador de cámara: interfaz y cámara real del navegador/Electron (etapa C)
-  reconocimiento/ Interfaz del reconocedor y reconocedor SIMULADO de desarrollo (etapa C)
+  reconocimiento/ Interfaz del reconocedor, reconocedor SIMULADO y experimental/ (MediaPipe + DTW, no validado)
+  herramientas/  Página de la herramienta de extracción de puntos (solo equipo, no es parte de la app)
   vistas/        Pantallas: paciente, médico y piezas comunes
   modos/         Modos de inicio (demostración, médico, paciente y los de red) y pantalla de inicio
 catalogo/        Datos del catálogo (entradas y recursos), editables sin tocar código
 public/recursos/ Archivos de los recursos en LSM (videos o imágenes), instalados con la app
-scripts/         validar-catalogo y docs-recursos (Node)
+public/modelos/  Modelos de MediaPipe y plantillas del reconocedor experimental (sin internet)
+recursos-candidatos/ Procedencia, inventario y evaluación del reconocedor (los videos y puntos no se versionan)
+scripts/         validar-catalogo, docs-recursos y evaluar-reconocedor (Node)
 Docs/            Documentos de referencia (SRS, lista), estado actual, inventario de recursos y prueba con dos laptops
 ```
 
@@ -341,10 +358,15 @@ Docs/            Documentos de referencia (SRS, lista), estado actual, inventari
   «desconocido»). Aquí se conectará el modelo real. `reconocedorPorPolitica` da el simulador solo en modo desarrollo.
 - **`reconocimiento/reconocedorSimulado.ts`**: **no reconoce LSM**: espera a que una persona elija el resultado. Si se
   intenta crear en el flujo de producto, falla a propósito.
+- **`reconocimiento/experimental/`**: el reconocedor experimental. `extractorMediaPipe.ts` reproduce el clip y saca los
+  puntos de hombros y manos; `caracteristicas.ts` los vuelve números que no dependen del tamaño ni de la posición en la
+  imagen; `clasificador.ts` busca la plantilla más parecida (DTW) y **rechaza** si no se parece lo suficiente o si dos
+  señas quedan casi igual; `reconocedorExperimental.ts` lo une detrás del contrato del reconocedor (solo en modo
+  desarrollo). `fabrica.ts` elige simulador o experimental.
 - **`vistas/paciente/`**: catálogo paginado con tarjetas «Elegir/Elegido», revisión con «¿Cuánto te duele?»,
   confirmar o descartar, pantalla «Mensaje del médico» con «No entendí» y la conversación. `useCaptura.ts` une la
   cámara y el reconocedor con los pasos del turno; `PanelCaptura.tsx` dibuja «Captura en LSM», «Interpretando…», el
-  aviso de seña no reconocida y el recuadro del simulador.
+  aviso de seña no reconocida, el recuadro del simulador y la marca del reconocedor experimental.
 - **`vistas/medico/`**: «Mensaje del paciente», avisos de «No entendí», «Buscar en el catálogo», revisión antes de
   enviar y cierre.
 - **`vistas/comunes/`**: cabecera y pasos del prototipo, iconos (`Iconos.tsx` para la interfaz, `IconoEntrada.tsx`
@@ -364,6 +386,7 @@ Docs/            Documentos de referencia (SRS, lista), estado actual, inventari
 - **Capturas de la cámara:** el clip vive solo en memoria mientras se interpreta y se descarta después; al cancelar no
   se entrega a nadie. No se guarda en disco ni en el navegador, no se envía a la computadora del médico y **no se usa
   para entrenamiento ni telemetría**. La cámara se apaga con «Listo», «Cancelar», al terminar la consulta y al salir.
+  El reconocedor experimental lee el clip y sus puntos solo en memoria y no guarda ninguno de los dos.
 - Usar solo datos ficticios.
 - La carpeta `Entrevistas/` está excluida en `.gitignore` y no debe subirse al repositorio.
 
@@ -371,9 +394,9 @@ Docs/            Documentos de referencia (SRS, lista), estado actual, inventari
 
 - **Etapa B:** ejecutar la prueba con dos laptops reales y registrar sus sistemas operativos
   ([Docs/PRUEBA_DOS_LAPTOPS.md](Docs/PRUEBA_DOS_LAPTOPS.md)).
-- **Etapa C:** captura con cámara hecha con reconocedor simulado. Falta el **modelo real**, el **vocabulario**
-  acordado con personas usuarias de LSM y las **muestras autorizadas** para entrenar y evaluar; probar con una webcam
-  física y en la laptop del paciente vinculada por Wi-Fi.
+- **Etapa C:** captura con cámara y reconocedor experimental hechos. Para que reconozca de verdad faltan **muestras
+  autorizadas de personas Sordas** y el **vocabulario** acordado con personas usuarias de LSM; probar con una webcam
+  física y una persona señando, y en la laptop del paciente vinculada por Wi-Fi.
 - **Etapa D:** verificación de la entrega (incluye RNF-01 con 30 intercambios).
 - **Etapa E:** tableta Android.
 - Catálogo V1 aprobado y recursos en LSM validados.

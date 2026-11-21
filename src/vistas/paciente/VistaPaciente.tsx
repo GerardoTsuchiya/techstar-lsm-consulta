@@ -6,6 +6,7 @@ import { generarId } from '../../nucleo/ids';
 import { textosRevisados } from '../../nucleo/mensajes';
 import { reducirTurno, turnoInicial } from '../../nucleo/turnoPaciente';
 import type { Catalogo, Comando, InstantaneaSesion, MensajeMedico, MensajePaciente, Resultado } from '../../nucleo/tipos';
+import { describirDiagnostico, esExperimental } from '../../reconocimiento/experimental/reconocedorExperimental';
 import { reconocedorPorPolitica, type FabricaReconocedor } from '../../reconocimiento/reconocedor';
 import type { ConexionCliente } from '../../transporte/tipos';
 import { AvisoAlcance } from '../comunes/AvisoAlcance';
@@ -97,6 +98,8 @@ function SesionPaciente(props: {
   const cuerpo = useRef<HTMLDivElement>(null);
   useAcuses(instantanea, 'paciente', enviar);
   const captura = useCaptura({ turno, despachar, camara, reconocedor, catalogo });
+  // Solo modo desarrollo: distancia, umbral y tiempo del último resultado del reconocedor experimental.
+  const detalleExperimental = esExperimental(reconocedor) ? describirDiagnostico(reconocedor.ultimoDiagnostico) : null;
 
   const ultimoMedico = [...mensajes].reverse().find((m): m is MensajeMedico => m.origen === 'medico');
   const ultimoPropio = [...mensajes].reverse().find((m): m is MensajePaciente => m.origen === 'paciente');
@@ -215,6 +218,8 @@ function SesionPaciente(props: {
 
             {turno.fase === 'no-reconocido' && (
               <PanelNoReconocido
+                experimental={reconocedor?.experimental === true}
+                detalleExperimental={detalleExperimental}
                 catalogo={catalogo}
                 politica={politica}
                 onReintentar={captura.iniciar}
@@ -248,6 +253,8 @@ function SesionPaciente(props: {
               <RevisionPaciente
                 via={turno.via}
                 simulado={turno.via === 'camara' && reconocedor?.simulado === true}
+                experimental={turno.via === 'camara' && reconocedor?.experimental === true}
+                detalleExperimental={detalleExperimental}
                 catalogo={catalogo}
                 politica={politica}
                 selecciones={turno.selecciones}

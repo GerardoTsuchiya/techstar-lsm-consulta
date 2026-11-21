@@ -1,0 +1,800 @@
+{
+  "descripcion": "Inventario del reconocedor experimental (TechStar). Sin videos: los archivos viven en recursos-candidatos/videos/ (ignorada por git). Procedencia completa en procedencia.json.",
+  "fecha": "2026-11-20",
+  "permisos": {
+    "Indiscapacidad CDMX (LSM)": "Uso para entrenamiento y para mostrar los videos en la app: confirmado por la fuente, según informó el equipo el 20/11/2026. Pendiente archivar la constancia escrita en la trazabilidad.",
+    "Iztacala Enseña": "Uso para entrenamiento y para mostrar los videos en la app: confirmado por la fuente, según informó el equipo el 20/11/2026. Pendiente archivar la constancia escrita en la trazabilidad.",
+    "Sol Lara (YouTube, Lsm_by_Sol)": "Uso para entrenamiento y para mostrar los videos en la app: confirmado por la fuente, según informó el equipo el 20/11/2026. Pendiente archivar la constancia escrita en la trazabilidad."
+  },
+  "personas": {
+    "Iztacala Enseña": "1 o 2 personas en total (según el equipo)",
+    "Indiscapacidad CDMX (LSM)": "1 o 2 personas en total (según el equipo)",
+    "Sol Lara (YouTube, Lsm_by_Sol)": "1 persona"
+  },
+  "vocabulario": [
+    {
+      "entrada": "PAC-S-01",
+      "senas": [
+        "Dolor de cabeza"
+      ]
+    },
+    {
+      "entrada": "PAC-S-04",
+      "senas": [
+        "Fiebre"
+      ]
+    },
+    {
+      "entrada": "PAC-S-05",
+      "senas": [
+        "Tos",
+        "Tos (1)",
+        "Tos (2)"
+      ]
+    },
+    {
+      "entrada": "PAC-S-07",
+      "senas": [
+        "Nauseas",
+        "Asco (Náuseas)"
+      ]
+    },
+    {
+      "entrada": "PAC-S-08",
+      "senas": [
+        "Cansado",
+        "Cansancio"
+      ]
+    },
+    {
+      "entrada": "PAC-R-03",
+      "senas": [
+        "No saber",
+        "No Saber"
+      ]
+    },
+    {
+      "entrada": "PAC-R-01",
+      "senas": [
+        "Seña de «Sí» en LSM"
+      ]
+    },
+    {
+      "entrada": "PAC-R-02",
+      "senas": [
+        "Seña de «No» en LSM"
+      ]
+    }
+  ],
+  "usos": {
+    "plantilla": "Muestra de una seña del vocabulario",
+    "desconocida": "Expresión fuera del vocabulario: mide falsas aceptaciones",
+    "excluido": "No se usa: contiene una seña del vocabulario dentro de una frase"
+  },
+  "videos": [
+    {
+      "archivo": "SOL_sena-de-si-en-lsm_o_uJTNHtJ2Q.mp4",
+      "youtubeId": "o_uJTNHtJ2Q",
+      "fuente": "Sol Lara (YouTube, Lsm_by_Sol)",
+      "senaEnSitio": "Seña de «Sí» en LSM",
+      "uso": "plantilla",
+      "entrada": "PAC-R-01",
+      "tipo": "mensaje completo"
+    },
+    {
+      "archivo": "SOL_sena-de-no-en-lsm_Ltg8txV9goA.mp4",
+      "youtubeId": "Ltg8txV9goA",
+      "fuente": "Sol Lara (YouTube, Lsm_by_Sol)",
+      "senaEnSitio": "Seña de «No» en LSM",
+      "uso": "plantilla",
+      "entrada": "PAC-R-02",
+      "tipo": "mensaje completo"
+    },
+    {
+      "archivo": "IND_no-saber_76L6t79x1Qo.mp4",
+      "youtubeId": "76L6t79x1Qo",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "No Saber",
+      "uso": "plantilla",
+      "entrada": "PAC-R-03",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_no-saber_sP5Rqv9ywRg.mp4",
+      "youtubeId": "sP5Rqv9ywRg",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "No saber",
+      "uso": "plantilla",
+      "entrada": "PAC-R-03",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_dolor-de-cabeza_6lUTzqJZo2o.mp4",
+      "youtubeId": "6lUTzqJZo2o",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Dolor de cabeza",
+      "uso": "plantilla",
+      "entrada": "PAC-S-01",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_dolor-de-cabeza__DZIK3D3Hoc.mp4",
+      "youtubeId": "_DZIK3D3Hoc",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Dolor de cabeza",
+      "uso": "plantilla",
+      "entrada": "PAC-S-01",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IND_fiebre_xTzmQOiP0Xw.mp4",
+      "youtubeId": "xTzmQOiP0Xw",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Fiebre",
+      "uso": "plantilla",
+      "entrada": "PAC-S-04",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_fiebre_hUSMSmo0vjU.mp4",
+      "youtubeId": "hUSMSmo0vjU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Fiebre",
+      "uso": "plantilla",
+      "entrada": "PAC-S-04",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IND_tos-1_8gJpNlN_0uU.mp4",
+      "youtubeId": "8gJpNlN_0uU",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Tos (1)",
+      "uso": "plantilla",
+      "entrada": "PAC-S-05",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IND_tos-2_H7KwVeZrP4k.mp4",
+      "youtubeId": "H7KwVeZrP4k",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Tos (2)",
+      "uso": "plantilla",
+      "entrada": "PAC-S-05",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_tos_hZ31kPkR2Ek.mp4",
+      "youtubeId": "hZ31kPkR2Ek",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Tos",
+      "uso": "plantilla",
+      "entrada": "PAC-S-05",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_tos_uckmooIUUaU.mp4",
+      "youtubeId": "uckmooIUUaU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Tos",
+      "uso": "plantilla",
+      "entrada": "PAC-S-05",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IND_asco-nauseas_E9a92aqS8GU.mp4",
+      "youtubeId": "E9a92aqS8GU",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Asco (Náuseas)",
+      "uso": "plantilla",
+      "entrada": "PAC-S-07",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_nauseas_FuhKrTiwU70.mp4",
+      "youtubeId": "FuhKrTiwU70",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Nauseas",
+      "uso": "plantilla",
+      "entrada": "PAC-S-07",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_nauseas_Hdu7TQqdUlk.mp4",
+      "youtubeId": "Hdu7TQqdUlk",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Nauseas",
+      "uso": "plantilla",
+      "entrada": "PAC-S-07",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IND_cansancio_DVBQ0brVcSo.mp4",
+      "youtubeId": "DVBQ0brVcSo",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Cansancio",
+      "uso": "plantilla",
+      "entrada": "PAC-S-08",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IZT_cansado_NPNwh1YSuiI.mp4",
+      "youtubeId": "NPNwh1YSuiI",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Cansado",
+      "uso": "plantilla",
+      "entrada": "PAC-S-08",
+      "tipo": "palabra suelta (concepto)"
+    },
+    {
+      "archivo": "IND_10_EabGQcQOTQM.mp4",
+      "youtubeId": "EabGQcQOTQM",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "10",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_1_zcd4GfYz-fA.mp4",
+      "youtubeId": "zcd4GfYz-fA",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "1",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_2_1Fau1Nh7rPY.mp4",
+      "youtubeId": "1Fau1Nh7rPY",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "2",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_3_EYEMXK7Eeq0.mp4",
+      "youtubeId": "EYEMXK7Eeq0",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "3",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_4_wedKjwNQYgw.mp4",
+      "youtubeId": "wedKjwNQYgw",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "4",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_5_d3MvmWXK3HE.mp4",
+      "youtubeId": "d3MvmWXK3HE",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "5",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_6_yQ5GJzVxUYQ.mp4",
+      "youtubeId": "yQ5GJzVxUYQ",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "6",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_7_ynp7TLZIEYc.mp4",
+      "youtubeId": "ynp7TLZIEYc",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "7",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_8_QzkfbPIdXAI.mp4",
+      "youtubeId": "QzkfbPIdXAI",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "8",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_9_MgnvumQM-cQ.mp4",
+      "youtubeId": "MgnvumQM-cQ",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "9",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_ahora_rFQFK-dOgpA.mp4",
+      "youtubeId": "rFQFK-dOgpA",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Ahora",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_alergia_i3Xcbwg4dls.mp4",
+      "youtubeId": "i3Xcbwg4dls",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Alergia",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_ayudar_bOoOX_IsWpU.mp4",
+      "youtubeId": "bOoOX_IsWpU",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Ayudar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_consulta-medica_e9O3KT-_tyU.mp4",
+      "youtubeId": "e9O3KT-_tyU",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Consulta Médica",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_dolor_61NSOq-fpL8.mp4",
+      "youtubeId": "61NSOq-fpL8",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Dolor",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_entender_f7RzPWBSEoU.mp4",
+      "youtubeId": "f7RzPWBSEoU",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Entender",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_enviar-1_sFAmiMgcxHQ.mp4",
+      "youtubeId": "sFAmiMgcxHQ",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Enviar (1)",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_enviar-2_fNQcIivLr58.mp4",
+      "youtubeId": "fNQcIivLr58",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Enviar (2)",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_enviar-3_OYIDHdXX5PM.mp4",
+      "youtubeId": "OYIDHdXX5PM",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Enviar (3)",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_esperar_S_yttzy0Ppk.mp4",
+      "youtubeId": "S_yttzy0Ppk",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Esperar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_gracias_jAvN4wvvpgY.mp4",
+      "youtubeId": "jAvN4wvvpgY",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Gracias",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_interprete_mE4MtejtVaM.mp4",
+      "youtubeId": "mE4MtejtVaM",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Intérprete",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_mareos_RUBKTdIwbP0.mp4",
+      "youtubeId": "RUBKTdIwbP0",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Mareos",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_medicamento_-na_HejIPyE.mp4",
+      "youtubeId": "-na_HejIPyE",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Medicamento",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_mucho_aVhLLKcJuTI.mp4",
+      "youtubeId": "aVhLLKcJuTI",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Mucho",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_poco-1_-jQz3JjCC_s.mp4",
+      "youtubeId": "-jQz3JjCC_s",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Poco (1)",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_poco-2_kLHFuNYu5-U.mp4",
+      "youtubeId": "kLHFuNYu5-U",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Poco (2)",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_por-favor_M5FowymHDx8.mp4",
+      "youtubeId": "M5FowymHDx8",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Por favor",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_sintomas_wlBs2mdwwio.mp4",
+      "youtubeId": "wlBs2mdwwio",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Síntomas",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IND_vomito_Hy5_QZdCH-I.mp4",
+      "youtubeId": "Hy5_QZdCH-I",
+      "fuente": "Indiscapacidad CDMX (LSM)",
+      "senaEnSitio": "Vómito",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_a-veces_vxv9gqp1Fps.mp4",
+      "youtubeId": "vxv9gqp1Fps",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "A veces",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_acabar__Q3cn5IwIpU.mp4",
+      "youtubeId": "_Q3cn5IwIpU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Acabar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_ahora_b4_B0Kakodo.mp4",
+      "youtubeId": "b4_B0Kakodo",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Ahora",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_alergia_VN7oU-16qg8.mp4",
+      "youtubeId": "VN7oU-16qg8",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Alergia",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_analgesico_UaE0gajgbBU.mp4",
+      "youtubeId": "UaE0gajgbBU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Analgésico",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_antibiotico_wM5SuZZY09I.mp4",
+      "youtubeId": "wM5SuZZY09I",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Antibiótico",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_antier_M1HbrnY_krg.mp4",
+      "youtubeId": "M1HbrnY_krg",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Antier",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_ayer_5o85hwZxwx4.mp4",
+      "youtubeId": "5o85hwZxwx4",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Ayer",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_ayudar_GE-aA8pjlRs.mp4",
+      "youtubeId": "GE-aA8pjlRs",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Ayudar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_cambiar_IW3RD5NzVP8.mp4",
+      "youtubeId": "IW3RD5NzVP8",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Cambiar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_cuales-son-tus-sintomas_837wg8XVV_E.mp4",
+      "youtubeId": "837wg8XVV_E",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Cuáles son tus síntomas?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_cuando_203_kFKIaZU.mp4",
+      "youtubeId": "203_kFKIaZU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Cuándo?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_descansar_wj2JzqHEbd0.mp4",
+      "youtubeId": "wj2JzqHEbd0",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Descansar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_dolor-de-garganta_MfcVpEjklko.mp4",
+      "youtubeId": "MfcVpEjklko",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Dolor de garganta",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_dolor_LrNHMvclyr0.mp4",
+      "youtubeId": "LrNHMvclyr0",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Dolor",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_donde-te-duele_fEpyoeFYeRU.mp4",
+      "youtubeId": "fEpyoeFYeRU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Dónde te duele?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_entender_ZE5UhgNLk7I.mp4",
+      "youtubeId": "ZE5UhgNLk7I",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Entender",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_equivocar_9p8SYLZzv6E.mp4",
+      "youtubeId": "9p8SYLZzv6E",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Equivocar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_eres-alergico-a-a-algun-medicamento_l8W3yNtDKTc.mp4",
+      "youtubeId": "l8W3yNtDKTc",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Eres alérgico/a a algún medicamento?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_estas-mareado-a_Y3O7HFJH8gs.mp4",
+      "youtubeId": "Y3O7HFJH8gs",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Estás mareado/a?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_estas-tomando-medicamento_G4dsxVz47wU.mp4",
+      "youtubeId": "G4dsxVz47wU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Estás tomando medicamento?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_gracias_bQMnHvFg0UU.mp4",
+      "youtubeId": "bQMnHvFg0UU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Gracias",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_hola_9MDuO3qpqOI.mp4",
+      "youtubeId": "9MDuO3qpqOI",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Hola",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_hoy_gGVDwWLKcoI.mp4",
+      "youtubeId": "gGVDwWLKcoI",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Hoy",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_interprete_5kdPzH8J5-E.mp4",
+      "youtubeId": "5kdPzH8J5-E",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Interprete",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_jarabe-medicamento_Gjnj8mQtrck.mp4",
+      "youtubeId": "Gjnj8mQtrck",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Jarabe (medicamento)",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_mareo_m9nsZzmyQCE.mp4",
+      "youtubeId": "m9nsZzmyQCE",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Mareo",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_mareo_zAgsjNZzzE8.mp4",
+      "youtubeId": "zAgsjNZzzE8",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Mareo",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_medicamento_zluP4dzBD4A.mp4",
+      "youtubeId": "zluP4dzBD4A",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Medicamento",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_mes_5U5qhTKG-ws.mp4",
+      "youtubeId": "5U5qhTKG-ws",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Mes",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_mucho_MnUZLrW2XyY.mp4",
+      "youtubeId": "MnUZLrW2XyY",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Mucho",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_necesitas-interprete_z2a7sdMnDu0.mp4",
+      "youtubeId": "z2a7sdMnDu0",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Necesitas intérprete?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_no-entender_CbeauWxL3k8.mp4",
+      "youtubeId": "CbeauWxL3k8",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "No entender",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_nunca_5ECyIBijkgM.mp4",
+      "youtubeId": "5ECyIBijkgM",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Nunca",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_poco-forma-1-y-2_E91OA2j1RTI.mp4",
+      "youtubeId": "E91OA2j1RTI",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Poco (forma 1 y 2)",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_por-favor_z2wR9JNBXXI.mp4",
+      "youtubeId": "z2wR9JNBXXI",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Por favor",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_que-sientes_K9IWDHFu1e4.mp4",
+      "youtubeId": "K9IWDHFu1e4",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Qué sientes?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_que-tanto-te-duele_d444MtGdCPs.mp4",
+      "youtubeId": "d444MtGdCPs",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Qué tanto te duele?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_quitar_7bpyKu2iVOQ.mp4",
+      "youtubeId": "7bpyKu2iVOQ",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Quitar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_revision-general-medica_OBmna7wmyOo.mp4",
+      "youtubeId": "OBmna7wmyOo",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Revisión general médica",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_semana_LgNz_-qDesc.mp4",
+      "youtubeId": "LgNz_-qDesc",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Semana",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_te-duele-la-cabeza__T-qtgwKyOA.mp4",
+      "youtubeId": "_T-qtgwKyOA",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Te duele la cabeza?",
+      "uso": "excluido",
+      "motivo": "Contiene la seña «Dolor de cabeza» del vocabulario"
+    },
+    {
+      "archivo": "IZT_te-duele-mucho_iMhmzcHdj9I.mp4",
+      "youtubeId": "iMhmzcHdj9I",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Te duele mucho?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_tiempo_z5YwJbqPhIc.mp4",
+      "youtubeId": "z5YwJbqPhIc",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Tiempo",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_tienes-dolor_1Eo-ltr6Wg4.mp4",
+      "youtubeId": "1Eo-ltr6Wg4",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Tienes dolor?",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_tienes-fiebre_w3b014ch1-o.mp4",
+      "youtubeId": "w3b014ch1-o",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Tienes fiebre?",
+      "uso": "excluido",
+      "motivo": "Contiene la seña «Fiebre» del vocabulario"
+    },
+    {
+      "archivo": "IZT_tienes-nauseas_XSXMPh4WyqY.mp4",
+      "youtubeId": "XSXMPh4WyqY",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Tienes náuseas?",
+      "uso": "excluido",
+      "motivo": "Contiene la seña «Náuseas» del vocabulario"
+    },
+    {
+      "archivo": "IZT_tienes-tos_ITg_gJL9CTc.mp4",
+      "youtubeId": "ITg_gJL9CTc",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Tienes tos?",
+      "uso": "excluido",
+      "motivo": "Contiene la seña «Tos» del vocabulario"
+    },
+    {
+      "archivo": "IZT_vitaminas_QZppkNvbqxU.mp4",
+      "youtubeId": "QZppkNvbqxU",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Vitaminas",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_vomitar_mg9MOO4DtTE.mp4",
+      "youtubeId": "mg9MOO4DtTE",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "Vomitar",
+      "uso": "desconocida"
+    },
+    {
+      "archivo": "IZT_vomitaste_zAiENF3ITCc.mp4",
+      "youtubeId": "zAiENF3ITCc",
+      "fuente": "Iztacala Enseña",
+      "senaEnSitio": "¿Vomitaste?",
+      "uso": "desconocida"
+    }
+  ]
+}

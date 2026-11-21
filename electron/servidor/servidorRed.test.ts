@@ -276,13 +276,16 @@ describe('Arranque de la app de escritorio', () => {
       politica: 'desarrollo',
       puerto: 47100,
       soloLocal: true,
+      reconocedor: 'simulado',
     });
+    expect(leerArgumentos(['--modo=demo', '--reconocedor=experimental'])).toMatchObject({ modo: 'demo', reconocedor: 'experimental' });
     expect(leerArgumentos(['--modo=paciente', '--puerto=5000'])).toMatchObject({ modo: 'paciente', politica: 'producto', puerto: 5000 });
     expect(leerArgumentos(['--modo=raro', '--recursos=otro', '--puerto=abc'])).toEqual({
       modo: 'demo',
       politica: 'producto',
       puerto: 47100,
       soloLocal: false,
+      reconocedor: 'simulado',
     });
   });
 });

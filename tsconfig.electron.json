@@ -4,5 +4,5 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["node", "vitest/globals"]
   },
-  "include": ["electron", "vite.electron.config.ts"]
+  "include": ["electron", "vite.electron.config.ts", "vite.mediapipe.ts", "vite.herramientas.config.ts"]
 }

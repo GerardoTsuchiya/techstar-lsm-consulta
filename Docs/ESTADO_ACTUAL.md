@@ -1,9 +1,11 @@
 # Estado actual · TechStar (LSM Consulta)
 
-**Fecha:** 16/11/2026 · **Etapa:** C, primera parte (cámara y reconocedor simulado) · **Estado:** captura con la
+**Fecha:** 20/11/2026 · **Etapa:** C, segunda parte (reconocedor experimental) · **Estado:** captura con la
 cámara implementada y probada en **una** computadora (Electron con una cámara del sistema, navegador con cámara
-bloqueada y pruebas automáticas con cámara falsa). **El reconocimiento es simulado**: falta el modelo real, el
-vocabulario y las muestras autorizadas (§2.3, §4.7, §6). La etapa B sigue **pendiente de probar en dos laptops**
+bloqueada y pruebas automáticas con cámara falsa). Hay un **reconocedor experimental, no validado** (8 señas,
+MediaPipe + DTW, plantillas de videos web), solo en modo desarrollo: funciona de punta a punta en Electron y rechaza lo
+desconocido, pero **no reconoce a una persona nueva** con los datos disponibles (§2.5, §4.8 y
+[RECONOCEDOR.md](RECONOCEDOR.md)). El simulador sigue disponible. La etapa B sigue **pendiente de probar en dos laptops**
 (protocolo en [PRUEBA_DOS_LAPTOPS.md](PRUEBA_DOS_LAPTOPS.md)). La etapa A sigue vigente (§2 a §4.4). Las etapas D y E
 siguen pendientes.
 
@@ -106,6 +108,19 @@ No se consultaron entrevistas: no fue necesario aclarar el origen de ningún req
 | D45 | **11 respuestas breves nuevas del paciente** (17/11/2026), cada una con su video de Iztacala como recurso de prueba: tiempo para «¿Desde cuándo?» (PAC-R-04 a -08: desde hoy, ayer, antier, hace una semana, hace un mes), frecuencia (PAC-R-09 «A veces», PAC-R-10 «Nunca») y medicamentos para las preguntas de alergia y tratamiento (PAC-R-11 a -14: analgésico, antibiótico, jarabe, vitaminas). Van en el grupo provisional «Respuestas breves» (D7) | Ninguna fuente tiene «Sí» ni «No». Como el paciente puede elegir varias tarjetas, «Tengo fiebre.» + «Desde ayer.» llega en un solo mensaje sin cambiar código. Las de tiempo muestran solo la seña («Ayer», «Semana»), sin «desde»/«hace»: revisión lingüística pendiente. Decidir qué respuestas quedan en el Catálogo V1 sigue siendo §6.3 |
 | D46 | **«Sí» (PAC-R-01) y «No» (PAC-R-02)** conectados con videos del canal de YouTube de Sol Lara (Lsm_by_Sol), propuestos por el equipo (17/11/2026). Recurso de prueba, como los demás; el video trae el logo «By Sol» y el subtítulo de la palabra, que no tapan las manos | Eran las dos respuestas breves sin video: no existen en Iztacala ni en Indiscapacidad. Es una **fuente individual**, no institucional: para validarlos hace falta el permiso de la autora y, con más razón, la revisión lingüística |
 
+### 2.5 Reconocedor experimental (20/11/2026)
+
+| # | Decisión | Motivo |
+|---|---|---|
+| D47 | **Vocabulario de 8 señas** del paciente, elegido con el equipo: PAC-S-01, -04, -05, -07, -08 y PAC-R-01, -02, -03. «Mareo» (PAC-S-06) queda fuera | Son las que tienen video en las fuentes. PAC-S-06 es la entrada sin recurso de las pruebas del bloqueo (D42). Inventario versionado sin videos: `recursos-candidatos/inventario-reconocedor.json` |
+| D48 | **Datos: solo videos web** de Iztacala Enseña, Indiscapacidad CDMX y Sol Lara; permiso de entrenamiento y de mostrarlos en la app confirmado por las fuentes **según el equipo** (constancia escrita por archivar). Sin grabaciones del equipo | No hay muestras de la asociación; el equipo decidió no grabar. Los videos y los puntos extraídos quedan en carpetas ignoradas por git |
+| D49 | **MediaPipe Tasks Vision 1.2.2** (Apache-2.0; publicada hace 17 días, no la más reciente) con Hand Landmarker y Pose Landmarker lite; modelos en `public/modelos/` (versionados, con SHA-256) y WebAssembly copiado de `node_modules` al compilar. **Sin internet** | Funciona en el navegador y en Electron con `file://` (comprobado). Las plantillas y el clip pasan por el mismo extractor |
+| D50 | **Clasificador sencillo:** vecino más cercano con DTW sobre posición y forma de las manos respecto a los hombros, con plantillas en espejo. **Rechazo** por distancia (≤ 0.47) y margen entre las dos mejores señas (≤ 0.70), calibrado para **cero falsas aceptaciones** | RF-05: nunca adivinar. Con umbrales más flexibles suben más las confusiones y falsas aceptaciones que los aciertos (tabla en RECONOCEDOR.md §4) |
+| D51 | El reconocedor corre **en la ventana del paciente** (D34): reproduce el clip WebM en memoria a 2× sobre un `<video>` fuera de la vista, extrae puntos y decide. Ni el clip ni los puntos se guardan; solo queda un diagnóstico (distancia, umbral, tiempo) en la memoria del reconocedor de esa sesión | RF-18. El diagnóstico se muestra en modo desarrollo para registrar la evaluación |
+| D52 | **Solo modo desarrollo**, elegido con `?reconocedor=experimental` (pantalla de inicio) o `--reconocedor=experimental` en Electron; `electron:demo` lo usa por omisión y `electron:demo-simulado` abre el simulador. Sin la opción, el simulador. En producto, ninguno | Igual que el simulador (D32, D33): nada experimental en el flujo de producto. La interfaz `Reconocedor` gana el campo `experimental` |
+| D53 | En pantalla: «Reconocedor experimental · no validado» mientras interpreta, en la revisión y en «No reconocimos tu seña», con la distancia, el umbral y el tiempo de respuesta | El encargo pide distinguir lo que acredita cada cosa (§7) |
+| D54 | CSP: `script-src` añade `'wasm-unsafe-eval'` (solo compilar WebAssembly, no `eval` de JS) y `media-src` añade `blob:` (el clip en memoria) | Sin ellas MediaPipe no carga o el clip no se puede leer en Electron |
+
 ## 3. Requisitos cubiertos en la etapa A
 
 Tabla de la etapa A: «comprobado» significa comprobado **en una sola computadora** (modo de una pantalla y dos
@@ -148,12 +163,12 @@ ventanas del mismo navegador). La cobertura de la etapa B está en §3.1.
 | Requisito | Qué se implementó | Una computadora | Laptop del paciente vinculada | Tableta Android |
 |---|---|---|---|---|
 | RF-17 Capturar | «Captura en LSM», «● Cámara activa» con tiempo, «Listo» (termina el clip, apaga la cámara y pide reconocimiento) y «Cancelar» (apaga, descarta sin reconocer, catálogo disponible) | **Probado** con una cámara del sistema en Electron (§4.7) y con cámara falsa | Pendiente de probar en dos laptops | Pendiente en Android |
-| RF-01 Interpretar (reconocido) | Candidato pendiente de revisión con `via: 'camara'`; el coordinador lo acepta con las mismas reglas | **Probado** con el reconocedor **simulado**. Sin modelo real | Pendiente | Pendiente en Android |
-| RF-05 Expresión desconocida | Aviso accesible (`role="alert"`) con recurso **de prueba**, «Intentar de nuevo» y «Elegir lo que sientes» | **Probado** con el simulador | Pendiente | Pendiente en Android |
+| RF-01 Interpretar (reconocido) | Candidato pendiente de revisión con `via: 'camara'`; el coordinador lo acepta con las mismas reglas | **Probado** con el simulador y con el reconocedor **experimental** en Electron con cámara falsa (§4.8). Exactitud con personas: ver RECONOCEDOR.md | Pendiente | Pendiente en Android |
+| RF-05 Expresión desconocida | Aviso accesible (`role="alert"`) con recurso **de prueba**, «Intentar de nuevo» y «Elegir lo que sientes». El experimental rechaza por distancia o ambigüedad | **Probado** con el simulador y con el experimental (0 de 77 falsas aceptaciones en videos web; 2 desconocidas rechazadas en Electron) | Pendiente | Pendiente en Android |
 | RF-03, RF-04, RF-07 para la cámara | Misma revisión, borrador solo en el paciente, envío único | **Probado** | Pendiente | Pendiente en Android |
 | RF-18 Cámara y clips | Clip en memoria; cámara liberada al cancelar, al terminar la consulta (también durante captura y procesamiento) y al salir; resultados tardíos descartados; nada en disco | **Probado** (§4.7) | Pendiente | Pendiente en Android |
 | §4 C: cámara denegada | Aviso con indicación de permisos; catálogo disponible | **Probado** en el navegador (cámara bloqueada) y con cámara falsa | Pendiente | Pendiente en Android |
-| §4 C: modelo, vocabulario y resultados | **No hay modelo**. Interfaz `Reconocedor` lista | **Bloqueado**: faltan vocabulario y muestras autorizadas | — | — |
+| §4 C: modelo, vocabulario y resultados | Reconocedor **experimental** de 8 señas (D47–D54); evaluación preliminar con videos web | **Documentado** en [RECONOCEDOR.md](RECONOCEDOR.md): 2 de 15 aciertos dejando uno fuera, 0 de 13 entre fuentes, 0 de 77 falsas aceptaciones. **Sin** personas Sordas ni webcam física | Pendiente | — |
 
 ## 4. Pruebas ejecutadas
 
@@ -172,11 +187,16 @@ en modo demostración manejado por el protocolo de depuración de Chromium · c�
 fija «Please start Iriun Webcam») y «GENERAL WEBCAM» (webcam USB física, **desconectada**: estado «Unknown») ·
 permiso de Windows «Cámara» en «Allow» · navegador integrado de la app de Claude (bloquea la cámara).
 
+**Entorno reconocedor experimental (20/11/2026):** la misma computadora · Electron 45.3.3 en modo demostración con la
+**cámara falsa de Chromium** (`--use-fake-device-for-media-stream --use-file-for-fake-video-capture`, videos de las
+fuentes convertidos a Y4M 640×480) y el protocolo de depuración · navegador integrado de la app de Claude para la
+herramienta de extracción (panel oculto). No había webcam física conectada.
+
 ### 4.1 Automáticas (`npm run check`)
 
-Resultado (16/11/2026, etapa C): **127 de 127 pruebas pasan** (46 de la etapa A + 25 de la etapa B + 34 de la etapa C +
-22 del catálogo editable, trabajo paralelo), sin errores de tipos y con las compilaciones correctas. Resultado de la
-etapa B: 71 de 71. Las pruebas de red se repitieron 5 veces seguidas sin fallos.
+Resultado (20/11/2026, reconocedor experimental): **152 de 152 pruebas pasan** (127 anteriores + 25 nuevas o
+ampliadas del reconocedor experimental), sin errores de tipos, catálogo correcto y compilaciones correctas. Resultado
+del 16/11/2026: 127 de 127. Resultado de la etapa B: 71 de 71.
 
 | Archivo | Qué comprueba |
 |---|---|
@@ -192,6 +212,8 @@ etapa B: 71 de 71. Las pruebas de red se repitieron 5 veces seguidas sin fallos.
 | `src/modos/captura.test.tsx` (10) | **Etapa C**, vistas reales + coordinador real + cámara falsa + simulador: inicio y «Listo» con caso reconocido y envío `cámara`; desconocido con reintento y catálogo; «Cancelar» sin reconocimiento; «Cancelar» durante el procesamiento con resultado tardío descartado; cámara denegada; cámara desconectada; cierre durante el procesamiento (cámara liberada, reconocimiento abortado, sesión nueva vacía); mensaje del médico durante la captura; no inicia con opciones elegidas; sin simulador en producto |
 | `src/camara/camaraNavegador.test.ts` (9) | **Etapa C**, adaptador real con getUserMedia y MediaRecorder simulados: solo video, «activa», imagen conectada, «Listo» entrega el clip y apaga; «Cancelar» descarta; cancelar mientras termina; denegada / sin cámara / ocupada; sin `mediaDevices`; permiso concedido tras cancelar → se apaga; desconexión; límite de 15 s; nueva captura descarta la anterior |
 | `src/reconocimiento/reconocedor.test.ts` (4) | **Etapa C**: simulador imposible en producto; vocabulario = entradas del paciente; espera la decisión del operador para la captura en curso; abortar descarta decisiones tardías |
+| `src/reconocimiento/experimental/experimental.test.ts` (17) | **Reconocedor experimental**, con puntos sintéticos: características invariantes a posición y tamaño, recorte del tramo activo y del reposo, seguimiento de la mano dominante aunque cruce el centro, DTW tolerante a la velocidad, reconocido / lejana / ambigua (RF-05), validación de archivos, solo en desarrollo, plantillas fuera del paciente nunca son resultado, sin manos → desconocido, cancelar sin resultado, modelo que no carga → fallo |
+| `src/modos/capturaExperimental.test.tsx` (2) | Vistas reales + coordinador + cámara falsa + experimental: reconocido con la marca «Reconocedor experimental · no validado» y su detalle, sin simulador; desconocido con aviso y motivo del rechazo |
 | `electron/permisos.test.ts` (3) | **Etapa C**: cámara solo para la ventana propia `file://` en paciente y demo; negada al médico, a otro contenido, al micrófono y a cualquier otro permiso |
 
 ### 4.2 Matriz de casos de la etapa A
@@ -293,6 +315,21 @@ fuera del repositorio (no se versionan).
 | §4 C | Cámara denegada (navegador) | Aviso y catálogo disponible | «No hay permiso para usar la cámara. Para usarla, permite la cámara en el navegador o en Windows…»; catálogo usable | Navegador integrado + captura |
 | Diseño | Panel de captura a media pantalla (modo demo, 1366×860) | «Cancelar» y «Listo» visibles sin desplazarse | Al principio quedaban debajo del video; se limitó la altura del video y se pusieron lado a lado. Comprobado visible después | Electron + capturas |
 
+### 4.8 Matriz del reconocedor experimental (20/11/2026)
+
+Detalle, tablas por seña y limitaciones en [RECONOCEDOR.md](RECONOCEDOR.md). La cámara fue la falsa de Chromium con
+videos de las fuentes: acredita la cadena en Electron, **no** la exactitud con una persona.
+
+| Requisito | Caso | Resultado esperado | Resultado observado | Evidencia |
+|---|---|---|---|---|
+| §4 C, RF-01 | `electron:demo` con el video «Tos» como cámara → «Listo» | Candidato en revisión marcado experimental; el médico no ve nada | «Esto es lo que entendimos de tu seña» → «Tos», «Reconocedor experimental · no validado», distancia 0.09, respuesta en 2.9 s (210 cuadros) | Electron + captura de pantalla |
+| RF-05 | Video «Gracias» (desconocida) | «No reconocimos tu seña» | Rechazo por distancia 2.54 > 0.47, 4.0 s | Electron |
+| RF-05 | Video «Mareo» (fuera del vocabulario) | «No reconocimos tu seña» | Rechazo por distancia 1.43 > 0.47, 3.9 s | Electron |
+| §6.5 | Evaluación con videos web | Resultados por seña, falsas aceptaciones y tiempo | 2 de 15 dejando uno fuera, 0 de 13 entre fuentes, 0 de 77 falsas aceptaciones, ≈ mitad del clip + 0.5 s | `npm run evaluar-reconocedor` |
+| RF-18 | Disco tras las pruebas | Ni clips ni resultados | 65 archivos técnicos en `%APPDATA%\techstar-lsm-consulta\demo\`, ninguno WebM ni con textos | Búsqueda en disco |
+| D54 | MediaPipe con `file://` y la CSP de la versión compilada | Carga sin internet | Carga con WebGL; sin errores de CSP tras añadir `blob:` a `media-src` (antes fallaba en 0.1 s) | Electron |
+| §4 C | Persona señando con webcam física | Registrar reconocidas y rechazadas | **Pendiente** | — |
+
 ## 5. Inventario de datos temporales (RF-18)
 
 | Dónde | Qué guarda | Cuándo se borra |
@@ -307,6 +344,8 @@ fuera del repositorio (no se versionan).
 | Disco, `localStorage`, `IndexedDB`, registros | **Nada** de la consulta. El código no usa almacenamiento ni `console.log`; el proceso principal no registra contenido | — |
 | Memoria de la vista del paciente: clip de la cámara (etapa C) | Trozos `Blob` del clip en curso (máx. 15 s, solo video) | Al cancelar o liberar se descartan. Con «Listo» se arma un `Blob`, se entrega al reconocedor del mismo equipo y no se guarda referencia. Al cerrar la sesión o la app, la cámara se libera. Comprobado en disco el 16/11/2026: sin archivos WebM (§4.7) |
 | Reconocedor simulado | Solo el identificador de la captura pendiente (no lee el clip) | Al decidir, al cancelar o al cerrar la sesión |
+| Reconocedor experimental (ventana del paciente) | Mientras interpreta: URL `blob:` del clip en un `<video>` fuera de la vista y los puntos de manos y hombros. Después: solo el diagnóstico del último intento (decisión, distancia, umbral, tiempo; sin imagen ni puntos) | El `<video>` se vacía y la URL se revoca al terminar o cancelar; los puntos se descartan al decidir; el diagnóstico, al cerrar la sesión. Los modelos de MediaPipe quedan en memoria de la ventana (no contienen datos de la consulta) |
+| Videos de las fuentes y sus puntos (`recursos-candidatos/videos/`, `recursos-candidatos/puntos/`) | Material de entrenamiento, **no** de consulta | Ignorados por git; se regeneran con los scripts |
 
 Pendiente: revisar los temporales en las dos laptops y, cuando exista, los del modelo real.
 
@@ -314,20 +353,19 @@ Pendiente: revisar los temporales en las dos laptops y, cuando exista, los del m
 
 - **Catálogo V1** aprobado: entradas del paciente y del médico, y qué puede responder el paciente a cada pregunta (§6.3).
 - **Recursos en LSM validados** para cada entrada y para los controles del sistema. Ver [RECURSOS_LSM.md](RECURSOS_LSM.md).
-  Hay 26 videos conectados como recursos de prueba: 24 de Iztacala Enseña y «Sí»/«No» de Sol Lara (D40, D45, D46). Para validarlos falta: **permiso de uso por
-  escrito** de la fuente, **revisión lingüística** (la mayoría muestra solo el concepto, p. ej. «Fiebre» para «Tengo
+  Hay 26 videos conectados como recursos de prueba: 24 de Iztacala Enseña y «Sí»/«No» de Sol Lara (D40, D45, D46). Para validarlos falta: archivar la **constancia
+  escrita del permiso** (según el equipo, el 20/11/2026 las tres fuentes autorizaron entrenar y mostrar los videos en
+  la app; D48), **revisión lingüística** (la mayoría muestra solo el concepto, p. ej. «Fiebre» para «Tengo
   fiebre»), aprobación entrada–recurso y probar la reproducción en **Electron** y en **Android**. Faltan por grabar o
   conseguir «estómago» y los avisos del sistema (D41).
 - Validar los iconos de apoyo visual con personas Sordas (o sustituirlos por las ilustraciones del prototipo).
 - Rúbrica de RNF-01 y protocolo de RNF-02.
 - Decidir si se mantiene el grupo «Respuestas breves» (D7).
-- **Etapa C (reconocimiento real):** elegir el **modelo** (p. ej. MediaPipe con características de manos, rostro y
-  cuerpo según las expresiones) y dónde corre (laptop del paciente o computadora del médico con transferencia
-  limitada, D34); acordar el **vocabulario** y las variantes con personas usuarias de LSM y apoyo lingüístico, y
-  registrar por separado las entradas del catálogo y las que cubre el reconocedor (§6.3 del encargo); conseguir
-  **muestras autorizadas** para entrenar y evaluar, separadas por persona o sesión, con movimientos cotidianos y
-  expresiones fuera de vocabulario (§6.4); acordar el criterio de reconocimiento y registrar resultados por expresión,
-  falsas aceptaciones y tiempo de respuesta (§6.5). Hasta entonces solo hay simulador.
+- **Etapa C (reconocimiento):** hay un reconocedor **experimental** (D47–D54, [RECONOCEDOR.md](RECONOCEDOR.md)). Falta
+  para que reconozca de verdad: **muestras autorizadas de personas Sordas** (idealmente de la asociación), separadas
+  por persona entre entrenamiento y evaluación, con movimientos cotidianos (§6.4); acordar el **vocabulario y las
+  variantes** con personas usuarias de LSM y apoyo lingüístico (§6.3); probar con una **webcam física** y una persona
+  señando. **Archivar la constancia escrita** del permiso de las tres fuentes (entrenar y mostrar en la app).
 - **Etapa C (cámara):** repetir §4.7 con una **webcam física** (o la app Iriun abierta) y una persona señando, y en la
   laptop del paciente vinculada por Wi-Fi (`electron:paciente`). Recursos en LSM validados para «Captura en LSM»,
   «Cancelar», los avisos de cámara y «No reconocimos tu seña».
@@ -355,7 +393,7 @@ revise contra el código. Ver la guía breve en el README.
 
 1. **Cerrar la etapa B:** ejecutar [PRUEBA_DOS_LAPTOPS.md](PRUEBA_DOS_LAPTOPS.md) con dos laptops reales, registrar sus
    sistemas operativos y copiar los resultados a §4.6. Si algo falla, anotarlo como incidente con el caso (B1–B15).
-2. **Etapa C, segunda parte (reconocimiento real):** con el vocabulario acordado y las muestras autorizadas (§6),
-   implementar un `Reconocedor` real en `src/reconocimiento/`, decidir dónde corre (D34) y evaluarlo. Repetir §4.7 con
-   una webcam física y en la laptop del paciente vinculada. La captura, los permisos, el ciclo de vida de la cámara y la
-   revisión ya están hechos y probados con el simulador.
+2. **Reconocedor experimental con una persona:** `npm run electron:demo` con una webcam física; una persona del
+   equipo hace cada una de las 8 señas y 3 expresiones fuera del vocabulario, y se registran en §4.8 las reconocidas,
+   las rechazadas, las confusiones y el tiempo que muestra la pantalla. Lo esperable con estos datos es que casi todo se
+   rechace (RECONOCEDOR.md §4). Para mejorarlo hacen falta muestras de personas Sordas (§6).
