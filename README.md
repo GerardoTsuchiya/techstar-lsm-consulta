@@ -6,8 +6,6 @@ durante una consulta general. Lo desarrollamos para la materia Aseguramiento de 
 Es una app de escritorio hecha con Electron y React. Tiene una vista para el médico y otra para el paciente, que se
 pueden abrir en la misma computadora o en dos laptops conectadas a la misma red Wi-Fi.
 
-> El catálogo de frases es ficticio y ninguno de los videos está validado en LSM. Los videos y marcadores que incluye
-> solo sirven para probar la interfaz.
 
 ## Requisitos
 
