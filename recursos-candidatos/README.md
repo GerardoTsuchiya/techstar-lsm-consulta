@@ -21,7 +21,7 @@ mensaje completo, que el uso esté permitido por la fuente y registrar la aproba
   entradas del catálogo para las que es candidato, cobertura, tamaño y fecha de descarga.
 - `inventario-reconocedor.json` — vocabulario del reconocedor experimental: por video, fuente, seña, entrada del
   catálogo, si la seña es palabra suelta o mensaje completo, y uso (plantilla, desconocida o excluido). Ver
-  [Docs/RECONOCEDOR.md](../Docs/RECONOCEDOR.md).
+  [guias/RECONOCEDOR.md](../guias/RECONOCEDOR.md).
 - `evaluacion-reconocedor.json` — resultados por video de la evaluación preliminar (`npm run evaluar-reconocedor`).
 - `puntos/` — puntos de hombros y manos extraídos de cada video (`npm run herramienta-puntos`); **ignorada por git**.
 - `indices/` — lista completa de señas de cada sitio (nombre, categoría, URL del video), por si se necesitan más.

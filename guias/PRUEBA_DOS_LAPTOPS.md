@@ -4,7 +4,7 @@ Protocolo para repetir el recorrido de la etapa A entre **dos laptops reales** p
 resultado. Duración aproximada: 40 minutos. Usar solo datos ficticios del catálogo de desarrollo.
 
 Resultado de esta prueba: **pendiente** (aún no se ejecuta). Al terminar, copiar la tabla de §5 a
-[ESTADO_ACTUAL.md](ESTADO_ACTUAL.md) §4.6.
+`Docs/ESTADO_ACTUAL.md` §4.6 (documento interno del equipo, no está en el repositorio).
 
 ## 1. Material
 
@@ -82,7 +82,7 @@ Windows, `ipconfig getifaddr en0` en macOS), que el firewall permitió la conexi
 
 ## 4. Casos
 
-Seguir el guion del README (pasos 2 a 9) entre las dos laptops y, además:
+Seguir el [guion de demostración](GUION_DEMO.md) (pasos 2 a 9) entre las dos laptops y, además:
 
 | # | Caso | Cómo hacerlo | Resultado esperado |
 |---|---|---|---|

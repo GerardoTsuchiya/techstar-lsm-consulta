@@ -1,7 +1,7 @@
 /**
  * npm run docs-recursos
  *
- * Regenera `Docs/RECURSOS_LSM.md` a partir del catálogo que usa la app.
+ * Regenera `guias/RECURSOS_LSM.md` a partir del catálogo que usa la app.
  * Solo escribe si el catálogo no tiene errores (`npm run validar-catalogo` da el detalle).
  */
 import { writeFileSync } from 'node:fs';

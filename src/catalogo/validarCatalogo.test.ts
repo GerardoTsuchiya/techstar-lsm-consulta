@@ -72,13 +72,13 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
     }
   });
 
-  it('Docs/RECURSOS_LSM.md está generado a partir del archivo de datos', () => {
+  it('guias/RECURSOS_LSM.md está generado a partir del archivo de datos', () => {
     const r = validarCatalogo(datos);
     const notas = Object.fromEntries(
       (datos.entradas as Fila[]).filter((e) => typeof e.nota === 'string').map((e) => [e.id, e.nota as string]),
     );
     const esperado = generarDocumentoRecursos(r.cargado!, 'catalogo/ficticio-dev.json', notas);
-    const actual = readFileSync('Docs/RECURSOS_LSM.md', 'utf8').replace(/\r\n/g, '\n');
+    const actual = readFileSync('guias/RECURSOS_LSM.md', 'utf8').replace(/\r\n/g, '\n');
     expect(actual, 'Ejecuta «npm run docs-recursos»').toBe(esperado);
   });
 });

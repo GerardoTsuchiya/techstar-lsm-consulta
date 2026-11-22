@@ -1,7 +1,7 @@
 # Modelos del reconocedor experimental
 
 Archivos que carga el reconocedor experimental (solo modo desarrollo) **sin internet**. Ver
-[Docs/RECONOCEDOR.md](../../Docs/RECONOCEDOR.md).
+[guias/RECONOCEDOR.md](../../guias/RECONOCEDOR.md).
 
 | Archivo | Qué es | Procedencia | Licencia | SHA-256 |
 |---|---|---|---|---|

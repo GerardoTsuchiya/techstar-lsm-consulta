@@ -4,7 +4,7 @@
  * Entrena y evalúa el reconocedor experimental con los puntos extraídos de los videos web
  * (`recursos-candidatos/puntos/`, generados con `npm run herramienta-puntos`). Evaluación
  * **preliminar**: solo hay 1 o 2 personas por fuente, videos de estudio y ninguna persona Sorda
- * de la asociación (ver Docs/RECONOCEDOR.md).
+ * de la asociación (ver guias/RECONOCEDOR.md).
  *
  * 1. Plantillas: cada video del vocabulario y su espejo.
  * 2. Umbrales de rechazo: se calibran con la validación «dejando uno fuera» del vocabulario y la
@@ -206,7 +206,7 @@ writeFileSync(path.join(RAIZ, 'recursos-candidatos/evaluacion-reconocedor.json')
 const redondeo = (vs: number[][]) => vs.map((f) => f.map((x) => Math.round(x * 1e4) / 1e4));
 const modeloFinal: ModeloReconocedor = {
   ...completo,
-  descripcion: `Reconocedor experimental NO VALIDADO (${evaluacion.fecha}). Plantillas de videos web de Iztacala Enseña, Indiscapacidad CDMX y Sol Lara (permiso de entrenamiento). Ver Docs/RECONOCEDOR.md.`,
+  descripcion: `Reconocedor experimental NO VALIDADO (${evaluacion.fecha}). Plantillas de videos web de Iztacala Enseña, Indiscapacidad CDMX y Sol Lara (permiso de entrenamiento). Ver guias/RECONOCEDOR.md.`,
   umbralDistancia: tau,
   umbralMargen: rho,
   plantillas: completo.plantillas.map((p) => ({ ...p, vectores: redondeo(p.vectores) })),

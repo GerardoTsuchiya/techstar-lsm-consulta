@@ -30,9 +30,10 @@ recursos-candidatos/puntos/
 .DS_Store
 Thumbs.db
 
-# Registro de sesiones de elicitación: perfiles de participantes (aunque codificados).
-# Se conserva en la trazabilidad formal, fuera del repositorio (TECHSTAR_MVP.md §2).
-Docs/ACS_REGISTRO-SESIONES-ELICITACION_TechStar.pdf
+# Documentos de trabajo del equipo (SRS, lista de requerimientos, estado, registro de elicitación) y presentaciones.
+# Se quedan en las computadoras del equipo, fuera del repositorio.
+Docs/
+Presentacion 4 Nov/
 
 # Configuración local de herramientas
 .claude/settings.local.json

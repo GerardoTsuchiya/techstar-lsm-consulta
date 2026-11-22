@@ -10,7 +10,7 @@ import { extractorMediaPipe, VELOCIDAD_EXTRACCION, type ExtractorPuntos } from '
  * Reconoce de verdad (no lo decide una persona como el simulador), pero con un método sencillo y
  * datos muy limitados: puntos de manos y hombros (MediaPipe) comparados con DTW contra plantillas
  * de videos web de 1 o 2 personas por fuente. No se ha probado con personas Sordas ni con su
- * cámara. Ver Docs/RECONOCEDOR.md.
+ * cámara. Ver guias/RECONOCEDOR.md.
  *
  * - Solo existe con la política `desarrollo` y la pantalla lo marca siempre.
  * - Si la seña no se parece lo suficiente a una plantilla, o se parece casi igual a dos, responde

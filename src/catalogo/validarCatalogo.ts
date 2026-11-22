@@ -39,7 +39,7 @@ const ESTADOS_RECURSO: Record<EstadoRecurso, string> = {
   prueba: 'prueba',
 };
 
-/** Uso de cada recurso de sistema (TECHSTAR_MVP.md §6.1). También lo usa `Docs/RECURSOS_LSM.md`. */
+/** Uso de cada recurso de sistema (TECHSTAR_MVP.md §6.1). También lo usa `guias/RECURSOS_LSM.md`. */
 export const USOS_SISTEMA: Record<ClaveSistema, string> = {
   avisoAlcance: 'Aviso de alcance al iniciar (RF-16, RC-01)',
   revisar: 'Encabezado «Revisa tu mensaje» (RF-03)',

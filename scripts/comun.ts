@@ -7,7 +7,7 @@ export const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 
 /** Catálogo que carga la app (`src/catalogo/catalogoFicticio.ts`) y del que sale el inventario. */
 export const CATALOGO_APP = 'catalogo/ficticio-dev.json';
-export const DOCUMENTO = 'Docs/RECURSOS_LSM.md';
+export const DOCUMENTO = 'guias/RECURSOS_LSM.md';
 export const CARPETA_PUBLICA = 'public/recursos';
 
 export type Lectura = { ok: true; datos: unknown } | { ok: false; error: string };

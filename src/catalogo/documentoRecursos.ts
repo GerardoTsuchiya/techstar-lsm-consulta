@@ -2,7 +2,7 @@ import type { ClaveSistema, EntradaCatalogo, Recurso } from '../nucleo/tipos';
 import { USOS_SISTEMA, type CatalogoCargado } from './validarCatalogo.ts';
 
 /**
- * Genera `Docs/RECURSOS_LSM.md` a partir del archivo de datos del catálogo (TECHSTAR_MVP.md §6.1).
+ * Genera `guias/RECURSOS_LSM.md` a partir del archivo de datos del catálogo (TECHSTAR_MVP.md §6.1).
  * Lo usan `npm run docs-recursos` (escribe el documento) y `npm run validar-catalogo`
  * (comprueba que el documento está al día). Solo importa tipos y funciones puras.
  */

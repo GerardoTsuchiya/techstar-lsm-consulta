@@ -2,7 +2,7 @@
  * npm run validar-catalogo [-- catalogo/otro.json]
  *
  * Revisa los archivos de `catalogo/` (todos, o los indicados), que los archivos de
- * `public/recursos/` existan y no estén dañados, y que `Docs/RECURSOS_LSM.md` esté al día.
+ * `public/recursos/` existan y no estén dañados, y que `guias/RECURSOS_LSM.md` esté al día.
  * Termina con código 1 si hay errores (así `npm run check` falla).
  */
 import { readdirSync, readFileSync } from 'node:fs';
