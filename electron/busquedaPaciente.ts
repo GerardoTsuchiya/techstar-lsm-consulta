@@ -60,9 +60,18 @@ export function buscarMedicos(opciones: OpcionesBuscar = {}): Promise<AnuncioRec
   return new Promise((resolver) => {
     const socket = dgram.createSocket('udp4');
     let intervalo: NodeJS.Timeout | undefined;
+    let limite: NodeJS.Timeout | undefined;
+    let fin = false;
     const terminar = () => {
+      if (fin) return;
+      fin = true;
       clearInterval(intervalo);
-      socket.close();
+      clearTimeout(limite);
+      try {
+        socket.close();
+      } catch {
+        /* ya cerrado */
+      }
       resolver([...encontrados.values()]);
     };
 
@@ -84,7 +93,7 @@ export function buscarMedicos(opciones: OpcionesBuscar = {}): Promise<AnuncioRec
       };
       preguntar();
       intervalo = setInterval(preguntar, intervaloMs);
-      setTimeout(terminar, duracionMs);
+      limite = setTimeout(terminar, duracionMs);
     });
   });
 }

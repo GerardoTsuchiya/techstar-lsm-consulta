@@ -83,4 +83,38 @@ describe('El médico responde a la búsqueda (D56)', () => {
     const busqueda = JSON.stringify(mensajeBusqueda());
     expect(await respuestasA(respuesta.puerto, [busqueda, busqueda, busqueda, busqueda, busqueda])).toBe(2);
   });
+
+  it('si el puerto UDP ya está ocupado, rechaza y no deja el socket abierto', async () => {
+    const ocupante = dgram.createSocket('udp4');
+    await new Promise<void>((r) => ocupante.bind(0, '127.0.0.1', r));
+    limpiar.push(() => new Promise<void>((r) => ocupante.close(() => r())));
+    await expect(
+      iniciarRespuestaBusqueda({ host: '127.0.0.1', puerto: ocupante.address().port, datos: () => Promise.reject(new Error('no se usa')) }),
+    ).rejects.toThrow();
+  });
+
+  it('si no se pueden calcular los datos, no responde ni deja un rechazo sin atrapar', async () => {
+    const respuesta = await iniciarRespuestaBusqueda({ host: '127.0.0.1', puerto: 0, datos: () => Promise.reject(new Error('x')) });
+    limpiar.push(() => respuesta.cerrar());
+    expect(await respuestasA(respuesta.puerto, [JSON.stringify(mensajeBusqueda())])).toBe(0);
+  });
+
+  it('cerrar mientras se calculan los datos no lanza ni responde', async () => {
+    let liberar!: (d: { puerto: number; sal: string; huella: string }) => void;
+    const pendiente = new Promise<{ puerto: number; sal: string; huella: string }>((r) => {
+      liberar = r;
+    });
+    const respuesta = await iniciarRespuestaBusqueda({ host: '127.0.0.1', puerto: 0, datos: () => pendiente });
+    const cliente = dgram.createSocket('udp4');
+    let n = 0;
+    cliente.on('message', () => n++);
+    await new Promise<void>((r) => cliente.bind(0, '127.0.0.1', r));
+    cliente.send(JSON.stringify(mensajeBusqueda()), respuesta.puerto, '127.0.0.1');
+    await new Promise((r) => setTimeout(r, 100));
+    await respuesta.cerrar();
+    liberar({ puerto: 1, sal: 'AAAAAAAAAAAAAAAAAAAAAA==', huella: 'AAAAAAAAAAAAAAAAAAAAAA==' });
+    await new Promise((r) => setTimeout(r, 100));
+    cliente.close();
+    expect(n).toBe(0);
+  });
 });

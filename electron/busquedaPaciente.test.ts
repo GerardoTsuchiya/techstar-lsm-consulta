@@ -20,4 +20,14 @@ describe('Direcciones de difusión del equipo del paciente (D56)', () => {
   it('sin redes: solo la general y la local', () => {
     expect(destinosDeDifusion({} as Interfaces)).toEqual(['255.255.255.255', '127.0.0.1']);
   });
+
+  it('con máscara /32 la difusión es la propia dirección', () => {
+    const interfaces = { enlace: [ipv4('10.0.0.5', '255.255.255.255')] } as unknown as Interfaces;
+    expect(destinosDeDifusion(interfaces)).toEqual(['10.0.0.5', '255.255.255.255', '127.0.0.1']);
+  });
+
+  it('una interfaz sin máscara se omite', () => {
+    const interfaces = { rara: [{ ...ipv4('10.0.0.5', '255.255.255.0'), netmask: '' }] } as unknown as Interfaces;
+    expect(destinosDeDifusion(interfaces)).toEqual(['255.255.255.255', '127.0.0.1']);
+  });
 });

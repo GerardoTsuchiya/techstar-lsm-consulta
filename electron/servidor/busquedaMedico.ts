@@ -33,9 +33,10 @@ export async function iniciarRespuestaBusqueda(opciones: OpcionesRespuestaBusque
   const socket = dgram.createSocket('udp4');
   let ventanaDesde = 0;
   let enVentana = 0;
+  let cerrado = false;
 
   socket.on('message', (datos, remitente) => {
-    if (datos.length > MAX_BYTES_BUSQUEDA) return;
+    if (cerrado || datos.length > MAX_BYTES_BUSQUEDA) return;
     if (!esBusqueda(leerJson(datos.toString('utf8')))) return;
     const ahora = Date.now();
     if (ahora - ventanaDesde >= 1000) {
@@ -44,25 +45,49 @@ export async function iniciarRespuestaBusqueda(opciones: OpcionesRespuestaBusque
     }
     if (enVentana >= maxPorSegundo) return;
     enVentana++;
-    void opciones.datos().then((d) => {
-      const anuncio: Anuncio = { t: 'anuncio', app: APP_BUSQUEDA, v: VERSION_PROTOCOLO, ...d };
-      socket.send(JSON.stringify(anuncio), remitente.port, remitente.address, () => undefined);
-    });
+    opciones
+      .datos()
+      .then((d) => {
+        if (cerrado) return; // se cerró mientras se calculaba: enviar lanzaría ERR_SOCKET_DGRAM_NOT_RUNNING
+        const anuncio: Anuncio = { t: 'anuncio', app: APP_BUSQUEDA, v: VERSION_PROTOCOLO, ...d };
+        try {
+          socket.send(JSON.stringify(anuncio), remitente.port, remitente.address, () => undefined);
+        } catch {
+          /* el socket ya no está disponible */
+        }
+      })
+      .catch(() => {
+        /* sin anuncio esta vez; el paciente repite cada segundo */
+      });
   });
   socket.on('error', () => {
     /* un error de envío no detiene al médico; la dirección tecleada sigue disponible */
   });
 
   await new Promise<void>((resolver, rechazar) => {
-    socket.once('error', rechazar);
+    const fallar = (e: Error) => {
+      cerrado = true;
+      try {
+        socket.close();
+      } catch {
+        /* ya cerrado */
+      }
+      rechazar(e);
+    };
+    socket.once('error', fallar);
     socket.bind(opciones.puerto ?? PUERTO_BUSQUEDA, opciones.host, () => {
-      socket.off('error', rechazar);
+      socket.off('error', fallar);
       resolver();
     });
   });
 
   return {
     puerto: socket.address().port,
-    cerrar: () => new Promise<void>((r) => socket.close(() => r())),
+    cerrar: () =>
+      new Promise<void>((r) => {
+        if (cerrado) return r();
+        cerrado = true;
+        socket.close(() => r());
+      }),
   };
 }
