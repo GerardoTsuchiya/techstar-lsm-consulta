@@ -6,7 +6,7 @@ import type { Catalogo, Mensaje } from './tipos';
  */
 export interface Sugerencia {
   entradaId: string;
-  /** Síntomas del paciente que la recomiendan, del más reciente al más antiguo. Vacío en las generales. */
+  /** Síntomas del paciente que la recomiendan: por mensaje, del más reciente al más antiguo; dentro de un mensaje, en su orden. Vacío en las generales. */
   porSintomas: string[];
 }
 

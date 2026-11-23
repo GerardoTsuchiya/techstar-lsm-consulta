@@ -20,6 +20,7 @@ const catalogo: Catalogo = {
     entrada('P-ESCALOFRIOS', 'pregunta-medico'),
     entrada('P-ALERGIA', 'pregunta-medico'),
     entrada('P-MEDICAMENTO', 'pregunta-medico'),
+    entrada('R-SI', 'respuesta-paciente'),
   ],
   preguntasGenerales: ['P-ALERGIA', 'P-MEDICAMENTO', 'P-FLEMAS'],
 };
@@ -73,8 +74,16 @@ describe('Preguntas sugeridas al médico (D55)', () => {
     expect(s.generales.map((x) => x.entradaId)).toEqual(['P-MEDICAMENTO']);
   });
 
+  it('el mismo síntoma en dos mensajes se lista una sola vez', () => {
+    const s = sugerencias(catalogo, [delPaciente('S-TOS'), delPaciente('S-TOS')]);
+    expect(s.porSintomas).toEqual([
+      { entradaId: 'P-DESDE', porSintomas: ['S-TOS'] },
+      { entradaId: 'P-FLEMAS', porSintomas: ['S-TOS'] },
+    ]);
+  });
+
   it('ignora síntomas sin recomendadas, respuestas breves y entradas que no existen', () => {
-    const s = sugerencias(catalogo, [delPaciente('S-SIN', 'NO-EXISTE')]);
+    const s = sugerencias(catalogo, [delPaciente('S-SIN', 'R-SI', 'NO-EXISTE')]);
     expect(s.porSintomas).toEqual([]);
   });
 });
