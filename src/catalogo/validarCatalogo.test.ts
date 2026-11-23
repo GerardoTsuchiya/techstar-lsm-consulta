@@ -42,6 +42,9 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
       'PAC-R-04', 'PAC-R-05', 'PAC-R-06', 'PAC-R-07', 'PAC-R-08', 'PAC-R-09', 'PAC-R-10',
       'PAC-R-11', 'PAC-R-12', 'PAC-R-13', 'PAC-R-14',
       'MED-P-01', 'MED-P-02', 'MED-P-03', 'MED-P-04', 'MED-P-05', 'MED-P-06',
+      // Preguntas nuevas (D55). MED-P-09 se descartó: no hay video.
+      'MED-P-07', 'MED-P-08', 'MED-P-10', 'MED-P-11', 'MED-P-12', 'MED-P-13', 'MED-P-14',
+      'MED-P-15', 'MED-P-16', 'MED-P-17', 'MED-P-18', 'MED-P-19', 'MED-P-20', 'MED-P-21',
       'MED-R-01', 'MED-R-02', 'MED-R-03', 'MED-R-04',
     ]);
     const sinRecurso = catalogoFicticio.entradas.filter((e) => !e.recursoId).map((e) => e.id);
@@ -63,6 +66,10 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
       'REC-PRUEBA-PAC-R-08', 'REC-PRUEBA-PAC-R-09', 'REC-PRUEBA-PAC-R-10', 'REC-PRUEBA-PAC-R-11',
       'REC-PRUEBA-PAC-R-12', 'REC-PRUEBA-PAC-R-13', 'REC-PRUEBA-PAC-R-14',
       'REC-PRUEBA-MED-P-02', 'REC-PRUEBA-MED-P-03', 'REC-PRUEBA-MED-P-04', 'REC-PRUEBA-MED-P-05',
+      'REC-PRUEBA-MED-P-07', 'REC-PRUEBA-MED-P-08', 'REC-PRUEBA-MED-P-10', 'REC-PRUEBA-MED-P-11',
+      'REC-PRUEBA-MED-P-12', 'REC-PRUEBA-MED-P-13', 'REC-PRUEBA-MED-P-14', 'REC-PRUEBA-MED-P-15',
+      'REC-PRUEBA-MED-P-16', 'REC-PRUEBA-MED-P-17', 'REC-PRUEBA-MED-P-18', 'REC-PRUEBA-MED-P-19',
+      'REC-PRUEBA-MED-P-20', 'REC-PRUEBA-MED-P-21',
       'REC-PRUEBA-SIS-NO-ENTENDI', 'REC-PRUEBA-SIS-INTENSIDAD',
     ]);
     for (const r of conArchivo) {
@@ -80,6 +87,23 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
     const esperado = generarDocumentoRecursos(r.cargado!, 'catalogo/ficticio-dev.json', notas);
     const actual = readFileSync('guias/RECURSOS_LSM.md', 'utf8').replace(/\r\n/g, '\n');
     expect(actual, 'Ejecuta «npm run docs-recursos»').toBe(esperado);
+  });
+
+  it('recomienda preguntas por síntoma y ofrece preguntas generales (D55)', () => {
+    const recomendadas = Object.fromEntries(
+      catalogoFicticio.entradas.filter((e) => e.recomendadas).map((e) => [e.id, e.recomendadas]),
+    );
+    expect(recomendadas).toEqual({
+      'PAC-S-01': ['MED-P-01', 'MED-P-12', 'MED-P-13', 'MED-P-05'],
+      'PAC-S-02': ['MED-P-01', 'MED-P-02', 'MED-P-06', 'MED-P-14', 'MED-P-15'],
+      'PAC-S-03': ['MED-P-01', 'MED-P-16', 'MED-P-05'],
+      'PAC-S-04': ['MED-P-01', 'MED-P-17', 'MED-P-08'],
+      'PAC-S-05': ['MED-P-01', 'MED-P-18', 'MED-P-19', 'MED-P-05'],
+      'PAC-S-06': ['MED-P-01', 'MED-P-20', 'MED-P-06', 'MED-P-07'],
+      'PAC-S-07': ['MED-P-01', 'MED-P-06', 'MED-P-15', 'MED-P-14'],
+      'PAC-S-08': ['MED-P-01', 'MED-P-21', 'MED-P-07', 'MED-P-05'],
+    });
+    expect(catalogoFicticio.preguntasGenerales).toEqual(['MED-P-03', 'MED-P-04', 'MED-P-07', 'MED-P-08', 'MED-P-10', 'MED-P-11']);
   });
 });
 

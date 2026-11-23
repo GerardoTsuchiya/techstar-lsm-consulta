@@ -25,6 +25,14 @@
     "expresionDesconocida": "REC-PRUEBA-SIS-DESCONOCIDA",
     "cancelarCaptura": "REC-PRUEBA-SIS-CANCELAR"
   },
+  "preguntasGenerales": [
+    "MED-P-03",
+    "MED-P-04",
+    "MED-P-07",
+    "MED-P-08",
+    "MED-P-10",
+    "MED-P-11"
+  ],
   "entradas": [
     {
       "id": "PAC-S-01",
@@ -34,7 +42,13 @@
       "termino": "dolor de cabeza",
       "icono": "cabeza",
       "esDolor": true,
-      "recursoId": "REC-PRUEBA-PAC-S-01"
+      "recursoId": "REC-PRUEBA-PAC-S-01",
+      "recomendadas": [
+        "MED-P-01",
+        "MED-P-12",
+        "MED-P-13",
+        "MED-P-05"
+      ]
     },
     {
       "id": "PAC-S-02",
@@ -44,7 +58,14 @@
       "termino": "dolor de estómago",
       "icono": "estomago",
       "esDolor": true,
-      "recursoId": "REC-PRUEBA-PAC-S-02"
+      "recursoId": "REC-PRUEBA-PAC-S-02",
+      "recomendadas": [
+        "MED-P-01",
+        "MED-P-02",
+        "MED-P-06",
+        "MED-P-14",
+        "MED-P-15"
+      ]
     },
     {
       "id": "PAC-S-03",
@@ -54,7 +75,12 @@
       "termino": "dolor de garganta",
       "icono": "garganta",
       "esDolor": true,
-      "recursoId": "REC-PRUEBA-PAC-S-03"
+      "recursoId": "REC-PRUEBA-PAC-S-03",
+      "recomendadas": [
+        "MED-P-01",
+        "MED-P-16",
+        "MED-P-05"
+      ]
     },
     {
       "id": "PAC-S-04",
@@ -64,7 +90,12 @@
       "termino": "fiebre",
       "icono": "fiebre",
       "esDolor": false,
-      "recursoId": "REC-PRUEBA-PAC-S-04"
+      "recursoId": "REC-PRUEBA-PAC-S-04",
+      "recomendadas": [
+        "MED-P-01",
+        "MED-P-17",
+        "MED-P-08"
+      ]
     },
     {
       "id": "PAC-S-05",
@@ -74,7 +105,13 @@
       "termino": "tos",
       "icono": "tos",
       "esDolor": false,
-      "recursoId": "REC-PRUEBA-PAC-S-05"
+      "recursoId": "REC-PRUEBA-PAC-S-05",
+      "recomendadas": [
+        "MED-P-01",
+        "MED-P-18",
+        "MED-P-19",
+        "MED-P-05"
+      ]
     },
     {
       "id": "PAC-S-06",
@@ -85,6 +122,12 @@
       "icono": "mareo",
       "esDolor": false,
       "recursoId": null,
+      "recomendadas": [
+        "MED-P-01",
+        "MED-P-20",
+        "MED-P-06",
+        "MED-P-07"
+      ],
       "nota": "Sin recurso a propósito: prueba el bloqueo en la revisión del paciente."
     },
     {
@@ -95,7 +138,13 @@
       "termino": "náuseas",
       "icono": "nauseas",
       "esDolor": false,
-      "recursoId": "REC-PRUEBA-PAC-S-07"
+      "recursoId": "REC-PRUEBA-PAC-S-07",
+      "recomendadas": [
+        "MED-P-01",
+        "MED-P-06",
+        "MED-P-15",
+        "MED-P-14"
+      ]
     },
     {
       "id": "PAC-S-08",
@@ -105,7 +154,13 @@
       "termino": "cansancio",
       "icono": "cansancio",
       "esDolor": false,
-      "recursoId": "REC-PRUEBA-PAC-S-08"
+      "recursoId": "REC-PRUEBA-PAC-S-08",
+      "recomendadas": [
+        "MED-P-01",
+        "MED-P-21",
+        "MED-P-07",
+        "MED-P-05"
+      ]
     },
     {
       "id": "PAC-R-01",
@@ -321,6 +376,160 @@
       "esDolor": false,
       "recursoId": null,
       "nota": "Sin recurso a propósito: prueba el bloqueo de envío del médico."
+    },
+    {
+      "id": "MED-P-07",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente tiene alguna enfermedad crónica.",
+      "texto": "¿Tiene alguna enfermedad crónica, como diabetes o presión alta?",
+      "termino": "enfermedad crónica",
+      "icono": "medicamento",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-07",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-08",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente ya tomó algún medicamento para el malestar actual.",
+      "texto": "¿Ha tomado algún medicamento para esto?",
+      "termino": "tomó medicamento",
+      "icono": "medicamento",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-08",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-10",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si la paciente está o podría estar embarazada.",
+      "texto": "¿Está embarazada o podría estarlo?",
+      "termino": "embarazo",
+      "icono": "revisar",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-10",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-11",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pide al paciente que indique la intensidad de su dolor en una escala de 1 a 10.",
+      "texto": "¿Cuánto le duele, del 1 al 10?",
+      "termino": "cuánto duele",
+      "icono": "escala",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-11",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-12",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el dolor es intermitente.",
+      "texto": "¿El dolor va y viene?",
+      "termino": "dolor va y viene",
+      "icono": "calendario",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-12",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-13",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente tiene visión borrosa o molestia con la luz.",
+      "texto": "¿Ve borroso o le molesta la luz?",
+      "termino": "vista borrosa",
+      "icono": "cabeza",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-13",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-14",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente ha tenido diarrea.",
+      "texto": "¿Ha tenido diarrea?",
+      "termino": "diarrea",
+      "icono": "estomago",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-14",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-15",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente puede comer y beber sin dificultad.",
+      "texto": "¿Puede comer y beber con normalidad?",
+      "termino": "comer y beber",
+      "icono": "estomago",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-15",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-16",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente siente dolor al tragar.",
+      "texto": "¿Le duele al tragar?",
+      "termino": "tragar",
+      "icono": "garganta",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-16",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-17",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente ha tenido escalofríos.",
+      "texto": "¿Ha tenido escalofríos?",
+      "termino": "escalofríos",
+      "icono": "fiebre",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-17",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-18",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente expulsa flemas al toser.",
+      "texto": "¿Tiene flemas al toser?",
+      "termino": "flemas",
+      "icono": "tos",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-18",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-19",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente tiene dificultad para respirar.",
+      "texto": "¿Le cuesta trabajo respirar?",
+      "termino": "respirar",
+      "icono": "tos",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-19",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-20",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente ha perdido el conocimiento.",
+      "texto": "¿Se ha desmayado?",
+      "termino": "desmayo",
+      "icono": "mareo",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-20",
+      "nota": "Pendiente de revisión médica (D55)."
+    },
+    {
+      "id": "MED-P-21",
+      "tipo": "pregunta-medico",
+      "significado": "El médico pregunta si el paciente duerme bien.",
+      "texto": "¿Duerme bien por las noches?",
+      "termino": "dormir",
+      "icono": "cansancio",
+      "esDolor": false,
+      "recursoId": "REC-PRUEBA-MED-P-21",
+      "nota": "Pendiente de revisión médica (D55)."
     },
     {
       "id": "MED-R-01",
@@ -675,6 +884,174 @@
       "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Tienes fiebre?» (presente; la entrada pregunta «¿Ha tenido…?»).",
       "aprobacion": null,
       "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-16: carga desde public/recursos/ y se reproduce sin audio en tarjetas, revisión del médico y mensaje al paciente. Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-07",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Tiene alguna enfermedad crónica, como diabetes o presión alta?»",
+      "archivo": "MED-P-07.mp4",
+      "procedencia": "Iztacala Enseña, video «¿Tienes alguna enfermedad?» (https://www.iztacalaensena.org/preguntas-de-consulta.html), alojado en https://www.youtube.com/watch?v=xpN4PyHgYG8. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Tienes alguna enfermedad?» (tutea; no menciona diabetes ni presión alta).",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-08",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Ha tomado algún medicamento para esto?»",
+      "archivo": "MED-P-08.mp4",
+      "procedencia": "Iztacala Enseña, video «Medicamento» (https://www.iztacalaensena.org/exploracioacuten-meacutedica.html), alojado en https://www.youtube.com/watch?v=zluP4dzBD4A. Descargado el 2026-11-16: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra solo la seña «Medicamento».",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-10",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Está embarazada o podría estarlo?»",
+      "archivo": "MED-P-10.mp4",
+      "procedencia": "Iztacala Enseña, video «¿Estás embarazada?» (https://www.iztacalaensena.org/preguntas-de-consulta.html), alojado en https://www.youtube.com/watch?v=u-QGRkYa6sE. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Estás embarazada?» (tutea; no dice «o podría estarlo»).",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-11",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Cuánto le duele, del 1 al 10?»",
+      "archivo": "MED-P-11.mp4",
+      "procedencia": "Iztacala Enseña, video «¿Qué tanto te duele?» (https://www.iztacalaensena.org/preguntas-de-consulta.html), alojado en https://www.youtube.com/watch?v=d444MtGdCPs. Descargado el 2026-11-16: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Qué tanto te duele?»; no menciona la escala 1 a 10. Mismo video que el control de intensidad del dolor.",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-12",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿El dolor va y viene?»",
+      "archivo": "MED-P-12.mp4",
+      "procedencia": "Iztacala Enseña, video «Dolor» (https://www.iztacalaensena.org/siacutentomas-enfermedades-lesiones-y-condiciones.html), alojado en https://www.youtube.com/watch?v=LrNHMvclyr0. Descargado el 2026-11-16: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra solo la seña «Dolor».",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-13",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Ve borroso o le molesta la luz?»",
+      "archivo": "MED-P-13.mp4",
+      "procedencia": "Iztacala Enseña, video «Vista borrosa» (https://www.iztacalaensena.org/siacutentomas-enfermedades-lesiones-y-condiciones.html), alojado en https://www.youtube.com/watch?v=MvJrvoh-JLE. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra solo la seña «Vista borrosa»; no pregunta por la luz.",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-14",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Ha tenido diarrea?»",
+      "archivo": "MED-P-14.mp4",
+      "procedencia": "Iztacala Enseña, video «¿Tienes diarrea?» (https://www.iztacalaensena.org/preguntas-de-consulta.html), alojado en https://www.youtube.com/watch?v=3juvYtLxhok. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Tienes diarrea?» (presente, no pasado).",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-15",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Puede comer y beber con normalidad?»",
+      "archivo": "MED-P-15.mp4",
+      "procedencia": "Iztacala Enseña, video «Comer» (https://www.iztacalaensena.org/verbos.html), alojado en https://www.youtube.com/watch?v=BUMUCQAc7WA. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra solo la seña «Comer».",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-16",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Le duele al tragar?»",
+      "archivo": "MED-P-16.mp4",
+      "procedencia": "Iztacala Enseña, video «Dolor de garganta» (https://www.iztacalaensena.org/siacutentomas-enfermedades-lesiones-y-condiciones.html), alojado en https://www.youtube.com/watch?v=MfcVpEjklko. Descargado el 2026-11-16: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra la seña «Dolor de garganta»; no pregunta por tragar. Mismo video que PAC-S-03.",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-17",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Ha tenido escalofríos?»",
+      "archivo": "MED-P-17.mp4",
+      "procedencia": "Indiscapacidad CDMX (Portal LSM), video «Escalofríos» (https://lsm.indiscapacidad.cdmx.gob.mx/ejes/salud/), alojado en https://www.youtube.com/watch?v=mwjUA-z77dw. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra solo la seña «Escalofríos».",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-18",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Tiene flemas al toser?»",
+      "archivo": "MED-P-18.mp4",
+      "procedencia": "Iztacala Enseña, video «Flema» (https://www.iztacalaensena.org/siacutentomas-enfermedades-lesiones-y-condiciones.html), alojado en https://www.youtube.com/watch?v=212iZNlPNxo. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra solo la seña «Flema».",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-19",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Le cuesta trabajo respirar?»",
+      "archivo": "MED-P-19.mp4",
+      "procedencia": "Iztacala Enseña, video «¿Sientes dificultad para respirar?» (https://www.iztacalaensena.org/preguntas-de-consulta.html), alojado en https://www.youtube.com/watch?v=1KBrPRJmh8o. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Sientes dificultad para respirar?» (tutea).",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-20",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Se ha desmayado?»",
+      "archivo": "MED-P-20.mp4",
+      "procedencia": "Iztacala Enseña, video «¿Te desmayaste?» (https://www.iztacalaensena.org/preguntas-de-consulta.html), alojado en https://www.youtube.com/watch?v=uzd6HVLZ-g4. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Te desmayaste?» (tutea).",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+    },
+    {
+      "id": "REC-PRUEBA-MED-P-21",
+      "tipo": "video",
+      "estado": "prueba",
+      "descripcion": "Seña o explicación en LSM de: «¿Duerme bien por las noches?»",
+      "archivo": "MED-P-21.mp4",
+      "procedencia": "Iztacala Enseña, video «Dormir» (https://www.iztacalaensena.org/verbos.html), alojado en https://www.youtube.com/watch?v=7Y_NuGhctQ0. Descargado el 2026-11-23: solo video H.264 720p, sin audio.",
+      "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
+      "revisionLinguistica": "Pendiente. Muestra solo la seña «Dormir».",
+      "aprobacion": null,
+      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-R-01",
