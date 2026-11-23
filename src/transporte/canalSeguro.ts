@@ -63,7 +63,7 @@ export function bytesAleatorios(n: number): Uint8Array<ArrayBuffer> {
 
 // ---------------------------------------------------------------- claves
 
-/** Deriva la clave maestra del código. Es lenta a propósito: se calcula una vez por código. */
+/** Deriva la clave maestra del código. Es lenta a propósito: se calcula una vez por código. También deriva la huella del anuncio de búsqueda (D56). */
 export async function derivarClaveMaestra(
   codigoNormalizado: string,
   sal: Uint8Array<ArrayBuffer>,
@@ -71,7 +71,7 @@ export async function derivarClaveMaestra(
 ): Promise<CryptoKey> {
   const base = await crypto.subtle.importKey('raw', texto.encode(codigoNormalizado), 'PBKDF2', false, ['deriveBits']);
   const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: sal, iterations: iteraciones }, base, 256);
-  return crypto.subtle.importKey('raw', bits, 'HKDF', false, ['deriveKey']);
+  return crypto.subtle.importKey('raw', bits, 'HKDF', false, ['deriveKey', 'deriveBits']);
 }
 
 export type Sentido = 'paciente-a-medico' | 'medico-a-paciente';
