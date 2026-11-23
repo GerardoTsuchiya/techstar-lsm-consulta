@@ -203,7 +203,7 @@ describe('Validador del catálogo: rechaza datos que cambiarían lo comunicado',
   it('recomendaciones: solo en síntomas, solo preguntas del médico existentes y sin repetir', () => {
     const r = copia((d) => {
       entrada(d, 'PAC-S-01').recomendadas = ['MED-P-01', 'MED-P-01', 'MED-NO-EXISTE', 'MED-R-01', 'PAC-S-02'];
-      entrada(d, 'PAC-R-01').recomendadas = ['MED-P-01'];
+      entrada(d, 'PAC-R-01').recomendadas = ['MED-NO-EXISTE'];
       entrada(d, 'PAC-S-03').recomendadas = 'MED-P-01';
     });
     const e = errores(r);
@@ -213,6 +213,7 @@ describe('Validador del catálogo: rechaza datos que cambiarían lo comunicado',
     expect(e).toContain('Entrada PAC-S-01: «recomendadas» incluye «MED-R-01», que no es una pregunta del médico.');
     expect(e).toContain('Entrada PAC-S-01: «recomendadas» incluye «PAC-S-02», que no es una pregunta del médico.');
     expect(e).toContain('Entrada PAC-R-01: solo un síntoma puede tener «recomendadas».');
+    expect(e).not.toContain('Entrada PAC-R-01: «recomendadas» incluye');
     expect(e).toContain('Entrada PAC-S-03: «recomendadas» debe ser una lista de ids de preguntas del médico.');
   });
 
@@ -227,6 +228,19 @@ describe('Validador del catálogo: rechaza datos que cambiarían lo comunicado',
     expect(errores(copia((d) => ((d as Fila).preguntasGenerales = 'MED-P-03')))).toContain(
       'Catálogo: «preguntasGenerales» debe ser una lista de ids de preguntas del médico.',
     );
+    expect(errores(copia((d) => ((d as Fila).preguntasGenerales = ['MED-P-03', 1])))).toContain(
+      'Catálogo: «preguntasGenerales» debe ser una lista de ids de preguntas del médico.',
+    );
+  });
+
+  it('recomendaciones y preguntas generales válidas se cargan en el orden dado', () => {
+    const r = copia((d) => {
+      entrada(d, 'PAC-S-01').recomendadas = ['MED-P-02', 'MED-P-01'];
+      (d as Fila).preguntasGenerales = ['MED-P-04', 'MED-P-03'];
+    });
+    expect(r.errores).toEqual([]);
+    expect(r.cargado!.catalogo.entradas.find((e) => e.id === 'PAC-S-01')!.recomendadas).toEqual(['MED-P-02', 'MED-P-01']);
+    expect(r.cargado!.catalogo.preguntasGenerales).toEqual(['MED-P-04', 'MED-P-03']);
   });
 
   it('sin «preguntasGenerales» ni «recomendadas» el catálogo carga con listas vacías', () => {

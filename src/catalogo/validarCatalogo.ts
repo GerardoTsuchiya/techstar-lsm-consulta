@@ -107,15 +107,6 @@ const lista = (claves: Record<string, unknown> | readonly string[]) =>
 
 const esListaDeTextos = (v: unknown): v is string[] => Array.isArray(v) && v.every((x) => typeof x === 'string');
 
-/** Revisa una lista de ids que debe contener solo preguntas del médico existentes, sin repetir (D55). */
-function validarListaPreguntas(ids: string[], donde: string, campo: string, tipos: Map<string, unknown>, errores: string[]) {
-  for (const id of repetidos(ids)) errores.push(`${donde}: «${campo}» repite «${id}».`);
-  for (const id of new Set(ids)) {
-    if (!tipos.has(id)) errores.push(`${donde}: «${campo}» incluye «${id}», que no existe en «entradas».`);
-    else if (tipos.get(id) !== 'pregunta-medico') errores.push(`${donde}: «${campo}» incluye «${id}», que no es una pregunta del médico.`);
-  }
-}
-
 const PATRON_ID = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
 const PATRON_ARCHIVO = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 const PATRON_FECHA = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -335,6 +326,15 @@ function repetidos(ids: string[]): string[] {
   const dobles = new Set<string>();
   for (const id of ids) (vistos.has(id) ? dobles : vistos).add(id);
   return [...dobles];
+}
+
+/** Revisa una lista de ids que debe contener solo preguntas del médico existentes, sin repetir (D55). */
+function validarListaPreguntas(ids: string[], donde: string, campo: string, tipos: Map<string, unknown>, errores: string[]) {
+  for (const id of repetidos(ids)) errores.push(`${donde}: «${campo}» repite «${id}».`);
+  for (const id of new Set(ids)) {
+    if (!tipos.has(id)) errores.push(`${donde}: «${campo}» incluye «${id}», que no existe en «entradas».`);
+    else if (tipos.get(id) !== 'pregunta-medico') errores.push(`${donde}: «${campo}» incluye «${id}», que no es una pregunta del médico.`);
+  }
 }
 
 /**
