@@ -48,7 +48,8 @@
   "paginaOrigen": "https://www.iztacalaensena.org/siacutentomas-enfermedades-lesiones-y-condiciones.html",
   "urlVideo": "https://www.youtube.com/watch?v=LrNHMvclyr0",
   "entradas": [
-   "PAC-S-02"
+   "PAC-S-02",
+   "MED-P-12"
   ],
   "cobertura": "parcial",
   "archivo": "videos/IZT_dolor_LrNHMvclyr0.mp4",
@@ -412,7 +413,8 @@
   "paginaOrigen": "https://www.iztacalaensena.org/exploracioacuten-meacutedica.html",
   "urlVideo": "https://www.youtube.com/watch?v=zluP4dzBD4A",
   "entradas": [
-   "MED-P-04"
+   "MED-P-04",
+   "MED-P-08"
   ],
   "cobertura": "completa",
   "archivo": "videos/IZT_medicamento_zluP4dzBD4A.mp4",
@@ -1370,5 +1372,145 @@
   "archivo": "videos/SOL_sena-de-no-en-lsm_Ltg8txV9goA.mp4",
   "bytes": 708923,
   "fechaDescarga": "2026-11-17"
+ },
+ {
+  "youtubeId": "xpN4PyHgYG8",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "¿Tienes alguna enfermedad?",
+  "paginaOrigen": "https://www.iztacalaensena.org/preguntas-de-consulta.html",
+  "urlVideo": "https://www.youtube.com/watch?v=xpN4PyHgYG8",
+  "entradas": [
+   "MED-P-07"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_tienes-alguna-enfermedad_xpN4PyHgYG8.mp4",
+  "bytes": 623675,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "u-QGRkYa6sE",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "¿Estás embarazada?",
+  "paginaOrigen": "https://www.iztacalaensena.org/preguntas-de-consulta.html",
+  "urlVideo": "https://www.youtube.com/watch?v=u-QGRkYa6sE",
+  "entradas": [
+   "MED-P-10"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_estas-embarazada_u-QGRkYa6sE.mp4",
+  "bytes": 787782,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "MvJrvoh-JLE",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Vista borrosa",
+  "paginaOrigen": "https://www.iztacalaensena.org/siacutentomas-enfermedades-lesiones-y-condiciones.html",
+  "urlVideo": "https://www.youtube.com/watch?v=MvJrvoh-JLE",
+  "entradas": [
+   "MED-P-13"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_vista-borrosa_MvJrvoh-JLE.mp4",
+  "bytes": 1002246,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "3juvYtLxhok",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "¿Tienes diarrea?",
+  "paginaOrigen": "https://www.iztacalaensena.org/preguntas-de-consulta.html",
+  "urlVideo": "https://www.youtube.com/watch?v=3juvYtLxhok",
+  "entradas": [
+   "MED-P-14"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_tienes-diarrea_3juvYtLxhok.mp4",
+  "bytes": 572339,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "BUMUCQAc7WA",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Comer",
+  "paginaOrigen": "https://www.iztacalaensena.org/verbos.html",
+  "urlVideo": "https://www.youtube.com/watch?v=BUMUCQAc7WA",
+  "entradas": [
+   "MED-P-15"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_comer_BUMUCQAc7WA.mp4",
+  "bytes": 355894,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "mwjUA-z77dw",
+  "fuente": "Indiscapacidad CDMX (LSM)",
+  "senaEnSitio": "Escalofríos",
+  "paginaOrigen": "https://lsm.indiscapacidad.cdmx.gob.mx/ejes/salud/",
+  "urlVideo": "https://www.youtube.com/watch?v=mwjUA-z77dw",
+  "entradas": [
+   "MED-P-17"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IND_escalofrios_mwjUA-z77dw.mp4",
+  "bytes": 524095,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "212iZNlPNxo",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Flema",
+  "paginaOrigen": "https://www.iztacalaensena.org/siacutentomas-enfermedades-lesiones-y-condiciones.html",
+  "urlVideo": "https://www.youtube.com/watch?v=212iZNlPNxo",
+  "entradas": [
+   "MED-P-18"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_flema_212iZNlPNxo.mp4",
+  "bytes": 702483,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "1KBrPRJmh8o",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "¿Sientes dificultad para respirar?",
+  "paginaOrigen": "https://www.iztacalaensena.org/preguntas-de-consulta.html",
+  "urlVideo": "https://www.youtube.com/watch?v=1KBrPRJmh8o",
+  "entradas": [
+   "MED-P-19"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_sientes-dificultad-para-respirar_1KBrPRJmh8o.mp4",
+  "bytes": 1389658,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "uzd6HVLZ-g4",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "¿Te desmayaste?",
+  "paginaOrigen": "https://www.iztacalaensena.org/preguntas-de-consulta.html",
+  "urlVideo": "https://www.youtube.com/watch?v=uzd6HVLZ-g4",
+  "entradas": [
+   "MED-P-20"
+  ],
+  "cobertura": "completa",
+  "archivo": "videos/IZT_te-desmayaste_uzd6HVLZ-g4.mp4",
+  "bytes": 1288899,
+  "fechaDescarga": "2026-11-23"
+ },
+ {
+  "youtubeId": "7Y_NuGhctQ0",
+  "fuente": "Iztacala Enseña",
+  "senaEnSitio": "Dormir",
+  "paginaOrigen": "https://www.iztacalaensena.org/verbos.html",
+  "urlVideo": "https://www.youtube.com/watch?v=7Y_NuGhctQ0",
+  "entradas": [
+   "MED-P-21"
+  ],
+  "cobertura": "parcial",
+  "archivo": "videos/IZT_dormir_7Y_NuGhctQ0.mp4",
+  "bytes": 516014,
+  "fechaDescarga": "2026-11-23"
  }
 ]
