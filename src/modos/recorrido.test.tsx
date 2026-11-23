@@ -237,4 +237,24 @@ describe('Recorrido de ida y vuelta (etapa A)', () => {
     expect((medico().getByRole('button', { name: /Enviar al paciente/ }) as HTMLButtonElement).disabled).toBe(true);
     expect(paciente().queryByText('¿Ha tenido vómito?')).toBeNull();
   });
+  it('los videos de la revisión y del mensaje del médico se reproducen solos, sin tener que pulsar «play»', async () => {
+    const { user, paciente, medico } = await abrir();
+    await cerrarAviso(user, paciente);
+
+    await user.click(paciente().getByRole('button', { name: 'Tos' }));
+    await user.click(paciente().getByRole('button', { name: /Revisar selección/ }));
+    const enRevision = paciente().getByLabelText('Video en LSM sin validar: Tengo tos.') as HTMLVideoElement;
+    expect(enRevision.autoplay).toBe(true);
+    expect(enRevision.controls).toBe(true);
+    await user.click(paciente().getByRole('button', { name: /Confirmar mensaje/ }));
+    await medico().findByText('Tengo tos.');
+
+    const sugeridas = medico().getByRole('list', { name: 'Sugeridas por los síntomas' });
+    await user.click(within(sugeridas).getByRole('button', { name: /Tiene flemas al toser/ }));
+    await user.click(medico().getByRole('button', { name: /Enviar al paciente/ }));
+    await paciente().findByText('¿Tiene flemas al toser?');
+    const delMedico = paciente().getByLabelText('Video en LSM sin validar: ¿Tiene flemas al toser?') as HTMLVideoElement;
+    expect(delMedico.autoplay).toBe(true);
+    expect(delMedico.controls).toBe(true);
+  });
 });

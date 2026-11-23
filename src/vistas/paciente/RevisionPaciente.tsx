@@ -62,24 +62,14 @@ export function RevisionPaciente(p: Props) {
         </p>
       )}
       <div className="dos-columnas">
-        <div className="panel-salvia">
+        <div className={`panel-salvia ${filas.some(({ entrada }) => entrada.esDolor) ? 'revision--con-dolor' : ''}`}>
           <h3 className="panel-salvia__titulo">Opciones seleccionadas ({selecciones.length})</h3>
           <ul className="revision__lista">
             {filas.map(({ s, entrada, recurso, bloqueada }) => (
               <li key={s.entradaId} className={`revision__item ${bloqueada ? 'revision__item--bloqueado' : ''}`}>
-                <div className="revision__fila">
-                  <RecursoLSM disponibilidad={recurso} icono={entrada.icono} tamano="grande" etiqueta={entrada.texto} />
-                  <span className="revision__titulo">{tituloDe(entrada)}</span>
-                </div>
-                {entrada.esDolor && (
-                  <SelectorIntensidad
-                    nombre={entrada.termino}
-                    valor={s.intensidad}
-                    recurso={recursoIntensidad}
-                    deshabilitado={p.enviando}
-                    onCambiar={(v) => p.onIntensidad(entrada.id, v)}
-                  />
-                )}
+                {/* El video es lo principal: muchas personas Sordas no leen español. El texto lo acompaña. */}
+                <RecursoLSM disponibilidad={recurso} icono={entrada.icono} tamano="ancho" etiqueta={entrada.texto} reproducirSolo />
+                <span className="revision__titulo">{tituloDe(entrada)}</span>
                 {bloqueada && (
                   <span className="nota nota--alerta" role="alert">
                     Falta el recurso en LSM validado. Quita esta opción para poder confirmar.
@@ -88,6 +78,20 @@ export function RevisionPaciente(p: Props) {
               </li>
             ))}
           </ul>
+          {/* La escala va a todo el ancho, debajo de las tarjetas, para que sus botones sean fáciles de tocar. */}
+          {filas
+            .filter(({ entrada }) => entrada.esDolor)
+            .map(({ s, entrada, recurso }) => (
+              <SelectorIntensidad
+                key={s.entradaId}
+                nombre={entrada.termino}
+                valor={s.intensidad}
+                recurso={recursoIntensidad}
+                deshabilitado={p.enviando}
+                onCambiar={(v) => p.onIntensidad(entrada.id, v)}
+                apoyo={<RecursoLSM disponibilidad={recurso} icono={entrada.icono} tamano="mediano" etiqueta={entrada.texto} reproducirSolo />}
+              />
+            ))}
         </div>
 
         <div className="tarjeta-crema revision__mensaje">

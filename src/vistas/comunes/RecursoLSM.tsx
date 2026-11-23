@@ -16,6 +16,11 @@ interface Props {
    * un control interactivo dentro de un botón no es válido y su clic también elegiría la tarjeta.
    */
   enBoton?: boolean;
+  /**
+   * El video empieza solo, sin sonido y en bucle, con los controles visibles. Para lo que el paciente debe ver
+   * sin tener que pulsar «play»: el mensaje del médico y su propia revisión.
+   */
+  reproducirSolo?: boolean;
 }
 
 /** Silueta neutra de intérprete: indica «aquí va un video en LSM» sin simular una seña real. */
@@ -43,7 +48,7 @@ function reproduceArchivo(d: Disponibilidad, tamano: NonNullable<Props['tamano']
  * - bloqueado: informa que falta; no muestra otro recurso en su lugar.
  * Usa solo elementos en línea para poder ir dentro de botones.
  */
-export function RecursoLSM({ disponibilidad: d, icono, tamano = 'mediano', etiqueta, enBoton = false }: Props) {
+export function RecursoLSM({ disponibilidad: d, icono, tamano = 'mediano', etiqueta, enBoton = false, reproducirSolo = false }: Props) {
   const clase = `recurso recurso--${tamano}`;
   // Archivo que no se pudo cargar (falta en public/recursos/ o está dañado, RNF-03).
   const [srcFallido, setSrcFallido] = useState<string>();
@@ -84,7 +89,7 @@ export function RecursoLSM({ disponibilidad: d, icono, tamano = 'mediano', etiqu
           <video
             src={recurso.src}
             controls={!enBoton}
-            autoPlay={enBoton}
+            autoPlay={enBoton || reproducirSolo}
             loop
             muted
             playsInline
