@@ -75,7 +75,8 @@ No registrar nombres de usuario, nombres de equipo ni direcciones MAC.
 
    Escribir solo el código que muestra la laptop M y pulsar «Vincular»; el equipo encuentra solo a la computadora del
    médico en la misma red (D56). Si no la encuentra, usar «Conectar escribiendo la dirección» con la dirección que
-   aparece en pequeño bajo el código (basta con la IP; el puerto 47100 es el predeterminado). La red debe permitir
+   aparece en pequeño bajo el código (basta con la IP; el puerto 47100 es el predeterminado). La búsqueda automática
+   solo funciona con ese puerto: si M se abrió con `--puerto=N`, hay que escribir `IP:N`. La red debe permitir
    que los equipos se vean entre sí; en redes con aislamiento de clientes (algunas universidades y hospitales),
    compartir la red desde un celular. El código no distingue mayúsculas y acepta «O» por «0». Debe aparecer «Conectado con la computadora del médico» y,
    en la laptop M, «Laptop del paciente conectada (equipo XXXXXX)».

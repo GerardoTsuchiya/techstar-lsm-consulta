@@ -46,7 +46,7 @@ export interface OpcionesBuscar {
 const MAX_ANUNCIOS = 32;
 
 /**
- * Pregunta durante `duracionMs` y devuelve un anuncio por `ip:puerto` (el más reciente). Las direcciones son IPv4
+ * Pregunta durante `duracionMs` y devuelve un anuncio por vinculación (el primero que llega). Las direcciones son IPv4
  * (los sockets son udp4).
  */
 export function buscarMedicos(opciones: OpcionesBuscar = {}): Promise<AnuncioRecibido[]> {
@@ -79,8 +79,10 @@ export function buscarMedicos(opciones: OpcionesBuscar = {}): Promise<AnuncioRec
       if (datos.length > MAX_BYTES_BUSQUEDA) return;
       const m = leerJson(datos.toString('utf8'));
       if (!esAnuncio(m)) return;
-      const clave = `${remitente.address}:${m.puerto}`;
-      if (!encontrados.has(clave) && encontrados.size >= MAX_ANUNCIOS) return;
+      // Una misma vinculación (sal y huella) cuenta una vez, aunque el médico responda por varias direcciones
+      // (p. ej. 127.0.0.1 y la IP de la red cuando los dos corren en la misma computadora). Se queda la primera.
+      const clave = `${m.sal}|${m.huella}|${m.puerto}`;
+      if (encontrados.has(clave) || encontrados.size >= MAX_ANUNCIOS) return;
       encontrados.set(clave, { ...m, ip: remitente.address });
     });
     socket.on('error', () => terminar());
