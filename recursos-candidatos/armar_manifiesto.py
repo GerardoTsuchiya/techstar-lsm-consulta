@@ -71,6 +71,21 @@ PLAN = [
     ("PAC-R-12", "completa", [("IZT", "Antibiótico")]),
     ("PAC-R-13", "completa", [("IZT", "Jarabe (medicamento)")]),
     ("PAC-R-14", "completa", [("IZT", "Vitaminas")]),
+    # Preguntas del médico agregadas el 23/11/2026 (D55).
+    ("MED-P-07", "completa", [("IZT", "¿Tienes alguna enfermedad?")]),
+    ("MED-P-08", "parcial", [("IZT", "Medicamento")]),
+    ("MED-P-10", "completa", [("IZT", "¿Estás embarazada?")]),
+    ("MED-P-11", "parcial", [("IZT", "¿Qué tanto te duele?")]),
+    ("MED-P-12", "parcial", [("IZT", "Dolor")]),
+    ("MED-P-13", "parcial", [("IZT", "Vista borrosa")]),
+    ("MED-P-14", "completa", [("IZT", "¿Tienes diarrea?")]),
+    ("MED-P-15", "parcial", [("IZT", "Comer")]),
+    ("MED-P-16", "parcial", [("IZT", "Dolor de garganta")]),
+    ("MED-P-17", "parcial", [("IND", "Escalofríos")]),
+    ("MED-P-18", "parcial", [("IZT", "Flema")]),
+    ("MED-P-19", "completa", [("IZT", "¿Sientes dificultad para respirar?")]),
+    ("MED-P-20", "completa", [("IZT", "¿Te desmayaste?")]),
+    ("MED-P-21", "parcial", [("IZT", "Dormir")]),
 ]
 
 salida, vistos = [], {}

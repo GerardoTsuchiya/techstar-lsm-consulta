@@ -1,7 +1,7 @@
 # Recursos candidatos en LSM (sin validar)
 
-Videos descargados el 16/11/2026 de las dos fuentes públicas. **Son candidatos, no recursos validados.**
-40 de ellos ya están conectados a la app como **recursos de prueba** (copiados a `public/recursos/` con el ID de la
+Videos descargados el 16/11, 17/11 y 23/11/2026 de las fuentes públicas. **Son candidatos, no recursos validados.**
+38 de ellos ya están conectados a la app como **recursos de prueba** (40 archivos: MED-P-11 y MED-P-16 reutilizan los videos de la intensidad del dolor y de PAC-S-03) (copiados a `public/recursos/` con el ID de la
 entrada; ver D40–D46 y D55 en `Docs/ESTADO_ACTUAL.md`): se ven en modo desarrollo con la etiqueta «LSM sin validar» y en el
 flujo de producto siguen bloqueados. Antes de validarlos falta lo que pide `TECHSTAR_MVP.md` §6.2: que corresponda al
 mensaje completo, que el uso esté permitido por la fuente y registrar la aprobación entrada–recurso.

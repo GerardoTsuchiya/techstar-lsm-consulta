@@ -63,7 +63,8 @@
   "paginaOrigen": "https://www.iztacalaensena.org/siacutentomas-enfermedades-lesiones-y-condiciones.html",
   "urlVideo": "https://www.youtube.com/watch?v=MfcVpEjklko",
   "entradas": [
-   "PAC-S-03"
+   "PAC-S-03",
+   "MED-P-16"
   ],
   "cobertura": "parcial",
   "archivo": "videos/IZT_dolor-de-garganta_MfcVpEjklko.mp4",
@@ -694,7 +695,8 @@
   "paginaOrigen": "https://www.iztacalaensena.org/preguntas-de-consulta.html",
   "urlVideo": "https://www.youtube.com/watch?v=d444MtGdCPs",
   "entradas": [
-   "SIS-INTENSIDAD"
+   "SIS-INTENSIDAD",
+   "MED-P-11"
   ],
   "cobertura": "parcial",
   "archivo": "videos/IZT_que-tanto-te-duele_d444MtGdCPs.mp4",
