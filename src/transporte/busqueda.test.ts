@@ -4,12 +4,13 @@ import {
   type AnuncioRecibido,
   APP_BUSQUEDA,
   calcularHuella,
+  MAX_SALES_POR_ELECCION,
   elegirMedico,
   esAnuncio,
   esBusqueda,
   mensajeBusqueda,
 } from './busqueda';
-import { aBase64, bytesAleatorios, derivarClaveMaestra, normalizarCodigo } from './canalSeguro';
+import { aBase64, bytesAleatorios, deBase64, derivarClaveMaestra, normalizarCodigo } from './canalSeguro';
 import { VERSION_PROTOCOLO } from './protocoloRed';
 
 const ITER = 1000;
@@ -38,6 +39,21 @@ describe('Mensajes de búsqueda y anuncio (D56)', () => {
     expect(esAnuncio({ ...anuncio, huella: 'x'.repeat(65) })).toBe(false);
     expect(esAnuncio({ ...anuncio, app: 'otra-app' })).toBe(false);
     expect(esAnuncio({ ...anuncio, codigo: 'ABCDE12345' })).toBe(false);
+  });
+
+  it('el anuncio rechaza tipos y largos incorrectos', async () => {
+    const { ip: _ip, ...anuncio } = await anuncioDe('ABCDE-12345', '192.168.1.20');
+    expect(esAnuncio({ ...anuncio, puerto: '47100' })).toBe(false);
+    expect(esAnuncio({ ...anuncio, puerto: 1.5 })).toBe(false);
+    expect(esAnuncio({ ...anuncio, sal: 5 })).toBe(false);
+    expect(esAnuncio([anuncio])).toBe(false);
+    expect(esAnuncio({ ...anuncio, sal: aBase64(bytesAleatorios(8)) })).toBe(false);
+    expect(esAnuncio({ ...anuncio, huella: aBase64(bytesAleatorios(8)) })).toBe(false);
+  });
+
+  it('la huella son 16 bytes en base64', async () => {
+    const sal = bytesAleatorios(16);
+    expect(deBase64(await calcularHuella(await derivarClaveMaestra('ABCDE12345', sal, ITER), sal)).length).toBe(16);
   });
 
   it('la huella depende del código y de la sal', async () => {
@@ -75,5 +91,37 @@ describe('Elegir la computadora del médico con el código (D56)', () => {
   it('un código mal escrito nunca coincide', async () => {
     const suyo = await anuncioDe('ABCDE-12345', '192.168.1.20');
     expect(await elegirMedico('abc', [suyo], ITER)).toEqual({ tipo: 'sin-coincidencia' });
+  });
+
+  it('ignora los anuncios más allá del tope de sales', async () => {
+    const basura = (i: number): AnuncioRecibido => ({
+      t: 'anuncio', app: APP_BUSQUEDA, v: VERSION_PROTOCOLO, puerto: 47100,
+      sal: aBase64(bytesAleatorios(16)), huella: aBase64(bytesAleatorios(16)), ip: `192.168.1.${100 + i}`,
+    });
+    const junk = Array.from({ length: MAX_SALES_POR_ELECCION }, (_, i) => basura(i));
+    const suyo = await anuncioDe('ABCDE-12345', '192.168.1.20');
+    expect(await elegirMedico('ABCDE-12345', [...junk, suyo], ITER)).toEqual({ tipo: 'sin-coincidencia' });
+    const r = await elegirMedico('ABCDE-12345', [...junk.slice(1), suyo], ITER);
+    expect(r.tipo).toBe('encontrado');
+  });
+
+  it('mezcla de versión incompatible y compatible: elige la compatible', async () => {
+    const viejo = await anuncioDe('ABCDE-12345', '192.168.1.21', 47100, VERSION_PROTOCOLO + 1);
+    const suyo = await anuncioDe('ABCDE-12345', '192.168.1.20');
+    const r = await elegirMedico('ABCDE-12345', [viejo, suyo], ITER);
+    expect(r).toEqual({ tipo: 'encontrado', anuncio: suyo, url: 'ws://192.168.1.20:47100/techstar' });
+  });
+
+  it('dos anuncios con la misma sal: el segundo coincide', async () => {
+    const suyo = await anuncioDe('ABCDE-12345', '192.168.1.20');
+    const falso = { ...suyo, huella: aBase64(bytesAleatorios(16)), ip: '192.168.1.99' };
+    const r = await elegirMedico('ABCDE-12345', [falso, suyo], ITER);
+    expect(r).toEqual({ tipo: 'encontrado', anuncio: suyo, url: 'ws://192.168.1.20:47100/techstar' });
+  });
+
+  it('una sal mal formada no lanza: «sin-coincidencia»', async () => {
+    const suyo = await anuncioDe('ABCDE-12345', '192.168.1.20');
+    const mala = { ...suyo, sal: '!!!!' } as AnuncioRecibido;
+    expect(await elegirMedico('ABCDE-12345', [mala], ITER)).toEqual({ tipo: 'sin-coincidencia' });
   });
 });

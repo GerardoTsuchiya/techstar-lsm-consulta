@@ -20,6 +20,11 @@ export const INTERVALO_BUSQUEDA_MS = 1000;
 /** Mientras la pantalla de conexión está abierta, se vuelve a buscar con esta pausa. */
 export const PAUSA_REBUSQUEDA_MS = 10_000;
 export const MAX_BYTES_BUSQUEDA = 512;
+/**
+ * Máximo de sales distintas que se derivan en una elección. Cada una cuesta un PBKDF2 completo y los anuncios
+ * llegan de cualquier equipo de la red: sin tope, un equipo hostil podría saturar el procesador del paciente.
+ */
+export const MAX_SALES_POR_ELECCION = 8;
 
 export interface Busqueda {
   t: 'busqueda';
@@ -60,7 +65,8 @@ export const MENSAJES_BUSQUEDA: Record<Exclude<ResultadoEleccion['tipo'], 'encon
 const esObjeto = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x);
 const tieneClaves = (x: Record<string, unknown>, claves: string[]) =>
   Object.keys(x).length === claves.length && claves.every((c) => c in x);
-const esTextoCorto = (x: unknown): x is string => typeof x === 'string' && x.length > 0 && x.length <= 64;
+/** Base64 canónico de exactamente 16 bytes (22 caracteres y «==»). */
+const esBase64De16 = (x: unknown): x is string => typeof x === 'string' && /^[A-Za-z0-9+/]{22}==$/.test(x);
 
 export function mensajeBusqueda(): Busqueda {
   return { t: 'busqueda', app: APP_BUSQUEDA, v: VERSION_PROTOCOLO };
@@ -86,8 +92,8 @@ export function esAnuncio(x: unknown): x is Anuncio {
     Number.isInteger(x.puerto) &&
     (x.puerto as number) >= 1 &&
     (x.puerto as number) <= 65535 &&
-    esTextoCorto(x.sal) &&
-    esTextoCorto(x.huella)
+    esBase64De16(x.sal) &&
+    esBase64De16(x.huella)
   );
 }
 
@@ -102,6 +108,9 @@ export async function calcularHuella(maestra: CryptoKey, sal: Uint8Array<ArrayBu
 /**
  * Elige el anuncio cuyo código coincide con el tecleado. Una derivación PBKDF2 por sal distinta.
  * Las iteraciones son fijas en el código (solo las pruebas las bajan): un anuncio falso no puede abaratarlas.
+ * Solo se derivan las primeras MAX_SALES_POR_ELECCION sales distintas (en el orden recibido); los anuncios con
+ * sales posteriores se omiten. Un anuncio repetido desde otro equipo solo provoca un saludo fallido (negación de
+ * servicio), nunca una fuga: quien lo envía no conoce el código.
  */
 export async function elegirMedico(
   codigo: string,
@@ -117,6 +126,7 @@ export async function elegirMedico(
   const huellas = new Map<string, string | null>();
   for (const a of compatibles) {
     if (!huellas.has(a.sal)) {
+      if (huellas.size >= MAX_SALES_POR_ELECCION) continue; // más allá del tope: no puede coincidir
       let huella: string | null = null;
       try {
         const sal = deBase64(a.sal);
