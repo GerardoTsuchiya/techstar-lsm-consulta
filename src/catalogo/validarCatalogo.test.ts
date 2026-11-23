@@ -199,6 +199,45 @@ describe('Validador del catálogo: rechaza datos que cambiarían lo comunicado',
     expect(r.avisos.join('\n')).toContain('Recurso REC-PRUEBA-PAC-S-05: ninguna entrada ni control del sistema lo usa.');
     expect(r.avisos.join('\n')).toContain('Recurso REC-PRUEBA-PAC-S-04: lo comparten Entrada PAC-S-04, Entrada PAC-S-05');
   });
+
+  it('recomendaciones: solo en síntomas, solo preguntas del médico existentes y sin repetir', () => {
+    const r = copia((d) => {
+      entrada(d, 'PAC-S-01').recomendadas = ['MED-P-01', 'MED-P-01', 'MED-NO-EXISTE', 'MED-R-01', 'PAC-S-02'];
+      entrada(d, 'PAC-R-01').recomendadas = ['MED-P-01'];
+      entrada(d, 'PAC-S-03').recomendadas = 'MED-P-01';
+    });
+    const e = errores(r);
+    expect(r.cargado).toBeUndefined();
+    expect(e).toContain('Entrada PAC-S-01: «recomendadas» repite «MED-P-01».');
+    expect(e).toContain('Entrada PAC-S-01: «recomendadas» incluye «MED-NO-EXISTE», que no existe en «entradas».');
+    expect(e).toContain('Entrada PAC-S-01: «recomendadas» incluye «MED-R-01», que no es una pregunta del médico.');
+    expect(e).toContain('Entrada PAC-S-01: «recomendadas» incluye «PAC-S-02», que no es una pregunta del médico.');
+    expect(e).toContain('Entrada PAC-R-01: solo un síntoma puede tener «recomendadas».');
+    expect(e).toContain('Entrada PAC-S-03: «recomendadas» debe ser una lista de ids de preguntas del médico.');
+  });
+
+  it('preguntas generales: lista de preguntas del médico existentes y sin repetir', () => {
+    const malas = copia((d) => {
+      (d as Fila).preguntasGenerales = ['MED-P-03', 'MED-P-03', 'MED-X', 'MED-R-02'];
+    });
+    const e = errores(malas);
+    expect(e).toContain('Catálogo: «preguntasGenerales» repite «MED-P-03».');
+    expect(e).toContain('Catálogo: «preguntasGenerales» incluye «MED-X», que no existe en «entradas».');
+    expect(e).toContain('Catálogo: «preguntasGenerales» incluye «MED-R-02», que no es una pregunta del médico.');
+    expect(errores(copia((d) => ((d as Fila).preguntasGenerales = 'MED-P-03')))).toContain(
+      'Catálogo: «preguntasGenerales» debe ser una lista de ids de preguntas del médico.',
+    );
+  });
+
+  it('sin «preguntasGenerales» ni «recomendadas» el catálogo carga con listas vacías', () => {
+    const r = copia((d) => {
+      delete (d as Fila).preguntasGenerales;
+      for (const e of d.entradas) delete e.recomendadas;
+    });
+    expect(r.errores).toEqual([]);
+    expect(r.cargado!.catalogo.preguntasGenerales).toEqual([]);
+    expect(r.cargado!.catalogo.entradas.every((e) => e.recomendadas === undefined)).toBe(true);
+  });
 });
 
 describe('Recurso validado bien registrado', () => {
