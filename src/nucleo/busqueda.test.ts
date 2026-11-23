@@ -15,7 +15,7 @@ describe('Búsqueda en el catálogo (RF-14)', () => {
   });
 
   it('busca por parte del término', () => {
-    expect(ids(buscarPorTermino(catalogoFicticio.entradas, 'medica', MEDICO))).toEqual(['MED-P-03', 'MED-P-04']);
+    expect(ids(buscarPorTermino(catalogoFicticio.entradas, 'medica', MEDICO))).toEqual(['MED-P-03', 'MED-P-04', 'MED-P-08']);
   });
 
   it('una búsqueda vacía no se ejecuta; sin coincidencias devuelve lista vacía', () => {

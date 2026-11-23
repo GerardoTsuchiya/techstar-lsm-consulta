@@ -68,6 +68,8 @@ export interface EntradaCatalogo {
   esDolor?: boolean;
   /** Asociación entrada–recurso (RI-01). Ausente = sin recurso. */
   recursoId?: string;
+  /** Solo síntomas: preguntas del médico que conviene hacer ante este síntoma, en orden (D55). */
+  recomendadas?: string[];
 }
 
 /** Recursos de los controles y avisos del sistema (TECHSTAR_MVP.md §6.1). */
@@ -88,6 +90,8 @@ export interface Catalogo {
   entradas: EntradaCatalogo[];
   recursos: Recurso[];
   recursosSistema: Partial<Record<ClaveSistema, string>>;
+  /** Preguntas del médico que se ofrecen en cualquier consulta, en orden (D55). */
+  preguntasGenerales: string[];
 }
 
 /**

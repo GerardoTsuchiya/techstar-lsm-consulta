@@ -369,7 +369,8 @@ p {
   background: var(--durazno);
   list-style: none;
   font-family: var(--titulo);
-  font-size: clamp(1.25rem, 3cqi, 1.85rem);
+  /* Más chico que los videos de la revisión: el texto es para el médico; para el paciente manda el video. */
+  font-size: clamp(1.05rem, 2cqi, 1.3rem);
   line-height: 1.18;
   letter-spacing: -0.01em;
   color: var(--verde);
@@ -1033,11 +1034,16 @@ p {
   border-color: var(--verde);
   background: color-mix(in srgb, var(--salvia-claro) 75%, var(--salvia));
 }
-/* Videos panorámicos como en «PS-Captura opciones»: caben dos filas en una laptop. */
+/*
+ * Videos panorámicos como en «PS-Captura opciones» en una laptop (alto ≈ ancho de la pantalla / 7.5). En pantallas
+ * más altas crecen hasta llenar las dos filas sin desplazarse (100vh menos cabecera, pasos y pie ≈ 575px), para que
+ * las señas en video vertical no queden diminutas.
+ */
 .tarjeta .recurso__cuerpo,
 .tarjeta .recurso video,
 .tarjeta .recurso img {
-  aspect-ratio: 2.2 / 1;
+  aspect-ratio: auto;
+  height: max(calc(100cqi / 7.5), min(calc((100vh - 575px) / 2), 28rem));
 }
 /* En la tarjeta el video corre solo y el clic es de la tarjeta (elegir), no del video. */
 .tarjeta .recurso video {
@@ -1242,8 +1248,10 @@ p {
 .revision {
   animation: llegar 0.2s ease-out;
 }
+/* El video manda (muchas personas Sordas no leen español): tarjetas con el video arriba y el texto chico debajo. */
 .revision__lista {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
   gap: 0.75rem;
   margin: 0;
   padding: 0;
@@ -1251,7 +1259,8 @@ p {
 }
 .revision__item {
   display: grid;
-  gap: 0.65rem;
+  align-content: start;
+  gap: 0.5rem;
   padding: 0.75rem;
   border-radius: 14px;
   background: color-mix(in srgb, var(--crema) 60%, transparent);
@@ -1259,14 +1268,29 @@ p {
 .revision__item--bloqueado {
   outline: 1.5px dashed var(--rojo);
 }
-.revision__fila {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
+/* Altura que deja ver «Confirmar mensaje» sin desplazarse con una o dos opciones; las señas verticales no se recortan. */
+.revision__item .recurso video,
+.revision__item .recurso img,
+.revision__item .recurso__cuerpo {
+  aspect-ratio: auto;
+  height: clamp(150px, calc(100vh - 700px), 340px);
+}
+/* La escala del dolor, debajo de las tarjetas, con el mismo fondo que ellas. */
+.panel-salvia > .intensidad {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--crema) 60%, transparent);
+}
+/* Con la escala del dolor debajo, las tarjetas ceden altura. */
+.revision--con-dolor .revision__item .recurso video,
+.revision--con-dolor .revision__item .recurso img,
+.revision--con-dolor .revision__item .recurso__cuerpo {
+  height: clamp(130px, calc(100vh - 750px), 320px);
 }
 .revision__titulo {
   font-family: var(--titulo);
-  font-size: 1.45rem;
+  font-size: 1.05rem;
   letter-spacing: -0.01em;
   color: var(--verde);
 }
@@ -1580,6 +1604,12 @@ p {
   text-align: center;
   font-family: var(--titulo);
   font-size: 1.15rem;
+  color: var(--verde);
+}
+.buscador__grupo {
+  margin: 0.6rem 0 0;
+  font-family: var(--titulo);
+  font-size: 1rem;
   color: var(--verde);
 }
 .resultados {
@@ -1986,6 +2016,25 @@ p {
 .vincular__tarjeta .boton {
   justify-self: start;
   margin-top: 0.5rem;
+}
+
+/* Búsqueda automática del médico (D56). */
+.vincular__busqueda {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--verde);
+}
+.vincular__acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.vinculo__respaldo {
+  font-size: 0.78rem;
+  color: var(--tinta-suave);
 }
 .vincular .inicio__nota .vinculo__equipo {
   margin-left: 0;

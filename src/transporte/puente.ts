@@ -1,4 +1,5 @@
 import type { Comando, Evento, PoliticaRecursos, Resultado } from '../nucleo/tipos';
+import type { AnuncioRecibido } from './busqueda';
 import type { MotivoRechazo } from './protocoloRed';
 
 /**
@@ -22,7 +23,7 @@ export interface EstadoVinculacion {
   error: string | null;
   puerto: number;
   soloLocal: boolean;
-  /** Direcciones que debe teclear el personal en la laptop del paciente («192.168.1.20:47100»). */
+  /** Direcciones de respaldo, si el equipo del paciente no encuentra al médico (D56). */
   direcciones: string[];
   /** Código vigente. Tras vincular solo sirve a la misma laptop (p. ej. si recarga su ventana). */
   codigo: string | null;
@@ -44,6 +45,12 @@ export interface PuenteMedico {
   desvincular(): Promise<EstadoVinculacion>;
 }
 
+/** Solo en el modo paciente de la app de escritorio (D56). */
+export interface PuentePaciente {
+  /** Busca la computadora del médico en la red local durante unos segundos. */
+  buscarMedicos(): Promise<AnuncioRecibido[]>;
+}
+
 export interface PuenteTechStar {
   modo: 'medico' | 'paciente' | 'demo';
   politica: PoliticaRecursos;
@@ -52,6 +59,8 @@ export interface PuenteTechStar {
   dispositivoId: string;
   /** Solo en el modo médico: acceso al coordinador del proceso principal. */
   medico?: PuenteMedico;
+  /** Solo en el modo paciente: búsqueda del médico en la red local. */
+  paciente?: PuentePaciente;
 }
 
 declare global {
@@ -71,4 +80,5 @@ export const CANALES_IPC = {
   vinculacion: 'techstar:vinculacion',
   cambioVinculacion: 'techstar:cambio-vinculacion',
   desvincular: 'techstar:desvincular',
+  buscarMedicos: 'techstar:buscar-medicos',
 } as const;

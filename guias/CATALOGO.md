@@ -14,7 +14,12 @@ Resumen en el [README](../README.md#editar-el-catálogo). Aquí están los campo
 | `icono` | Clave de un icono existente (el validador lista las disponibles) | `"cabeza"` |
 | `esDolor` | `true` solo en síntomas de dolor (admiten intensidad 1–10) | `true` |
 | `recursoId` | ID del recurso en LSM asociado, o `null` si todavía no tiene (la entrada queda bloqueada) | `"REC-PAC-S-09"` |
+| `recomendadas` | Opcional, solo en síntomas. Preguntas del médico que se le sugieren cuando el paciente confirma este síntoma, en orden | `["MED-P-01", "MED-P-18"]` |
 | `nota` | Opcional. Aparece en el inventario | `"Pendiente de revisión médica."` |
+
+**Preguntas generales:** la lista `"preguntasGenerales"` (en la raíz del archivo, después de `"recursosSistema"`) son
+preguntas del médico que se le sugieren en cualquier consulta, en ese orden. El validador revisa que `recomendadas` y
+`preguntasGenerales` solo contengan IDs de preguntas del médico que existan, sin repetir.
 
 **Campos de cada recurso:** `id`, `tipo` (`video`, `imagen` o `marcador-prueba`), `estado` (`validado` o
 `prueba`), `descripcion` (qué debe mostrar), `archivo` (nombre dentro de `public/recursos/`, o `null`),

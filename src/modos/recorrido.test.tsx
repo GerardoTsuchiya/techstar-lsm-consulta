@@ -182,4 +182,79 @@ describe('Recorrido de ida y vuelta (etapa A)', () => {
     expect(paciente().getByText('Mensaje a enviar')).toBeTruthy();
     expect(paciente().getByText('Tengo tos.', { selector: 'li' })).toBeTruthy();
   });
+
+  it('el médico ve preguntas sugeridas por los síntomas y las generales sin buscar (D55)', async () => {
+    const { user, paciente, medico } = await abrir();
+    await cerrarAviso(user, paciente);
+
+    // Antes de que el paciente diga algo: solo las generales
+    const generales = medico().getByRole('list', { name: 'Preguntas generales' });
+    expect(within(generales).getByRole('button', { name: /Tiene alergia a algún medicamento/ })).toBeTruthy();
+    expect(medico().queryByRole('list', { name: 'Sugeridas por los síntomas' })).toBeNull();
+
+    // El paciente confirma «Tos» y «Fiebre»
+    await user.click(paciente().getByRole('button', { name: 'Tos' }));
+    await user.click(paciente().getByRole('button', { name: 'Fiebre' }));
+    await user.click(paciente().getByRole('button', { name: /Revisar selección/ }));
+    await user.click(paciente().getByRole('button', { name: /Confirmar mensaje/ }));
+    await medico().findByText('Tengo tos.');
+
+    const sugeridas = medico().getByRole('list', { name: 'Sugeridas por los síntomas' });
+    const flemas = within(sugeridas).getByRole('button', { name: /Tiene flemas al toser/ });
+    expect(flemas.textContent).toContain('por Tos');
+    expect(flemas.textContent).not.toContain('por Tos y Fiebre');
+    expect(within(sugeridas).getByRole('button', { name: /Desde cuándo/ }).textContent).toContain('por Tos y Fiebre');
+
+    // Elegirla abre la misma revisión; al enviarla deja de sugerirse
+    await user.click(flemas);
+    expect(medico().getByText('Revisar antes de enviar')).toBeTruthy();
+    await user.click(medico().getByRole('button', { name: /Enviar al paciente/ }));
+    expect(await paciente().findByText('¿Tiene flemas al toser?')).toBeTruthy();
+    expect(within(medico().getByRole('list', { name: 'Sugeridas por los síntomas' })).queryByRole('button', { name: /Tiene flemas al toser/ })).toBeNull();
+
+    // Al escribir, las sugerencias dan paso a los resultados de la búsqueda
+    await user.type(medico().getByLabelText('Buscar pregunta o respuesta'), 'diarrea');
+    expect(medico().queryByRole('list', { name: 'Sugeridas por los síntomas' })).toBeNull();
+    expect(medico().getByRole('button', { name: /Ha tenido diarrea/ })).toBeTruthy();
+  });
+
+  it('una pregunta sugerida sin recurso validado abre la revisión pero no se puede enviar (D55, RF-02)', async () => {
+    const { user, paciente, medico } = await abrir();
+    await cerrarAviso(user, paciente);
+
+    await user.click(paciente().getByRole('button', { name: 'Dolor de estómago' }));
+    await user.click(paciente().getByRole('button', { name: /Revisar selección/ }));
+    await user.click(paciente().getByRole('button', { name: /Confirmar mensaje/ }));
+    await medico().findByText('Tengo dolor de estómago.');
+
+    const sugeridas = medico().getByRole('list', { name: 'Sugeridas por los síntomas' });
+    const vomito = within(sugeridas).getByRole('button', { name: /Ha tenido vómito/ });
+    expect(vomito.textContent).toContain('Sin recurso');
+
+    await user.click(vomito);
+    expect(medico().getByText('Revisar antes de enviar')).toBeTruthy();
+    expect(medico().getByText(/no tiene recurso en LSM validado/)).toBeTruthy();
+    expect((medico().getByRole('button', { name: /Enviar al paciente/ }) as HTMLButtonElement).disabled).toBe(true);
+    expect(paciente().queryByText('¿Ha tenido vómito?')).toBeNull();
+  });
+  it('los videos de la revisión y del mensaje del médico se reproducen solos, sin tener que pulsar «play»', async () => {
+    const { user, paciente, medico } = await abrir();
+    await cerrarAviso(user, paciente);
+
+    await user.click(paciente().getByRole('button', { name: 'Tos' }));
+    await user.click(paciente().getByRole('button', { name: /Revisar selección/ }));
+    const enRevision = paciente().getByLabelText('Video en LSM sin validar: Tengo tos.') as HTMLVideoElement;
+    expect(enRevision.autoplay).toBe(true);
+    expect(enRevision.controls).toBe(true);
+    await user.click(paciente().getByRole('button', { name: /Confirmar mensaje/ }));
+    await medico().findByText('Tengo tos.');
+
+    const sugeridas = medico().getByRole('list', { name: 'Sugeridas por los síntomas' });
+    await user.click(within(sugeridas).getByRole('button', { name: /Tiene flemas al toser/ }));
+    await user.click(medico().getByRole('button', { name: /Enviar al paciente/ }));
+    await paciente().findByText('¿Tiene flemas al toser?');
+    const delMedico = paciente().getByLabelText('Video en LSM sin validar: ¿Tiene flemas al toser?') as HTMLVideoElement;
+    expect(delMedico.autoplay).toBe(true);
+    expect(delMedico.controls).toBe(true);
+  });
 });

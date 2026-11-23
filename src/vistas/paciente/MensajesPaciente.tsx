@@ -50,7 +50,8 @@ export function MensajeMedicoDestacado(props: {
     <div className="dos-columnas mensaje-medico" data-mensaje={m.id}>
       <div className="panel-salvia">
         <h3 className="panel-salvia__titulo">Mensaje en LSM</h3>
-        <RecursoLSM disponibilidad={recurso} icono={entrada?.icono} tamano="ancho" etiqueta={m.texto} />
+        {/* La clave reinicia el video con cada mensaje nuevo, aunque repita la misma pregunta. */}
+        <RecursoLSM key={m.id} disponibilidad={recurso} icono={entrada?.icono} tamano="ancho" etiqueta={m.texto} reproducirSolo />
       </div>
       <div className="tarjeta-crema mensaje-medico__tarjeta">
         <span className="mensaje-medico__hora">Médico · {horaCorta(m.enviadoEn)}</span>

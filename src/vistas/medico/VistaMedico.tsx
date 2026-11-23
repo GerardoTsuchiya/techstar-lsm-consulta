@@ -174,6 +174,7 @@ function SesionMedico(props: {
               ref={busqueda}
               catalogo={catalogo}
               politica={politica}
+              mensajes={mensajes}
               consulta={consulta}
               onConsulta={setConsulta}
               seleccionId={seleccionId}

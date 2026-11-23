@@ -1,7 +1,8 @@
 import { forwardRef } from 'react';
 import { buscarPorTermino } from '../../nucleo/busqueda';
+import { sugerencias, type Sugerencia } from '../../nucleo/recomendaciones';
 import { buscarEntrada, recursoDeEntrada } from '../../nucleo/recursos';
-import type { Catalogo, Disponibilidad, PoliticaRecursos, TipoEntrada } from '../../nucleo/tipos';
+import type { Catalogo, Disponibilidad, EntradaCatalogo, Mensaje, PoliticaRecursos, TipoEntrada } from '../../nucleo/tipos';
 import { IconoCheck, IconoGlobo } from '../comunes/Iconos';
 import { IconoEntrada } from '../comunes/IconoEntrada';
 import { RecursoLSM } from '../comunes/RecursoLSM';
@@ -12,6 +13,8 @@ const TIPOS_MEDICO: TipoEntrada[] = ['pregunta-medico', 'respuesta-medico'];
 interface Props {
   catalogo: Catalogo;
   politica: PoliticaRecursos;
+  /** Mensajes de la sesión: de ellos salen las preguntas sugeridas (D55). */
+  mensajes: readonly Mensaje[];
   consulta: string;
   onConsulta: (q: string) => void;
   seleccionId: string | null;
@@ -102,7 +105,10 @@ export const CatalogoMedico = forwardRef<HTMLInputElement, Props>(function Catal
         onChange={(e) => p.onConsulta(e.target.value)}
       />
       {resultados === null ? (
-        <p className="buscador__nota">Escriba parte de un término. No distingue mayúsculas ni tildes.</p>
+        <>
+          <p className="buscador__nota">Escriba parte de un término. No distingue mayúsculas ni tildes.</p>
+          <Sugeridas catalogo={catalogo} politica={politica} mensajes={p.mensajes} onSeleccionar={p.onSeleccionar} />
+        </>
       ) : resultados.length === 0 ? (
         <p className="buscador__vacio" role="status">
           Sin resultados
@@ -114,21 +120,7 @@ export const CatalogoMedico = forwardRef<HTMLInputElement, Props>(function Catal
           </p>
           <ul className="resultados" aria-label="Resultados">
             {resultados.map((e) => (
-              <li key={e.id}>
-                <button type="button" className="resultado" onClick={() => p.onSeleccionar(e.id)}>
-                  <span className="resultado__titulo">
-                    <span className="resultado__icono"><IconoEntrada clave={e.icono} tamano={16} /></span> {tituloDe(e)}
-                    <ChipRecurso d={recursoDeEntrada(catalogo, e, politica)} />
-                  </span>
-                  <span className="resultado__texto">{e.texto}</span>
-                  <span className="resultado__meta">
-                    <code>{e.id}</code> · {e.tipo === 'pregunta-medico' ? 'Pregunta' : 'Respuesta'}
-                  </span>
-                  <span className="pastilla pastilla--blanca" aria-hidden="true">
-                    Mostrar al paciente
-                  </span>
-                </button>
-              </li>
+              <TarjetaEntrada key={e.id} entrada={e} catalogo={catalogo} politica={politica} onSeleccionar={p.onSeleccionar} />
             ))}
           </ul>
         </>
@@ -136,6 +128,84 @@ export const CatalogoMedico = forwardRef<HTMLInputElement, Props>(function Catal
     </div>
   );
 });
+
+/** Une nombres en español: «Tos», «Tos y Fiebre», «Tos, Fiebre y Mareo». */
+function unir(nombres: string[]): string {
+  return nombres.length <= 1 ? (nombres[0] ?? '') : `${nombres.slice(0, -1).join(', ')} y ${nombres[nombres.length - 1]}`;
+}
+
+/**
+ * Preguntas sugeridas cuando la búsqueda está vacía (D55): las recomendadas por los síntomas que
+ * el paciente confirmó y las generales. Elegir una abre la misma revisión antes de enviar (RF-02).
+ */
+function Sugeridas(p: {
+  catalogo: Catalogo;
+  politica: PoliticaRecursos;
+  mensajes: readonly Mensaje[];
+  onSeleccionar: (id: string) => void;
+}) {
+  const { porSintomas, generales } = sugerencias(p.catalogo, p.mensajes);
+  const grupo = (titulo: string, lista: Sugerencia[]) =>
+    lista.length > 0 && (
+      <>
+        <h4 className="buscador__grupo">{titulo}</h4>
+        <ul className="resultados" aria-label={titulo}>
+          {lista.map((s) => {
+            const entrada = buscarEntrada(p.catalogo, s.entradaId);
+            if (!entrada) return null;
+            const sintomas = s.porSintomas
+              .map((id) => buscarEntrada(p.catalogo, id))
+              .filter((e): e is EntradaCatalogo => e !== undefined);
+            return (
+              <TarjetaEntrada
+                key={s.entradaId}
+                entrada={entrada}
+                catalogo={p.catalogo}
+                politica={p.politica}
+                motivo={sintomas.length > 0 ? `por ${unir(sintomas.map(tituloDe))}` : undefined}
+                onSeleccionar={p.onSeleccionar}
+              />
+            );
+          })}
+        </ul>
+      </>
+    );
+  return (
+    <>
+      {grupo('Sugeridas por los síntomas', porSintomas)}
+      {grupo('Preguntas generales', generales)}
+    </>
+  );
+}
+
+/** Una entrada del catálogo del médico como botón «Mostrar al paciente» (resultados y sugerencias). */
+function TarjetaEntrada(p: {
+  entrada: EntradaCatalogo;
+  catalogo: Catalogo;
+  politica: PoliticaRecursos;
+  motivo?: string;
+  onSeleccionar: (id: string) => void;
+}) {
+  const e = p.entrada;
+  return (
+    <li>
+      <button type="button" className="resultado" onClick={() => p.onSeleccionar(e.id)}>
+        <span className="resultado__titulo">
+          <span className="resultado__icono"><IconoEntrada clave={e.icono} tamano={16} /></span> {tituloDe(e)}
+          <ChipRecurso d={recursoDeEntrada(p.catalogo, e, p.politica)} />
+        </span>
+        <span className="resultado__texto">{e.texto}</span>
+        <span className="resultado__meta">
+          <code>{e.id}</code> · {e.tipo === 'pregunta-medico' ? 'Pregunta' : 'Respuesta'}
+          {p.motivo && <> · {p.motivo}</>}
+        </span>
+        <span className="pastilla pastilla--blanca" aria-hidden="true">
+          Mostrar al paciente
+        </span>
+      </button>
+    </li>
+  );
+}
 
 function ChipRecurso({ d }: { d: Disponibilidad }) {
   if (d.estado === 'validado') return <span className="chip chip--ok">LSM validado</span>;

@@ -23,6 +23,7 @@ const CATALOGO_VACIO: Catalogo = {
   entradas: [],
   recursos: [],
   recursosSistema: {},
+  preguntasGenerales: [],
 };
 
 export const catalogoFicticio: Catalogo = resultado.cargado?.catalogo ?? CATALOGO_VACIO;

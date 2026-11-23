@@ -1,8 +1,8 @@
 # Recursos candidatos en LSM (sin validar)
 
-Videos descargados el 16/11/2026 de las dos fuentes públicas. **Son candidatos, no recursos validados.**
-26 de ellos ya están conectados a la app como **recursos de prueba** (copiados a `public/recursos/` con el ID de la
-entrada; ver D40–D46 en `Docs/ESTADO_ACTUAL.md`): se ven en modo desarrollo con la etiqueta «LSM sin validar» y en el
+Videos descargados el 16/11, 17/11 y 23/11/2026 de las fuentes públicas. **Son candidatos, no recursos validados.**
+38 de ellos ya están conectados a la app como **recursos de prueba** (40 archivos: MED-P-11 y MED-P-16 reutilizan los videos de la intensidad del dolor y de PAC-S-03) (copiados a `public/recursos/` con el ID de la
+entrada; ver D40–D46 y D55 en `Docs/ESTADO_ACTUAL.md`): se ven en modo desarrollo con la etiqueta «LSM sin validar» y en el
 flujo de producto siguen bloqueados. Antes de validarlos falta lo que pide `TECHSTAR_MVP.md` §6.2: que corresponda al
 mensaje completo, que el uso esté permitido por la fuente y registrar la aprobación entrada–recurso.
 
@@ -14,7 +14,7 @@ mensaje completo, que el uso esté permitido por la fuente y registrar la aproba
 
 ## Contenido
 
-- `videos/` — 98 videos `.mp4` (57 MB en total; 85 del 16/11/2026, 11 respuestas breves y «Sí»/«No» del 17/11/2026; H.264 a 720p, **sin audio**: solo la pista de video).
+- `videos/` — 108 videos `.mp4` (64 MB en total; 85 del 16/11/2026, 11 respuestas breves y «Sí»/«No» del 17/11/2026, 10 preguntas del médico del 23/11/2026; H.264 a 720p, **sin audio**: solo la pista de video).
   Iztacala son verticales (720×1280) e Indiscapacidad horizontales (1280×720). Nombre:
   `<IZT|IND>_<seña>_<idYouTube>.mp4`.
 - `procedencia.json` — por cada video: fuente, nombre de la seña en el sitio, página de origen, URL del video,
@@ -53,6 +53,20 @@ tiempo verbal); falta decidir con apoyo lingüístico si basta o si hay que grab
 | MED-P-04 | ¿Está tomando algún medicamento? | completa | IZT «¿Estás tomando medicamento?» (+ «Medicamento» IZT/IND) |
 | MED-P-05 | ¿Ha tenido fiebre? | parcial | IZT «¿Tienes fiebre?» (presente, no pasado) |
 | MED-P-06 | ¿Ha tenido vómito? | completa | IZT «¿Vomitaste?» (+ IZT «Vomitar», IND «Vómito») |
+| MED-P-07 | ¿Tiene alguna enfermedad crónica, como diabetes o presión alta? | completa (sin los ejemplos) | IZT «¿Tienes alguna enfermedad?» |
+| MED-P-08 | ¿Ha tomado algún medicamento para esto? | parcial | IZT «Medicamento» |
+| MED-P-10 | ¿Está embarazada o podría estarlo? | completa | IZT «¿Estás embarazada?» |
+| MED-P-11 | ¿Cuánto le duele, del 1 al 10? | parcial | IZT «¿Qué tanto te duele?» (mismo video que la escala de intensidad) |
+| MED-P-12 | ¿El dolor va y viene? | parcial | IZT «Dolor» |
+| MED-P-13 | ¿Ve borroso o le molesta la luz? | parcial | IZT «Vista borrosa» |
+| MED-P-14 | ¿Ha tenido diarrea? | completa | IZT «¿Tienes diarrea?» (presente) |
+| MED-P-15 | ¿Puede comer y beber con normalidad? | parcial | IZT «Comer» |
+| MED-P-16 | ¿Le duele al tragar? | parcial | IZT «Dolor de garganta» (mismo video que PAC-S-03) |
+| MED-P-17 | ¿Ha tenido escalofríos? | parcial | IND «Escalofríos» |
+| MED-P-18 | ¿Tiene flemas al toser? | parcial | IZT «Flema» |
+| MED-P-19 | ¿Le cuesta trabajo respirar? | completa | IZT «¿Sientes dificultad para respirar?» |
+| MED-P-20 | ¿Se ha desmayado? | completa | IZT «¿Te desmayaste?» |
+| MED-P-21 | ¿Duerme bien por las noches? | parcial | IZT «Dormir» |
 | MED-R-01 | Ahora voy a revisarle. | parcial | IZT «Revisión general médica», «Ahora» IZT/IND |
 | MED-R-02 | Espere un momento, por favor. | parcial | IND «Esperar», «Por favor» IZT/IND |
 | MED-R-03 | Para continuar se necesita un intérprete de LSM. | parcial | IZT «¿Necesitas intérprete?», «Intérprete» IZT/IND |
@@ -100,4 +114,4 @@ Vocabulario de apoyo (útil para el reconocedor o futuras entradas): «¿Cuáles
    `condicionesUso` y `aprobacion` en `catalogo/ficticio-dev.json`. Para uno nuevo: copiar el video a
    `public/recursos/` con el nombre del campo `archivo`. En ambos casos, `npm run validar-catalogo` (ver README del
    proyecto, «Editar el catálogo»).
-5. **No subir los videos a git** sin decidirlo: son 57 MB y su redistribución no está autorizada.
+5. **No subir los videos a git** sin decidirlo: son 64 MB y su redistribución no está autorizada.

@@ -2,6 +2,7 @@ import os from 'node:os';
 import { WebSocket, WebSocketServer } from 'ws';
 import type { CoordinadorSesion } from '../../src/nucleo/coordinador';
 import type { Comando, Resultado } from '../../src/nucleo/tipos';
+import { calcularHuella } from '../../src/transporte/busqueda';
 import {
   aBase64,
   bytesAleatorios,
@@ -59,6 +60,8 @@ export interface ServidorRed {
   estado(): EstadoVinculacion;
   alCambio(fn: (estado: EstadoVinculacion) => void): () => void;
   desvincular(): Promise<EstadoVinculacion>;
+  /** Lo que el médico responde a una búsqueda (D56): puerto, sal y huella de la vinculación vigente. */
+  datosAnuncio(): Promise<{ puerto: number; sal: string; huella: string }>;
   cerrar(): Promise<void>;
   /** Solo pruebas: corta la conexión del paciente como si cayera la red. */
   cortarConexiones(): void;
@@ -304,6 +307,10 @@ export async function iniciarServidorRed(opciones: OpcionesServidorRed): Promise
       }
       notificar();
       return estado();
+    },
+    async datosAnuncio() {
+      const vinc = vinculacion;
+      return { puerto, sal: aBase64(vinc.sal), huella: await calcularHuella(await vinc.maestra, vinc.sal) };
     },
     async cerrar() {
       clearInterval(latidos);

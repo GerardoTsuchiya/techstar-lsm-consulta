@@ -11,17 +11,21 @@ Recorrido para probar la app de principio a fin. Para instalarla y abrirla, ver 
    «Confirmar mensaje» (prueben un doble clic: llega un solo mensaje).
 5. **Médico:** buscar `ALERGIA` → «Mostrar al paciente» en «¿Tiene alergia a algún medicamento?» → revisar texto y
    recurso → «Enviar al paciente».
+   Antes de escribir, el médico ya ve «Sugeridas por los síntomas» (por ejemplo, con «Fiebre»: «¿Ha tenido
+   escalofríos?») y «Preguntas generales». Elegir una abre la misma revisión antes de enviar.
 6. **Paciente:** aparece «Mensaje del médico»; pulsar **«No entendí»**. **Médico:** aparece el aviso rosa con ese mismo
    mensaje → «Elegir otra entrada» → buscar `desde` → enviar. El aviso queda marcado como respondido.
    **Paciente:** «Responder» vuelve al catálogo; «Conversación» muestra el historial.
 7. **Entrada sin recurso:** médico, buscar `vomito` → «Enviar» bloqueado. Paciente, «Mareo» (sin recurso) →
    «Revisar selección» → «Confirmar» bloqueado → «Descartar mensaje».
-8. **Sin resultados:** médico, buscar `cirugía`.
-9. **Cierre:** «Finalizar consulta» → «Terminar y borrar». Ambas pantallas se vacían → «Nueva consulta» empieza vacía.
-10. Opcional: volver al inicio con «Flujo de producto» y comprobar que todo envío queda bloqueado.
+8. **Sugerida sin recurso:** paciente, confirmar «Dolor de estómago» → el médico ve «¿Ha tenido vómito?» entre las
+   sugeridas, con «Sin recurso»; al elegirla, la revisión explica el bloqueo y «Enviar» queda desactivado.
+9. **Sin resultados:** médico, buscar `cirugía`.
+10. **Cierre:** «Finalizar consulta» → «Terminar y borrar». Ambas pantallas se vacían → «Nueva consulta» empieza vacía.
+11. Opcional: volver al inicio con «Flujo de producto» y comprobar que todo envío queda bloqueado.
 
 **Dos laptops:** vincularlas (ver «Dos laptops» en el [README](../README.md#en-dos-laptops)) y repetir los pasos, cada participante en su laptop. **Dos procesos en
-una computadora:** `npm run electron:medico-local` y `npm run electron:paciente` con la dirección `127.0.0.1`.
+una computadora:** `npm run electron:medico-local` y `npm run electron:paciente` escribiendo solo el código (el equipo del paciente encuentra al médico en `127.0.0.1`).
 **Dos pestañas del navegador:** modo **Médico** y luego **Paciente** en otra pestaña (como en la etapa A).
 
 ## Captura en LSM (etapa C)

@@ -105,6 +105,8 @@ const textoValido = (v: unknown): v is string => typeof v === 'string' && v.trim
 const lista = (claves: Record<string, unknown> | readonly string[]) =>
   (Array.isArray(claves) ? claves : Object.keys(claves)).map((c) => `«${c}»`).join(', ');
 
+const esListaDeTextos = (v: unknown): v is string[] => Array.isArray(v) && v.every((x) => typeof x === 'string');
+
 const PATRON_ID = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
 const PATRON_ARCHIVO = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 const PATRON_FECHA = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -153,8 +155,8 @@ function camposDesconocidos(obj: Objeto, admitidos: readonly string[], donde: st
 
 // ------------------------------------------------------------ Validación
 
-const CAMPOS_RAIZ = ['version', 'ficticio', 'notas', 'avisoAlcance', 'recursosSistema', 'entradas', 'recursos'] as const;
-const CAMPOS_ENTRADA = ['id', 'tipo', 'significado', 'texto', 'termino', 'icono', 'esDolor', 'recursoId', 'nota'] as const;
+const CAMPOS_RAIZ = ['version', 'ficticio', 'notas', 'avisoAlcance', 'recursosSistema', 'preguntasGenerales', 'entradas', 'recursos'] as const;
+const CAMPOS_ENTRADA = ['id', 'tipo', 'significado', 'texto', 'termino', 'icono', 'esDolor', 'recursoId', 'recomendadas', 'nota'] as const;
 const CAMPOS_RECURSO = [
   'id', 'tipo', 'estado', 'descripcion', 'archivo', 'procedencia', 'condicionesUso',
   'revisionLinguistica', 'aprobacion', 'estadoReproduccion', 'nota',
@@ -208,6 +210,13 @@ function validarEntrada(e: unknown, i: number, errores: string[]): EntradaCatalo
   if (e.recursoId !== null && !textoValido(e.recursoId)) {
     errores.push(`${donde}: «recursoId» debe ser el id de un recurso o null si la entrada no tiene recurso.`);
   }
+  if (e.recomendadas !== undefined) {
+    if (!esListaDeTextos(e.recomendadas)) {
+      errores.push(`${donde}: «recomendadas» debe ser una lista de ids de preguntas del médico.`);
+    } else if (e.tipo !== 'sintoma') {
+      errores.push(`${donde}: solo un síntoma puede tener «recomendadas».`);
+    }
+  }
   if (e.nota !== undefined && typeof e.nota !== 'string') errores.push(`${donde}: «nota» debe ser texto.`);
 
   if (errores.length > nErrores || !id) return undefined;
@@ -221,6 +230,7 @@ function validarEntrada(e: unknown, i: number, errores: string[]): EntradaCatalo
   };
   if (e.esDolor === true) entrada.esDolor = true;
   if (typeof e.recursoId === 'string') entrada.recursoId = e.recursoId;
+  if (esListaDeTextos(e.recomendadas)) entrada.recomendadas = [...e.recomendadas];
   return entrada;
 }
 
@@ -318,6 +328,15 @@ function repetidos(ids: string[]): string[] {
   return [...dobles];
 }
 
+/** Revisa una lista de ids que debe contener solo preguntas del médico existentes, sin repetir (D55). */
+function validarListaPreguntas(ids: string[], donde: string, campo: string, tipos: Map<string, unknown>, errores: string[]) {
+  for (const id of repetidos(ids)) errores.push(`${donde}: «${campo}» repite «${id}».`);
+  for (const id of new Set(ids)) {
+    if (!tipos.has(id)) errores.push(`${donde}: «${campo}» incluye «${id}», que no existe en «entradas».`);
+    else if (tipos.get(id) !== 'pregunta-medico') errores.push(`${donde}: «${campo}» incluye «${id}», que no es una pregunta del médico.`);
+  }
+}
+
 /**
  * Valida los datos leídos de `catalogo/*.json`. No lanza excepciones: devuelve errores y avisos
  * en español, y el catálogo listo para usar solo si no hay errores.
@@ -411,6 +430,25 @@ export function validarCatalogo(datos: unknown): ResultadoValidacion {
     }
   }
 
+  // Preguntas recomendadas por síntoma y preguntas generales (D55)
+  const tipoDe = new Map<string, unknown>(
+    entradasLista.filter(esObjeto).filter((e) => typeof e.id === 'string').map((e) => [e.id as string, e.tipo]),
+  );
+  for (const e of entradasLista) {
+    if (esObjeto(e) && e.tipo === 'sintoma' && esListaDeTextos(e.recomendadas)) {
+      validarListaPreguntas(e.recomendadas, `Entrada ${String(e.id)}`, 'recomendadas', tipoDe, errores);
+    }
+  }
+  let preguntasGenerales: string[] = [];
+  if (datos.preguntasGenerales !== undefined) {
+    if (!esListaDeTextos(datos.preguntasGenerales)) {
+      errores.push('Catálogo: «preguntasGenerales» debe ser una lista de ids de preguntas del médico.');
+    } else {
+      validarListaPreguntas(datos.preguntasGenerales, 'Catálogo', 'preguntasGenerales', tipoDe, errores);
+      preguntasGenerales = [...datos.preguntasGenerales];
+    }
+  }
+
   // Avisos (no bloquean)
   for (const r of recursos) {
     if (!r) continue;
@@ -441,6 +479,7 @@ export function validarCatalogo(datos: unknown): ResultadoValidacion {
         entradas: entradas as EntradaCatalogo[],
         recursos: recursos as Recurso[],
         recursosSistema: sistema,
+        preguntasGenerales,
       },
     },
   };

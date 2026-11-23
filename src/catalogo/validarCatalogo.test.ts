@@ -42,6 +42,9 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
       'PAC-R-04', 'PAC-R-05', 'PAC-R-06', 'PAC-R-07', 'PAC-R-08', 'PAC-R-09', 'PAC-R-10',
       'PAC-R-11', 'PAC-R-12', 'PAC-R-13', 'PAC-R-14',
       'MED-P-01', 'MED-P-02', 'MED-P-03', 'MED-P-04', 'MED-P-05', 'MED-P-06',
+      // Preguntas nuevas (D55). MED-P-09 se descartó: no hay video.
+      'MED-P-07', 'MED-P-08', 'MED-P-10', 'MED-P-11', 'MED-P-12', 'MED-P-13', 'MED-P-14',
+      'MED-P-15', 'MED-P-16', 'MED-P-17', 'MED-P-18', 'MED-P-19', 'MED-P-20', 'MED-P-21',
       'MED-R-01', 'MED-R-02', 'MED-R-03', 'MED-R-04',
     ]);
     const sinRecurso = catalogoFicticio.entradas.filter((e) => !e.recursoId).map((e) => e.id);
@@ -63,6 +66,10 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
       'REC-PRUEBA-PAC-R-08', 'REC-PRUEBA-PAC-R-09', 'REC-PRUEBA-PAC-R-10', 'REC-PRUEBA-PAC-R-11',
       'REC-PRUEBA-PAC-R-12', 'REC-PRUEBA-PAC-R-13', 'REC-PRUEBA-PAC-R-14',
       'REC-PRUEBA-MED-P-02', 'REC-PRUEBA-MED-P-03', 'REC-PRUEBA-MED-P-04', 'REC-PRUEBA-MED-P-05',
+      'REC-PRUEBA-MED-P-07', 'REC-PRUEBA-MED-P-08', 'REC-PRUEBA-MED-P-10', 'REC-PRUEBA-MED-P-11',
+      'REC-PRUEBA-MED-P-12', 'REC-PRUEBA-MED-P-13', 'REC-PRUEBA-MED-P-14', 'REC-PRUEBA-MED-P-15',
+      'REC-PRUEBA-MED-P-16', 'REC-PRUEBA-MED-P-17', 'REC-PRUEBA-MED-P-18', 'REC-PRUEBA-MED-P-19',
+      'REC-PRUEBA-MED-P-20', 'REC-PRUEBA-MED-P-21',
       'REC-PRUEBA-SIS-NO-ENTENDI', 'REC-PRUEBA-SIS-INTENSIDAD',
     ]);
     for (const r of conArchivo) {
@@ -80,6 +87,23 @@ describe('Catálogo ficticio en catalogo/ficticio-dev.json', () => {
     const esperado = generarDocumentoRecursos(r.cargado!, 'catalogo/ficticio-dev.json', notas);
     const actual = readFileSync('guias/RECURSOS_LSM.md', 'utf8').replace(/\r\n/g, '\n');
     expect(actual, 'Ejecuta «npm run docs-recursos»').toBe(esperado);
+  });
+
+  it('recomienda preguntas por síntoma y ofrece preguntas generales (D55)', () => {
+    const recomendadas = Object.fromEntries(
+      catalogoFicticio.entradas.filter((e) => e.recomendadas).map((e) => [e.id, e.recomendadas]),
+    );
+    expect(recomendadas).toEqual({
+      'PAC-S-01': ['MED-P-01', 'MED-P-12', 'MED-P-13', 'MED-P-05'],
+      'PAC-S-02': ['MED-P-01', 'MED-P-02', 'MED-P-06', 'MED-P-14', 'MED-P-15'],
+      'PAC-S-03': ['MED-P-01', 'MED-P-16', 'MED-P-05'],
+      'PAC-S-04': ['MED-P-01', 'MED-P-17', 'MED-P-08'],
+      'PAC-S-05': ['MED-P-01', 'MED-P-18', 'MED-P-19', 'MED-P-05'],
+      'PAC-S-06': ['MED-P-01', 'MED-P-20', 'MED-P-06', 'MED-P-07'],
+      'PAC-S-07': ['MED-P-01', 'MED-P-06', 'MED-P-15', 'MED-P-14'],
+      'PAC-S-08': ['MED-P-01', 'MED-P-21', 'MED-P-07', 'MED-P-05'],
+    });
+    expect(catalogoFicticio.preguntasGenerales).toEqual(['MED-P-03', 'MED-P-04', 'MED-P-07', 'MED-P-08', 'MED-P-10', 'MED-P-11']);
   });
 });
 
@@ -198,6 +222,59 @@ describe('Validador del catálogo: rechaza datos que cambiarían lo comunicado',
     expect(r.errores).toEqual([]);
     expect(r.avisos.join('\n')).toContain('Recurso REC-PRUEBA-PAC-S-05: ninguna entrada ni control del sistema lo usa.');
     expect(r.avisos.join('\n')).toContain('Recurso REC-PRUEBA-PAC-S-04: lo comparten Entrada PAC-S-04, Entrada PAC-S-05');
+  });
+
+  it('recomendaciones: solo en síntomas, solo preguntas del médico existentes y sin repetir', () => {
+    const r = copia((d) => {
+      entrada(d, 'PAC-S-01').recomendadas = ['MED-P-01', 'MED-P-01', 'MED-NO-EXISTE', 'MED-R-01', 'PAC-S-02'];
+      entrada(d, 'PAC-R-01').recomendadas = ['MED-NO-EXISTE'];
+      entrada(d, 'PAC-S-03').recomendadas = 'MED-P-01';
+    });
+    const e = errores(r);
+    expect(r.cargado).toBeUndefined();
+    expect(e).toContain('Entrada PAC-S-01: «recomendadas» repite «MED-P-01».');
+    expect(e).toContain('Entrada PAC-S-01: «recomendadas» incluye «MED-NO-EXISTE», que no existe en «entradas».');
+    expect(e).toContain('Entrada PAC-S-01: «recomendadas» incluye «MED-R-01», que no es una pregunta del médico.');
+    expect(e).toContain('Entrada PAC-S-01: «recomendadas» incluye «PAC-S-02», que no es una pregunta del médico.');
+    expect(e).toContain('Entrada PAC-R-01: solo un síntoma puede tener «recomendadas».');
+    expect(e).not.toContain('Entrada PAC-R-01: «recomendadas» incluye');
+    expect(e).toContain('Entrada PAC-S-03: «recomendadas» debe ser una lista de ids de preguntas del médico.');
+  });
+
+  it('preguntas generales: lista de preguntas del médico existentes y sin repetir', () => {
+    const malas = copia((d) => {
+      (d as Fila).preguntasGenerales = ['MED-P-03', 'MED-P-03', 'MED-X', 'MED-R-02'];
+    });
+    const e = errores(malas);
+    expect(e).toContain('Catálogo: «preguntasGenerales» repite «MED-P-03».');
+    expect(e).toContain('Catálogo: «preguntasGenerales» incluye «MED-X», que no existe en «entradas».');
+    expect(e).toContain('Catálogo: «preguntasGenerales» incluye «MED-R-02», que no es una pregunta del médico.');
+    expect(errores(copia((d) => ((d as Fila).preguntasGenerales = 'MED-P-03')))).toContain(
+      'Catálogo: «preguntasGenerales» debe ser una lista de ids de preguntas del médico.',
+    );
+    expect(errores(copia((d) => ((d as Fila).preguntasGenerales = ['MED-P-03', 1])))).toContain(
+      'Catálogo: «preguntasGenerales» debe ser una lista de ids de preguntas del médico.',
+    );
+  });
+
+  it('recomendaciones y preguntas generales válidas se cargan en el orden dado', () => {
+    const r = copia((d) => {
+      entrada(d, 'PAC-S-01').recomendadas = ['MED-P-02', 'MED-P-01'];
+      (d as Fila).preguntasGenerales = ['MED-P-04', 'MED-P-03'];
+    });
+    expect(r.errores).toEqual([]);
+    expect(r.cargado!.catalogo.entradas.find((e) => e.id === 'PAC-S-01')!.recomendadas).toEqual(['MED-P-02', 'MED-P-01']);
+    expect(r.cargado!.catalogo.preguntasGenerales).toEqual(['MED-P-04', 'MED-P-03']);
+  });
+
+  it('sin «preguntasGenerales» ni «recomendadas» el catálogo carga con listas vacías', () => {
+    const r = copia((d) => {
+      delete (d as Fila).preguntasGenerales;
+      for (const e of d.entradas) delete e.recomendadas;
+    });
+    expect(r.errores).toEqual([]);
+    expect(r.cargado!.catalogo.preguntasGenerales).toEqual([]);
+    expect(r.cargado!.catalogo.entradas.every((e) => e.recomendadas === undefined)).toBe(true);
   });
 });
 
