@@ -2,6 +2,7 @@ import { type SubmitEvent, useEffect, useMemo, useState } from 'react';
 import { catalogoFicticio } from '../catalogo/catalogoFicticio';
 import { generarId } from '../nucleo/ids';
 import type { Catalogo, PoliticaRecursos } from '../nucleo/tipos';
+import { type AnuncioRecibido, elegirMedico, MENSAJES_BUSQUEDA, PAUSA_REBUSQUEDA_MS } from '../transporte/busqueda';
 import { normalizarCodigo } from '../transporte/canalSeguro';
 import { conectarPorIpc } from '../transporte/ipcElectron';
 import { MOTIVOS_RECHAZO, urlDeDireccion } from '../transporte/protocoloRed';
@@ -75,14 +76,14 @@ function PanelVinculacion({ medico, equipo }: { medico: PuenteMedico; equipo: In
       {!v.vinculado ? (
         <>
           <span className="vinculo__estado">
-            <IconoVincular /> Vincular la laptop del paciente
-          </span>
-          <span className="vinculo__dato">
-            Dirección{' '}
-            <strong data-prueba="direccion">{v.direcciones.length ? v.direcciones.join('  ·  ') : 'sin red local'}</strong>
+            <IconoVincular /> Vincular el equipo del paciente
           </span>
           <span className="vinculo__dato">
             Código <strong className="vinculo__codigo" data-prueba="codigo">{v.codigo}</strong>
+          </span>
+          <span className="vinculo__respaldo">
+            Si el equipo del paciente no la encuentra, escribe:{' '}
+            <strong data-prueba="direccion">{v.direcciones.length ? v.direcciones.join('  ·  ') : 'sin red local'}</strong>
           </span>
         </>
       ) : (
@@ -95,7 +96,7 @@ function PanelVinculacion({ medico, equipo }: { medico: PuenteMedico; equipo: In
           </span>
           {!v.conectado && v.codigo && (
             <span className="vinculo__dato">
-              Si la laptop del paciente se reinició o recargó, vuelve a escribir {v.direcciones[0] ?? ''} y el código{' '}
+              Si el equipo del paciente se reinició o recargó, vuelve a escribir el código{' '}
               <strong className="vinculo__codigo">{v.codigo}</strong>
             </span>
           )}
@@ -189,17 +190,37 @@ function BandaRed({ estado }: { estado: EstadoRed }) {
   );
 }
 
+/** Línea de estado de la búsqueda automática (D56). */
+function EstadoBusqueda({ encontrados }: { encontrados: AnuncioRecibido[] | null }) {
+  let texto = 'Buscando la computadora del médico…';
+  if (encontrados?.length === 1) texto = 'Computadora del médico encontrada en esta red';
+  else if (encontrados && encontrados.length > 1) texto = `${encontrados.length} computadoras de médico encontradas en esta red`;
+  else if (encontrados) texto = 'Todavía no encontramos la computadora del médico en esta red. Seguimos buscando…';
+  return (
+    <p className="vincular__busqueda" role="status" data-encontrados={encontrados?.length ?? ''}>
+      {encontrados?.length ? <IconoWifi /> : <IconoSinWifi />} {texto}
+    </p>
+  );
+}
+
 /**
- * Modo paciente por red: lo prepara el personal escribiendo la dirección y el código que
- * muestra la laptop del médico. Funciona en la app de escritorio y en el navegador.
+ * Modo paciente por red: lo prepara el personal. En la app de escritorio basta el código: el equipo busca solo a la
+ * computadora del médico en la red (D56) y la dirección tecleada queda como respaldo. En el navegador, que no puede
+ * buscar, se escriben la dirección y el código.
  */
 export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Catalogo }) {
   const p = puente();
+  const buscador = p?.paciente;
   const [idVentana] = useState(() => generarId('disp'));
   const dispositivoId = p?.dispositivoId ?? idVentana;
+  const [manual, setManual] = useState(!buscador);
   const [direccion, setDireccion] = useState('');
   const [codigo, setCodigo] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [sinEncontrar, setSinEncontrar] = useState(false);
+  const [encontrados, setEncontrados] = useState<AnuncioRecibido[] | null>(null);
+  const [eligiendo, setEligiendo] = useState(false);
+  const [destino, setDestino] = useState('');
   const [conexion, setConexion] = useState<ConexionRed | null>(null);
   const [estado, setEstado] = useState<EstadoRed | null>(null);
   const [vinculado, setVinculado] = useState(false);
@@ -223,15 +244,77 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
     }
   }, [estado]);
 
-  function vincular(e: SubmitEvent<HTMLFormElement>) {
+  // Búsqueda automática mientras la pantalla de conexión está abierta (D56).
+  useEffect(() => {
+    if (!buscador || conexion) return;
+    let vigente = true;
+    let pausa: ReturnType<typeof setTimeout> | undefined;
+    const buscar = () => {
+      void buscador.buscarMedicos().then((lista) => {
+        if (!vigente) return;
+        setEncontrados(lista);
+        pausa = setTimeout(buscar, PAUSA_REBUSQUEDA_MS);
+      });
+    };
+    buscar();
+    return () => {
+      vigente = false;
+      clearTimeout(pausa);
+    };
+  }, [buscador, conexion]);
+
+  function conectar(url: string, cod: string, mostrar: string) {
+    setError(null);
+    setSinEncontrar(false);
+    setVinculado(false);
+    setDestino(mostrar);
+    setConexion(conectarPorWebSocket({ url, codigo: cod, dispositivoId }));
+  }
+
+  async function vincularConCodigo(e: SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const cod = normalizarCodigo(codigo);
+    if (!cod) return setError('El código tiene 10 letras o números, por ejemplo 7KQ2M-9XD4T.');
+    if (!buscador) return;
+    setError(null);
+    setEligiendo(true);
+    try {
+      // Primero con lo ya encontrado; si no coincide, una búsqueda nueva.
+      let r = encontrados?.length ? await elegirMedico(cod, encontrados) : null;
+      if (r?.tipo !== 'encontrado') {
+        const lista = await buscador.buscarMedicos();
+        setEncontrados(lista);
+        r = await elegirMedico(cod, lista);
+      }
+      if (r.tipo === 'encontrado') return conectar(r.url, cod, `${r.anuncio.ip}:${r.anuncio.puerto}`);
+      setError(MENSAJES_BUSQUEDA[r.tipo]);
+      setSinEncontrar(true);
+    } finally {
+      setEligiendo(false);
+    }
+  }
+
+  function vincularConDireccion(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const url = urlDeDireccion(direccion);
     const cod = normalizarCodigo(codigo);
     if (!url) return setError('Escribe la dirección que muestra la laptop del médico, por ejemplo 192.168.1.20:47100.');
     if (!cod) return setError('El código tiene 10 letras o números, por ejemplo 7KQ2M-9XD4T.');
+    conectar(url, cod, direccion);
+  }
+
+  function buscarDeNuevo() {
+    if (!buscador) return;
     setError(null);
-    setVinculado(false);
-    setConexion(conectarPorWebSocket({ url, codigo: cod, dispositivoId }));
+    setSinEncontrar(false);
+    setEncontrados(null);
+    void buscador.buscarMedicos().then(setEncontrados);
+  }
+
+  function irAManual() {
+    setError(null);
+    setSinEncontrar(false);
+    setManual(true);
   }
 
   if (conexion && vinculado && estado) {
@@ -245,32 +328,56 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
     );
   }
 
+  const campoCodigo = (
+    <>
+      <label className="buscador__etiqueta" htmlFor="codigo">
+        Código de vinculación
+      </label>
+      <input
+        id="codigo"
+        className="buscador__campo vinculo__codigo"
+        value={codigo}
+        onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+        placeholder="XXXXX-XXXXX"
+        autoComplete="off"
+        spellCheck={false}
+        maxLength={14}
+      />
+    </>
+  );
+  const aviso = error && (
+    <p className="nota nota--alerta" role="alert">
+      {error}
+    </p>
+  );
+
   return (
     <main className="inicio vincular">
       <header className="inicio__cabecera">
         <p className="inicio__equipo">TechStar · Pinkies</p>
-        <h1 className="inicio__titulo">Conectar con la laptop del médico</h1>
+        <h1 className="inicio__titulo">Conectar con la computadora del médico</h1>
         <p className="inicio__lema">
-          Preparación a cargo del personal. Escribe la dirección y el código que aparecen en la parte superior de la
-          pantalla del médico. Las dos laptops deben estar en la misma red Wi-Fi.
+          {manual
+            ? 'Preparación a cargo del personal. Escribe la dirección y el código que aparecen en la parte superior de la pantalla del médico. Los dos equipos deben estar en la misma red Wi-Fi.'
+            : 'Preparación a cargo del personal. Escribe el código que aparece en la parte superior de la pantalla del médico. Los dos equipos deben estar en la misma red Wi-Fi.'}
         </p>
       </header>
 
       {conexion ? (
         <div className="tarjeta-crema vincular__tarjeta" role="status">
           <p>
-            Conectando con <strong>{direccion}</strong>…
+            Conectando con <strong>{destino}</strong>…
           </p>
           <p className="buscador__nota">
-            Si tarda, revisa que la laptop del médico esté abierta en el modo médico, que ambas estén en la misma red y
-            que el firewall permita la conexión.
+            Si tarda, revisa que la computadora del médico esté abierta en el modo médico, que ambas estén en la misma
+            red y que el firewall permita la conexión.
           </p>
           <button type="button" className="boton boton--secundario" onClick={() => setConexion(null)}>
             Cancelar
           </button>
         </div>
-      ) : (
-        <form className="tarjeta-crema vincular__tarjeta" onSubmit={vincular} noValidate>
+      ) : manual ? (
+        <form className="tarjeta-crema vincular__tarjeta" onSubmit={vincularConDireccion} noValidate>
           <label className="buscador__etiqueta" htmlFor="direccion">
             Dirección de la laptop del médico
           </label>
@@ -284,26 +391,37 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
             spellCheck={false}
             inputMode="url"
           />
-          <label className="buscador__etiqueta" htmlFor="codigo">
-            Código de vinculación
-          </label>
-          <input
-            id="codigo"
-            className="buscador__campo vinculo__codigo"
-            value={codigo}
-            onChange={(e) => setCodigo(e.target.value.toUpperCase())}
-            placeholder="XXXXX-XXXXX"
-            autoComplete="off"
-            spellCheck={false}
-            maxLength={14}
-          />
-          {error && (
-            <p className="nota nota--alerta" role="alert">
-              {error}
-            </p>
-          )}
+          {campoCodigo}
+          {aviso}
           <button type="submit" className="boton boton--primario boton--alto">
             <IconoVincular /> Vincular
+          </button>
+          {buscador && (
+            <button type="button" className="boton boton--claro" onClick={() => setManual(false)}>
+              Buscar automáticamente
+            </button>
+          )}
+        </form>
+      ) : (
+        <form className="tarjeta-crema vincular__tarjeta" onSubmit={(e) => void vincularConCodigo(e)} noValidate>
+          <EstadoBusqueda encontrados={encontrados} />
+          {campoCodigo}
+          {aviso}
+          {sinEncontrar && (
+            <div className="vincular__acciones">
+              <button type="button" className="boton boton--secundario" onClick={buscarDeNuevo}>
+                Buscar de nuevo
+              </button>
+              <button type="button" className="boton boton--secundario" onClick={irAManual}>
+                Escribir la dirección
+              </button>
+            </div>
+          )}
+          <button type="submit" className="boton boton--primario boton--alto" disabled={eligiendo}>
+            <IconoVincular /> {eligiendo ? 'Buscando…' : 'Vincular'}
+          </button>
+          <button type="button" className="boton boton--claro" onClick={irAManual}>
+            Conectar escribiendo la dirección
           </button>
         </form>
       )}

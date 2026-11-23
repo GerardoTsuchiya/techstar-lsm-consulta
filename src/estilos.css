@@ -2017,6 +2017,25 @@ p {
   justify-self: start;
   margin-top: 0.5rem;
 }
+
+/* Búsqueda automática del médico (D56). */
+.vincular__busqueda {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--verde);
+}
+.vincular__acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.vinculo__respaldo {
+  font-size: 0.78rem;
+  color: var(--tinta-suave);
+}
 .vincular .inicio__nota .vinculo__equipo {
   margin-left: 0;
   color: inherit;
