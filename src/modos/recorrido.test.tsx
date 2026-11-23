@@ -202,6 +202,7 @@ describe('Recorrido de ida y vuelta (etapa A)', () => {
     const sugeridas = medico().getByRole('list', { name: 'Sugeridas por los síntomas' });
     const flemas = within(sugeridas).getByRole('button', { name: /Tiene flemas al toser/ });
     expect(flemas.textContent).toContain('por Tos');
+    expect(flemas.textContent).not.toContain('por Tos y Fiebre');
     expect(within(sugeridas).getByRole('button', { name: /Desde cuándo/ }).textContent).toContain('por Tos y Fiebre');
 
     // Elegirla abre la misma revisión; al enviarla deja de sugerirse
@@ -215,5 +216,25 @@ describe('Recorrido de ida y vuelta (etapa A)', () => {
     await user.type(medico().getByLabelText('Buscar pregunta o respuesta'), 'diarrea');
     expect(medico().queryByRole('list', { name: 'Sugeridas por los síntomas' })).toBeNull();
     expect(medico().getByRole('button', { name: /Ha tenido diarrea/ })).toBeTruthy();
+  });
+
+  it('una pregunta sugerida sin recurso validado abre la revisión pero no se puede enviar (D55, RF-02)', async () => {
+    const { user, paciente, medico } = await abrir();
+    await cerrarAviso(user, paciente);
+
+    await user.click(paciente().getByRole('button', { name: 'Dolor de estómago' }));
+    await user.click(paciente().getByRole('button', { name: /Revisar selección/ }));
+    await user.click(paciente().getByRole('button', { name: /Confirmar mensaje/ }));
+    await medico().findByText('Tengo dolor de estómago.');
+
+    const sugeridas = medico().getByRole('list', { name: 'Sugeridas por los síntomas' });
+    const vomito = within(sugeridas).getByRole('button', { name: /Ha tenido vómito/ });
+    expect(vomito.textContent).toContain('Sin recurso');
+
+    await user.click(vomito);
+    expect(medico().getByText('Revisar antes de enviar')).toBeTruthy();
+    expect(medico().getByText(/no tiene recurso en LSM validado/)).toBeTruthy();
+    expect((medico().getByRole('button', { name: /Enviar al paciente/ }) as HTMLButtonElement).disabled).toBe(true);
+    expect(paciente().queryByText('¿Ha tenido vómito?')).toBeNull();
   });
 });
