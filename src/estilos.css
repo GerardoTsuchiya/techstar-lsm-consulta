@@ -1582,6 +1582,12 @@ p {
   font-size: 1.15rem;
   color: var(--verde);
 }
+.buscador__grupo {
+  margin: 0.6rem 0 0;
+  font-family: var(--titulo);
+  font-size: 1rem;
+  color: var(--verde);
+}
 .resultados {
   display: grid;
   gap: 0.5rem;
