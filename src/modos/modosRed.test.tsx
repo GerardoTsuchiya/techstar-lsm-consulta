@@ -117,13 +117,68 @@ describe('Modo paciente en la app de escritorio: vinculación solo con código (
     expect((await screen.findByRole('alert')).textContent).toMatch(/ninguna tiene este código/);
   });
 
-  it('el enlace «Conectar escribiendo la dirección» abre el formulario de respaldo', async () => {
+  it('el enlace «Conectar escribiendo la dirección» abre el formulario de respaldo y detiene la búsqueda', async () => {
     conPuentePaciente(async () => []);
+    const buscar = () => vi.mocked(window.techstar!.paciente!.buscarMedicos);
     const usuario = userEvent.setup();
     render(<ModoPacienteRed />);
+    await waitFor(() => expect(buscar()).toHaveBeenCalledTimes(1));
     await usuario.click(screen.getByRole('button', { name: 'Conectar escribiendo la dirección' }));
     expect(screen.getByLabelText('Dirección de la laptop del médico')).toBeTruthy();
-    await waitFor(() => expect(window.techstar?.paciente?.buscarMedicos).toHaveBeenCalled());
+    const llamadas = buscar().mock.calls.length;
+    await new Promise((r) => setTimeout(r, 50));
+    expect(buscar()).toHaveBeenCalledTimes(llamadas);
+
+    await usuario.click(screen.getByRole('button', { name: 'Buscar automáticamente' }));
+    expect(screen.queryByLabelText('Dirección de la laptop del médico')).toBeNull();
+    await waitFor(() => expect(buscar()).toHaveBeenCalledTimes(llamadas + 1));
+  });
+
+  it('si la búsqueda falla, lo explica y deja volver a intentar (sin quedarse en «Buscando…»)', async () => {
+    conPuentePaciente(async () => {
+      throw new Error('sin manejador');
+    });
+    const usuario = userEvent.setup();
+    render(<ModoPacienteRed />);
+    await usuario.type(screen.getByLabelText('Código de vinculación'), 'ABCDE-12345');
+    await usuario.click(screen.getByRole('button', { name: /Vincular/ }));
+    expect((await screen.findByRole('alert')).textContent).toMatch(/No encontramos la computadora del médico/);
+    expect((screen.getByRole('button', { name: /Vincular/ }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it('si lo ya encontrado no coincide, busca de nuevo antes de rendirse', async () => {
+    conPuentePaciente(async () => [ANUNCIO]);
+    vi.mocked(elegirMedico)
+      .mockResolvedValueOnce({ tipo: 'sin-coincidencia' })
+      .mockResolvedValueOnce({ tipo: 'encontrado', anuncio: ANUNCIO, url: 'ws://192.168.1.20:47100/techstar' });
+    const usuario = userEvent.setup();
+    render(<ModoPacienteRed />);
+    expect(await screen.findByText('Computadora del médico encontrada en esta red')).toBeTruthy();
+    await usuario.type(screen.getByLabelText('Código de vinculación'), 'ABCDE12345');
+    await usuario.click(screen.getByRole('button', { name: /Vincular/ }));
+
+    await waitFor(() => expect(vi.mocked(conectarPorWebSocket)).toHaveBeenCalledWith(expect.objectContaining({ url: 'ws://192.168.1.20:47100/techstar' })));
+    expect(vi.mocked(window.techstar!.paciente!.buscarMedicos).mock.calls.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('«Buscar de nuevo» lanza otra búsqueda', async () => {
+    conPuentePaciente(async () => []);
+    vi.mocked(elegirMedico).mockResolvedValue({ tipo: 'nadie' });
+    const usuario = userEvent.setup();
+    render(<ModoPacienteRed />);
+    await usuario.type(screen.getByLabelText('Código de vinculación'), 'ABCDE-12345');
+    await usuario.click(screen.getByRole('button', { name: /Vincular/ }));
+    await screen.findByRole('alert');
+    const antes = vi.mocked(window.techstar!.paciente!.buscarMedicos).mock.calls.length;
+    await usuario.click(screen.getByRole('button', { name: 'Buscar de nuevo' }));
+    expect(vi.mocked(window.techstar!.paciente!.buscarMedicos).mock.calls.length).toBe(antes + 1);
+  });
+
+  it('con dos médicos en la red, la línea de estado lo indica', async () => {
+    conPuentePaciente(async () => [ANUNCIO, { ...ANUNCIO, ip: '192.168.1.21' }]);
+    render(<ModoPacienteRed />);
+    const estado = await screen.findByText('2 computadoras de médico encontradas en esta red');
+    expect(estado.closest('[role="status"]')).toBeTruthy();
   });
 });
 

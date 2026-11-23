@@ -1,4 +1,4 @@
-import { type SubmitEvent, useEffect, useMemo, useState } from 'react';
+import { type SubmitEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { catalogoFicticio } from '../catalogo/catalogoFicticio';
 import { generarId } from '../nucleo/ids';
 import type { Catalogo, PoliticaRecursos } from '../nucleo/tipos';
@@ -224,6 +224,16 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
   const [conexion, setConexion] = useState<ConexionRed | null>(null);
   const [estado, setEstado] = useState<EstadoRed | null>(null);
   const [vinculado, setVinculado] = useState(false);
+  // Para no conectar si la pantalla se cerró o el personal cambió a la dirección mientras se esperaba la búsqueda.
+  const montado = useRef(true);
+  const manualAhora = useRef(manual);
+  manualAhora.current = manual;
+  useEffect(() => {
+    montado.current = true;
+    return () => {
+      montado.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!conexion) return;
@@ -246,22 +256,28 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
 
   // Búsqueda automática mientras la pantalla de conexión está abierta (D56).
   useEffect(() => {
-    if (!buscador || conexion) return;
+    if (!buscador || conexion || manual) return;
     let vigente = true;
     let pausa: ReturnType<typeof setTimeout> | undefined;
     const buscar = () => {
-      void buscador.buscarMedicos().then((lista) => {
-        if (!vigente) return;
-        setEncontrados(lista);
-        pausa = setTimeout(buscar, PAUSA_REBUSQUEDA_MS);
-      });
+      void buscador
+        .buscarMedicos()
+        .then((lista) => {
+          if (vigente) setEncontrados(lista);
+        })
+        .catch(() => {
+          if (vigente) setEncontrados([]);
+        })
+        .finally(() => {
+          if (vigente) pausa = setTimeout(buscar, PAUSA_REBUSQUEDA_MS);
+        });
     };
     buscar();
     return () => {
       vigente = false;
       clearTimeout(pausa);
     };
-  }, [buscador, conexion]);
+  }, [buscador, conexion, manual]);
 
   function conectar(url: string, cod: string, mostrar: string) {
     setError(null);
@@ -286,11 +302,16 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
         setEncontrados(lista);
         r = await elegirMedico(cod, lista);
       }
+      if (!montado.current || manualAhora.current) return;
       if (r.tipo === 'encontrado') return conectar(r.url, cod, `${r.anuncio.ip}:${r.anuncio.puerto}`);
       setError(MENSAJES_BUSQUEDA[r.tipo]);
       setSinEncontrar(true);
+    } catch {
+      if (!montado.current) return;
+      setError(MENSAJES_BUSQUEDA.nadie);
+      setSinEncontrar(true);
     } finally {
-      setEligiendo(false);
+      if (montado.current) setEligiendo(false);
     }
   }
 
@@ -308,7 +329,10 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
     setError(null);
     setSinEncontrar(false);
     setEncontrados(null);
-    void buscador.buscarMedicos().then(setEncontrados);
+    void buscador
+      .buscarMedicos()
+      .then(setEncontrados)
+      .catch(() => setEncontrados([]));
   }
 
   function irAManual() {
@@ -420,7 +444,7 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
           <button type="submit" className="boton boton--primario boton--alto" disabled={eligiendo}>
             <IconoVincular /> {eligiendo ? 'Buscando…' : 'Vincular'}
           </button>
-          <button type="button" className="boton boton--claro" onClick={irAManual}>
+          <button type="button" className="boton boton--claro" onClick={irAManual} disabled={eligiendo}>
             Conectar escribiendo la dirección
           </button>
         </form>
