@@ -69,8 +69,9 @@ Ambas laptops tienen que estar en la misma red Wi-Fi y tener el proyecto instala
    npm run electron:medico
    ```
 
-   Si Windows pide permiso en el firewall, permitan el acceso solo en redes privadas. En la parte superior aparecen la
-   dirección (por ejemplo `192.168.1.20:47100`) y un código de vinculación de 10 caracteres.
+   Si Windows pide permiso en el firewall, permitan el acceso solo en redes privadas. En el panel «Vincular el equipo del paciente»
+   aparece el código de vinculación de 10 caracteres y, en letra pequeña debajo, la dirección de la laptop (por ejemplo
+   `192.168.1.20:47100`).
 
 2. En la laptop del paciente:
 
@@ -78,13 +79,16 @@ Ambas laptops tienen que estar en la misma red Wi-Fi y tener el proyecto instala
    npm run electron:paciente
    ```
 
-   Escriban la IP y el código que muestra la laptop del médico, y pulsen «Vincular».
+   Escriban solo el código que muestra la laptop del médico y pulsen «Vincular». El equipo encuentra solo a la
+   computadora del médico en la misma red (D56). Si no la encuentra, usen «Conectar escribiendo la dirección» con la
+   dirección que aparece en pequeño bajo el código.
 
 3. Al conectarse, el paciente ve «Conectado con la computadora del médico» y el médico «Laptop del paciente
    conectada». A partir de ahí ya se puede hacer la consulta.
 
 Si no logran conectarse, lo más probable es que la red de la universidad tenga aislados los equipos entre sí. En ese
-caso, conecten ambas laptops al punto de acceso de un celular. El protocolo completo de esta prueba está en
+caso, conecten ambas laptops al punto de acceso de un celular. La red debe permitir que los equipos se vean entre sí;
+en redes con aislamiento de clientes (algunas universidades y hospitales), comparte la red desde un celular. El protocolo completo de esta prueba está en
 [guias/PRUEBA_DOS_LAPTOPS.md](guias/PRUEBA_DOS_LAPTOPS.md).
 
 ## Prueba rápida
@@ -106,7 +110,7 @@ El guion completo, con los casos de error y la captura con cámara, está en [gu
 | `npm run electron:demo-simulado` | Igual, pero el resultado de la cámara lo elige manualmente quien dirige la prueba |
 | `npm run electron:medico` | Abre la app en modo médico (laptop del médico) |
 | `npm run electron:paciente` | Abre la app en modo paciente (laptop del paciente) |
-| `npm run electron:medico-local` | Modo médico accesible solo desde esta computadora, para probar ambos modos en la misma máquina usando `127.0.0.1` |
+| `npm run electron:medico-local` | Modo médico accesible solo desde esta computadora, para probar ambos modos en la misma máquina; el paciente encuentra al médico en `127.0.0.1` con solo el código |
 | `npm run dev` | Versión de navegador en http://127.0.0.1:5173 |
 | `npm test` | Ejecuta las pruebas automáticas |
 | `npm run check` | Revisión completa: tipos de TypeScript, catálogo, pruebas y compilación. Conviene correrlo antes de subir cambios |

@@ -15,7 +15,7 @@ En la entrega definimos el MVP en 7 módulos funcionales. El código no está or
 | 4 | Catálogo de síntomas | `src/catalogo/`, `catalogo/ficticio-dev.json`, `src/nucleo/recursos.ts`, `src/vistas/paciente/CatalogoPaciente.tsx` | Código terminado. Faltan el Catálogo V1 aprobado y los videos en LSM validados |
 | 5 | Revisión y confirmación | `src/nucleo/turnoPaciente.ts`, `src/vistas/paciente/RevisionPaciente.tsx`, `src/vistas/paciente/SelectorIntensidad.tsx` | Terminado |
 | 6 | Comunicación y preguntas médicas | `src/vistas/medico/`, `src/nucleo/busqueda.ts`, `src/nucleo/mensajes.ts`, `src/vistas/paciente/MensajesPaciente.tsx` («No entendí») | Terminado |
-| 7 | Sincronización y vinculación | `src/transporte/`, `electron/servidor/` | Terminado. Falta la prueba con dos laptops reales |
+| 7 | Sincronización y vinculación | `src/transporte/` (incl. `busqueda.ts`), `electron/servidor/` (incl. `busquedaMedico.ts`), `electron/busquedaPaciente.ts` | Terminado. Falta la prueba con dos laptops reales |
 
 Piezas compartidas por todos los módulos: `electron/main.ts`, `electron/preload.ts` y `electron/permisos.ts` (ventana
 aislada y permisos), `src/vistas/comunes/` (piezas de pantalla) y `src/nucleo/tipos.ts` (forma de los datos).
@@ -72,7 +72,8 @@ guias/           Guion de demostración, catálogo, reconocedor, prueba con dos 
   se vincula con el código, reintenta si cae la red y reenvía lo pendiente sin duplicar. `ipcElectron.ts` comunica la
   vista del médico con el coordinador del proceso principal. `canalSeguro.ts` cifra y autentica cada mensaje con una
   clave que sale del código de vinculación. `protocoloRed.ts` define los mensajes de red y revisa su forma.
-  `puente.ts` describe lo único que la app de escritorio expone a las vistas.
+  `puente.ts` describe lo único que la app de escritorio expone a las vistas. `busqueda.ts` define cómo el equipo del
+  paciente encuentra al médico en la red con solo el código (D56).
 - **`electron/servidor/servidorRed.ts`**: la «portería» de la laptop del médico. Solo deja pasar a la laptop que
   conoce el código, y a una sola; le fija el rol «paciente», entrega sus comandos al coordinador y le reenvía los
   cambios. Si la conexión se queda callada, la cierra y espera a que vuelva.

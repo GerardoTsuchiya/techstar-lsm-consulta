@@ -64,17 +64,20 @@ No registrar nombres de usuario, nombres de equipo ni direcciones MAC.
      **Redes privadas** y pulsar «Permitir acceso». La red Wi-Fi debe estar como **privada** (Configuración → Red e
      Internet → Wi-Fi → propiedades de la red → «Red privada»). No marcar «Redes públicas».
    - **macOS** preguntará si «Electron» puede aceptar conexiones entrantes: «Permitir».
-   - En la franja superior aparecen la **Dirección** (p. ej. `192.168.1.20:47100 (Wi-Fi)`) y el **Código**
-     (p. ej. `7KQ2M-9XD4T`). Si hay varias direcciones, usar la del adaptador Wi-Fi; las de `vEthernet`, `WSL`,
-     `VirtualBox` o VPN no sirven.
+   - En el panel «Vincular el equipo del paciente» aparece el **Código** (p. ej. `7KQ2M-9XD4T`) y, en letra pequeña
+     debajo, la **Dirección** (p. ej. `192.168.1.20:47100 (Wi-Fi)`). Si hay varias direcciones, usar la del
+     adaptador Wi-Fi; las de `vEthernet`, `WSL`, `VirtualBox` o VPN no sirven.
 2. **Laptop P:**
 
    ```bash
    npm run electron:paciente
    ```
 
-   Escribir la dirección (basta con la IP; el puerto 47100 es el predeterminado) y el código. Pulsar «Vincular».
-   El código no distingue mayúsculas y acepta «O» por «0». Debe aparecer «Conectado con la computadora del médico» y,
+   Escribir solo el código que muestra la laptop M y pulsar «Vincular»; el equipo encuentra solo a la computadora del
+   médico en la misma red (D56). Si no la encuentra, usar «Conectar escribiendo la dirección» con la dirección que
+   aparece en pequeño bajo el código (basta con la IP; el puerto 47100 es el predeterminado). La red debe permitir
+   que los equipos se vean entre sí; en redes con aislamiento de clientes (algunas universidades y hospitales),
+   compartir la red desde un celular. El código no distingue mayúsculas y acepta «O» por «0». Debe aparecer «Conectado con la computadora del médico» y,
    en la laptop M, «Laptop del paciente conectada (equipo XXXXXX)».
 
 Si no conecta: comprobar que la laptop M muestra una dirección de la misma red que la laptop P (`ipconfig` en
@@ -90,17 +93,23 @@ Seguir el [guion de demostración](GUION_DEMO.md) (pasos 2 a 9) entre las dos la
 | B2 | Borrador privado | Paciente en la revisión sin confirmar | M sigue en «Todavía no hay mensajes» |
 | B3 | Médico → paciente | M: buscar `alergia` → «Mostrar al paciente» → «Enviar al paciente» | P muestra «Mensaje del médico». M pasa de «Enviado» a «Se mostró en la pantalla del paciente» |
 | B4 | No entendí | P: «No entendí» | M muestra el aviso rosa con el texto de ese mensaje |
-| B5 | Equipo ajeno (código) | En una tercera computadora (o en P tras «Desvincular»), `npm run electron:paciente` con un código inventado | «El código de vinculación no es correcto.» M: «Equipos rechazados: 1 (último: código incorrecto)» |
-| B6 | Equipo ajeno (pareja ocupada) | Tercera computadora con el **código correcto** mientras P está vinculada | «La computadora del médico ya está vinculada con otro equipo.» P sigue conectada |
+| B5 | Equipo ajeno (código) | En una tercera computadora (o en P tras «Desvincular»), `npm run electron:paciente`, «Conectar escribiendo la dirección» con la dirección de M y un código inventado | «El código de vinculación no es correcto.» M: «Equipos rechazados: 1 (último: código incorrecto)» |
+| B6 | Equipo ajeno (pareja ocupada) | Tercera computadora con el **código correcto** (búsqueda automática o dirección) mientras P está vinculada | «La computadora del médico ya está vinculada con otro equipo.» P sigue conectada |
 | B7 | Caída de red y recuperación | Apagar el Wi-Fi de **P** 15 s y volver a encenderlo | P: franja ámbar «Se perdió la conexión…» y después «Conectado…». M: «desconectada · esperando…» y después «conectada». La conversación sigue igual |
 | B8 | Envío del médico durante la caída (RF-20) | Con el Wi-Fi de P apagado, M envía «¿Desde cuándo…?» | M muestra «Enviado · esperando que se muestre» (**no** «Se mostró») mientras P esté fuera. Al volver P, lo muestra y M cambia a «Se mostró…» |
 | B9 | Envío del paciente durante la caída (sin duplicados) | P revisa «Tos», apaga su Wi-Fi, pulsa «Confirmar», enciende el Wi-Fi antes de 10 s | Llega **un solo** mensaje «Tengo tos.» a M. Si pasan más de 10 s, P ve «Sin conexión…» y al confirmar otra vez llega **uno** |
 | B10 | Caída en la laptop del médico | Apagar el Wi-Fi de **M** 15 s y encenderlo | Igual que B7 (puede tardar hasta unos 10 s en reconectar) |
 | B11 | Cierre durante la caída (envío tardío) | P revisa «Tos» y apaga el Wi-Fi; P pulsa «Confirmar»; M «Finalizar consulta» → «Terminar y borrar»; encender el Wi-Fi de P | M no recibe «Tos». P muestra «Consulta finalizada» y nada de la consulta anterior |
 | B12 | Nueva consulta | M: «Nueva consulta» | Las dos pantallas empiezan vacías: «Conversación (0)» y «Mensaje del paciente (0)» |
-| B13 | Recarga de la ventana del paciente | P: Ctrl+R (Cmd+R en macOS) | M muestra el código de nuevo; P escribe dirección y código y vuelve a entrar (misma laptop) |
+| B13 | Recarga de la ventana del paciente | P: Ctrl+R (Cmd+R en macOS) | M muestra el código de nuevo; P escribe solo el código y vuelve a entrar (misma laptop) |
 | B14 | Desvincular | M: «Desvincular» → «Desvincular y crear código nuevo» | P vuelve a la pantalla de conexión con «terminó la vinculación». El código anterior ya no sirve |
 | B15 | Respaldo en una pantalla | En cualquiera: `npm run electron:demo` | Las dos interfaces lado a lado, sin red |
+| B16 | Búsqueda automática | P abre `npm run electron:paciente` y escribe solo el código | P: «Computadora del médico encontrada en esta red»; al vincular queda conectado |
+| B17 | Médico cerrado | P con la app del médico cerrada; después abrir la app de M y pulsar «Buscar de nuevo» | P: «No encontramos la computadora del médico…» con «Buscar de nuevo» y «Escribir la dirección»; al abrir M y buscar de nuevo, aparece |
+| B18 | Código equivocado | P escribe un código inventado con M abierta | «Hay computadoras de médico en esta red, pero ninguna tiene este código.» M no suma «equipos rechazados» |
+| B19 | Dos médicos en la red | Tercera computadora con `npm run electron:medico`; P escribe el código de M | P se vincula con su médico según el código; la tercera computadora no registra rechazos |
+| B20 | Respaldo con la dirección | P: «Conectar escribiendo la dirección», con la dirección pequeña de M y el código | Conectado; «Buscar automáticamente» regresa a la búsqueda |
+| B21 | Red de la universidad | Repetir B16 en la red de la universidad y anotar el resultado | Anotar si la búsqueda llega; si no, si llega con la dirección (B20); si no, usar el punto de acceso de un celular |
 
 ## 5. Registro
 
@@ -130,6 +139,12 @@ Seguir el [guion de demostración](GUION_DEMO.md) (pasos 2 a 9) entre las dos la
 | B13 | | |
 | B14 | | |
 | B15 | | |
+| B16 | | |
+| B17 | | |
+| B18 | | |
+| B19 | | |
+| B20 | | |
+| B21 | | |
 
 Tomar capturas de pantalla de B5, B7 (las dos franjas) y B8 como evidencia; no deben mostrar datos personales.
 Cualquier diferencia entre lo enviado y lo recibido es un **incidente**: anotar el mensaje exacto.

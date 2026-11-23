@@ -25,7 +25,7 @@ Recorrido para probar la app de principio a fin. Para instalarla y abrirla, ver 
 11. Opcional: volver al inicio con «Flujo de producto» y comprobar que todo envío queda bloqueado.
 
 **Dos laptops:** vincularlas (ver «Dos laptops» en el [README](../README.md#en-dos-laptops)) y repetir los pasos, cada participante en su laptop. **Dos procesos en
-una computadora:** `npm run electron:medico-local` y `npm run electron:paciente` con la dirección `127.0.0.1`.
+una computadora:** `npm run electron:medico-local` y `npm run electron:paciente` escribiendo solo el código (el equipo del paciente encuentra al médico en `127.0.0.1`).
 **Dos pestañas del navegador:** modo **Médico** y luego **Paciente** en otra pestaña (como en la etapa A).
 
 ## Captura en LSM (etapa C)
