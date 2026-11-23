@@ -2,6 +2,26 @@
 
 Guía breve de las carpetas y módulos, para que cada integrante pueda explicarlos con sus palabras.
 
+## Los 7 módulos del MVP
+
+En la entrega definimos el MVP en 7 módulos funcionales. El código no está organizado por módulo sino por capas
+(siguiente sección), así que esta tabla indica dónde vive cada uno.
+
+| # | Módulo | Dónde está en el código | Estado (23/11/2026) |
+|---|---|---|---|
+| 1 | Gestión de sesión | `src/nucleo/coordinador.ts`, `src/cliente/useSesion.ts`, `src/modos/` | Terminado: inicio, cierre y borrado de la consulta |
+| 2 | Captura de señas | `src/camara/`, `src/vistas/paciente/PanelCaptura.tsx`, `src/vistas/paciente/useCaptura.ts` | Terminado. Falta probar con webcam física y en Android |
+| 3 | Reconocimiento de LSM | `src/reconocimiento/` (simulado y `experimental/`) | Experimental, no validado: 8 señas, no reconoce a personas nuevas. Necesita muestras de personas Sordas |
+| 4 | Catálogo de síntomas | `src/catalogo/`, `catalogo/ficticio-dev.json`, `src/nucleo/recursos.ts`, `src/vistas/paciente/CatalogoPaciente.tsx` | Código terminado. Faltan el Catálogo V1 aprobado y los videos en LSM validados |
+| 5 | Revisión y confirmación | `src/nucleo/turnoPaciente.ts`, `src/vistas/paciente/RevisionPaciente.tsx`, `src/vistas/paciente/SelectorIntensidad.tsx` | Terminado |
+| 6 | Comunicación y preguntas médicas | `src/vistas/medico/`, `src/nucleo/busqueda.ts`, `src/nucleo/mensajes.ts`, `src/vistas/paciente/MensajesPaciente.tsx` («No entendí») | Terminado |
+| 7 | Sincronización y vinculación | `src/transporte/`, `electron/servidor/` | Terminado. Falta la prueba con dos laptops reales |
+
+Piezas compartidas por todos los módulos: `electron/main.ts`, `electron/preload.ts` y `electron/permisos.ts` (ventana
+aislada y permisos), `src/vistas/comunes/` (piezas de pantalla) y `src/nucleo/tipos.ts` (forma de los datos).
+
+## Carpetas
+
 ```
 electron/        App de escritorio (proceso principal de Electron, Node)
   main.ts          Modos, ventana aislada, permisos, IPC con la vista del médico
