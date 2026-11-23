@@ -895,7 +895,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Tienes alguna enfermedad?» (tutea; no menciona diabetes ni presión alta).",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-08",
@@ -907,7 +907,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra solo la seña «Medicamento».",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-10",
@@ -919,7 +919,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Estás embarazada?» (tutea; no dice «o podría estarlo»).",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-11",
@@ -931,7 +931,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Qué tanto te duele?»; no menciona la escala 1 a 10. Mismo video que el control de intensidad del dolor.",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-12",
@@ -943,7 +943,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra solo la seña «Dolor».",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-13",
@@ -955,7 +955,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra solo la seña «Vista borrosa»; no pregunta por la luz.",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-14",
@@ -967,7 +967,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Tienes diarrea?» (presente, no pasado).",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-15",
@@ -979,7 +979,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra solo la seña «Comer».",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-16",
@@ -991,7 +991,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra la seña «Dolor de garganta»; no pregunta por tragar. Mismo video que PAC-S-03.",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-17",
@@ -1003,7 +1003,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra solo la seña «Escalofríos».",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-18",
@@ -1015,7 +1015,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra solo la seña «Flema».",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-19",
@@ -1027,7 +1027,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Sientes dificultad para respirar?» (tutea).",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-20",
@@ -1039,7 +1039,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra la pregunta «¿Te desmayaste?» (tutea).",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-P-21",
@@ -1051,7 +1051,7 @@
       "condicionesUso": "Sin permiso de uso registrado: la fuente no publica licencia de redistribución. Solo desarrollo y uso académico interno hasta obtener autorización por escrito.",
       "revisionLinguistica": "Pendiente. Muestra solo la seña «Dormir».",
       "aprobacion": null,
-      "estadoReproduccion": "Pendiente de probar en la app (agregado el 2026-11-23). Pendiente en Electron y en Android."
+      "estadoReproduccion": "Probado en navegador (Chromium, npm run dev), 2026-11-23: el archivo carga desde public/recursos/ y el navegador lo puede reproducir. Pendiente en Electron y en Android."
     },
     {
       "id": "REC-PRUEBA-MED-R-01",
