@@ -9,13 +9,16 @@ import type { Evento } from '../src/nucleo/tipos';
 import { esComando } from '../src/transporte/protocoloRed';
 import { CANALES_IPC, type EstadoVinculacion, type InfoEquipo, type PuenteTechStar } from '../src/transporte/puente';
 import { leerArgumentos } from './argumentos';
+import { buscarMedicos } from './busquedaPaciente';
 import { permisoConcedido } from './permisos';
+import { iniciarRespuestaBusqueda, type RespuestaBusqueda } from './servidor/busquedaMedico';
 import { iniciarServidorRed, type ServidorRed } from './servidor/servidorRed';
 
 /**
  * Proceso principal de la app de escritorio (etapa B).
  *   --modo=medico    aloja el coordinador y el servidor WebSocket de la red local
- *   --modo=paciente  vista del paciente; se conecta por WebSocket a la laptop del médico
+ *   --modo=paciente  vista del paciente; busca al médico en la red (D56) y se
+ *                   conecta por WebSocket
  *   --modo=demo      las dos vistas en una pantalla, sin red (respaldo)
  * Las vistas corren aisladas de Node: contextIsolation, sandbox y sin nodeIntegration.
  */
@@ -39,6 +42,7 @@ function infoEquipo(): InfoEquipo {
 let ventana: BrowserWindow | null = null;
 let servidor: ServidorRed | null = null;
 let errorServidor: string | null = null;
+let respuestaBusqueda: RespuestaBusqueda | null = null;
 
 /** Solo la ventana propia, con la página empaquetada, puede hablar con el coordinador. */
 function remitenteValido(e: IpcMainInvokeEvent): boolean {
@@ -72,6 +76,16 @@ async function prepararMedico() {
       puerto: args.puerto,
     });
     servidor.alCambio((estado) => ventana?.webContents.send(CANALES_IPC.cambioVinculacion, estado));
+    try {
+      const s = servidor;
+      respuestaBusqueda = await iniciarRespuestaBusqueda({
+        host: args.soloLocal ? '127.0.0.1' : '0.0.0.0',
+        puerto: args.puerto,
+        datos: () => s.datosAnuncio(),
+      });
+    } catch (e) {
+      console.error('No se pudo abrir la búsqueda en la red (D56); queda la dirección tecleada.', e);
+    }
   } catch (e) {
     const err = e as NodeJS.ErrnoException;
     errorServidor =
@@ -98,8 +112,13 @@ async function prepararMedico() {
   });
 }
 
+function prepararPaciente() {
+  // Búsqueda del médico en la red local (D56). Solo la ventana propia puede pedirla.
+  ipcMain.handle(CANALES_IPC.buscarMedicos, (e) => (remitenteValido(e) ? buscarMedicos() : []));
+}
+
 function crearVentana() {
-  const config: Omit<PuenteTechStar, 'medico'> = {
+  const config: Omit<PuenteTechStar, 'medico' | 'paciente'> = {
     modo: args.modo,
     politica: args.politica,
     equipo: infoEquipo(),
@@ -166,10 +185,12 @@ void app.whenReady().then(async () => {
   // Catálogo con errores: no se abre la red ni la sesión; la ventana muestra los errores.
   if (ERRORES_CATALOGO.length > 0) console.error(describirErrores([...ERRORES_CATALOGO]));
   else if (args.modo === 'medico') await prepararMedico();
+  else if (args.modo === 'paciente') prepararPaciente();
   crearVentana();
 });
 
 app.on('window-all-closed', () => {
+  void respuestaBusqueda?.cerrar();
   void servidor?.cerrar();
   app.quit();
 });
