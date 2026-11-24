@@ -239,13 +239,15 @@ function SesionPaciente(props: {
                   </p>
                 )}
                 <div className="catalogo-paciente__zona">
-                  {/* Contexto de la conversación junto al catálogo: lo último que dijo el paciente y, si el médico
-                      preguntó después, su pregunta para responderla sin tener que recordarla. */}
+                  {/* Contexto junto al catálogo: la pregunta del médico que falta responder, con su video en grande
+                      para no tener que recordarla; si no hay, lo último que dijo el paciente y si llegó. Con una
+                      pregunta pendiente ya se sabe que el médico recibió el mensaje: todo el espacio es para el video. */}
                   {(ultimoPropio || preguntaSinResponder) && (
                     <div className="catalogo-paciente__contexto">
-                      {ultimoPropio && <EstadoEnvio mensaje={ultimoPropio} />}
-                      {preguntaSinResponder && (
+                      {preguntaSinResponder ? (
                         <RecordatorioMedico mensaje={preguntaSinResponder} catalogo={catalogo} politica={politica} />
+                      ) : (
+                        ultimoPropio && <EstadoEnvio mensaje={ultimoPropio} />
                       )}
                     </div>
                   )}

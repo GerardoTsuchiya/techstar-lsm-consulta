@@ -75,6 +75,10 @@ export function RecordatorioMedico(props: { mensaje: MensajeMedico; catalogo: Ca
   const { mensaje: m, catalogo, politica } = props;
   return (
     <aside className="recordatorio-medico" aria-label="Pregunta del médico" data-mensaje={m.id}>
+      <span className="recordatorio-medico__rotulo">
+        <IconoPregunta tamano={15} /> El médico preguntó · {horaCorta(m.enviadoEn)}
+      </span>
+      {/* El video es lo principal (muchas personas Sordas no leen español); el texto lo acompaña. */}
       <RecursoLSM
         key={m.id}
         disponibilidad={resolverRecurso(catalogo, m.recursoId, politica)}
@@ -83,12 +87,7 @@ export function RecordatorioMedico(props: { mensaje: MensajeMedico; catalogo: Ca
         etiqueta={m.texto}
         reproducirSolo
       />
-      <div className="recordatorio-medico__texto">
-        <span className="recordatorio-medico__rotulo">
-          <IconoPregunta tamano={15} /> El médico preguntó · {horaCorta(m.enviadoEn)}
-        </span>
-        <p className="recordatorio-medico__pregunta">{m.texto}</p>
-      </div>
+      <p className="recordatorio-medico__pregunta">{m.texto}</p>
     </aside>
   );
 }

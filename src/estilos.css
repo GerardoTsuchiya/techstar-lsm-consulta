@@ -1151,35 +1151,14 @@ p {
 }
 
 /*
- * Contexto junto al catálogo: el último mensaje del paciente y, si el médico preguntó después, su pregunta. Se ve
- * como la conversación (lo tuyo en verde, lo del médico en una tarjeta clara con borde, video pequeño al lado del
- * texto), distinto de las opciones, para que nadie lo confunda con algo que se puede elegir.
- * En pantallas anchas va en una columna a la izquierda, para no quitarles alto a las tarjetas; en angostas, arriba.
+ * Contexto junto al catálogo: la pregunta del médico que falta responder o, si no hay, el último mensaje del
+ * paciente. La pregunta se ve como mensaje del médico (tarjeta clara con borde verde y rótulo), distinta de las
+ * opciones, y con el video en grande: es lo que la persona necesita ver; el texto solo lo acompaña.
+ * Desde que las opciones van en una fila, el contexto ocupa una columna a la izquierda para no quitarles alto; en
+ * pantallas muy angostas va arriba, con el video al lado del texto.
  */
 .catalogo-paciente__zona {
   display: grid;
-}
-@container (min-width: 900px) {
-  .catalogo-paciente__zona:has(> .catalogo-paciente__contexto) {
-    --ancho-contexto: calc(14rem + 1rem);
-    grid-template-columns: 14rem minmax(0, 1fr);
-    column-gap: 1rem;
-    align-items: start;
-  }
-  .catalogo-paciente__zona > .catalogo-paciente__contexto {
-    flex-direction: column;
-    align-items: stretch;
-    margin-bottom: 0;
-  }
-  .catalogo-paciente__contexto .estado-envio {
-    width: auto;
-  }
-  .catalogo-paciente__contexto .recordatorio-medico {
-    flex: none;
-  }
-  .catalogo-paciente__contexto .recordatorio-medico .recurso--mediano {
-    width: 3.2rem;
-  }
 }
 .catalogo-paciente__contexto {
   display: flex;
@@ -1192,47 +1171,95 @@ p {
   margin-bottom: 0;
 }
 .recordatorio-medico {
-  flex: 1 1 20rem;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.45rem 1rem 0.45rem 0.45rem;
+  flex: 1 1 18rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'video rotulo'
+    'video pregunta';
+  align-content: center;
+  gap: 0.2rem 0.8rem;
+  padding: 0.45rem 0.8rem 0.45rem 0.45rem;
   border: 2px solid var(--verde);
   border-radius: 14px;
   background: var(--crema-tarjeta);
   box-shadow: var(--sombra-boton);
   animation: llegar 0.25s ease-out;
 }
+.recordatorio-medico > .recurso {
+  grid-area: video;
+  align-self: center;
+}
 .recordatorio-medico .recurso--mediano {
-  width: 2.6rem;
+  width: 3.6rem;
 }
 .recordatorio-medico .recurso video,
 .recordatorio-medico .recurso img,
 .recordatorio-medico .recurso__cuerpo {
   aspect-ratio: 9 / 16;
 }
-/* Video pequeño: la marca de texto taparía la seña; el borde ámbar sigue indicando que no está validado. */
-.recordatorio-medico .recurso__etiqueta {
-  display: none;
-}
-.recordatorio-medico__texto {
-  display: grid;
-  gap: 0.25rem;
-}
 .recordatorio-medico__rotulo {
+  grid-area: rotulo;
+  align-self: end;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.78rem;
+  gap: 0.3rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--verde);
 }
 .recordatorio-medico__pregunta {
+  grid-area: pregunta;
+  align-self: start;
   margin: 0;
   font-family: var(--titulo);
-  font-size: clamp(1.1rem, 2cqi, 1.35rem);
+  font-size: 1rem;
   line-height: 1.15;
   color: var(--verde);
+}
+@container (min-width: 560px) {
+  .catalogo-paciente__zona:has(> .catalogo-paciente__contexto) {
+    --columna-contexto: clamp(8rem, 14cqi, 11rem);
+    --ancho-contexto: calc(var(--columna-contexto) + 1rem);
+    grid-template-columns: var(--columna-contexto) minmax(0, 1fr);
+    column-gap: 1rem;
+    align-items: start;
+  }
+  .catalogo-paciente__zona > .catalogo-paciente__contexto {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 0;
+  }
+  .catalogo-paciente__contexto .estado-envio {
+    width: auto;
+  }
+  /* Rótulo, video lo más grande que quepa en el alto disponible y la pregunta debajo. */
+  .catalogo-paciente__contexto .recordatorio-medico {
+    flex: none;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'rotulo'
+      'video'
+      'pregunta';
+    justify-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem;
+    text-align: center;
+  }
+  .catalogo-paciente__contexto .recordatorio-medico .recurso--mediano {
+    /* Alto disponible menos rótulo, pregunta (hasta 3 líneas), relleno y borde. */
+    width: min(100%, calc((max(9rem, var(--alto-disponible, calc(100vh - 360px))) - 7.5rem) * 9 / 16));
+  }
+  .catalogo-paciente__contexto .recordatorio-medico__rotulo {
+    align-self: auto;
+  }
+  .catalogo-paciente__contexto .recordatorio-medico__pregunta {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
 }
 
 .catalogo-paciente__pie {

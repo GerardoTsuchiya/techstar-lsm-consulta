@@ -17,8 +17,9 @@ const POR_PAGINA = 6;
 
 /**
  * Alto que queda para las tarjetas sin desplazarse: el alto visible de la pantalla menos todo lo demás que contiene
- * (cabecera, avisos, pie con la paginación). Se escribe en `--alto-disponible` y el CSS deriva de él el tamaño del
- * video. Se mide de nuevo en cada render (cambian los avisos de arriba) y al cambiar el tamaño de la ventana.
+ * (cabecera, avisos, pie con la paginación). Se escribe en `--alto-disponible` de la zona del catálogo y el CSS
+ * deriva de él el tamaño de los videos (tarjetas y pregunta del médico). Se mide de nuevo en cada render (cambian los
+ * avisos de arriba) y al cambiar el tamaño de la ventana.
  */
 function useAltoDisponible() {
   const lista = useRef<HTMLUListElement>(null);
@@ -35,7 +36,8 @@ function useAltoDisponible() {
     const abajo =
       catalogo.getBoundingClientRect().bottom - tarjetas.bottom + parseFloat(getComputedStyle(cuerpo).paddingBottom);
     const alto = `${Math.max(0, Math.floor(cuerpo.clientHeight - arriba - abajo))}px`;
-    if (ul.style.getPropertyValue('--alto-disponible') !== alto) ul.style.setProperty('--alto-disponible', alto);
+    const destino = ul.closest<HTMLElement>('.catalogo-paciente__zona') ?? ul;
+    if (destino.style.getPropertyValue('--alto-disponible') !== alto) destino.style.setProperty('--alto-disponible', alto);
   };
   useLayoutEffect(medir);
   useLayoutEffect(() => {
