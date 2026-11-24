@@ -94,6 +94,59 @@ describe('Recorrido de ida y vuelta (etapa A)', () => {
     expect(paciente().getByRole('button', { name: 'Dolor de cabeza' }).getAttribute('aria-pressed')).toBe('false');
   });
 
+  it('la conversación del paciente muestra el video de cada mensaje, también de los propios (muchos no leen español)', async () => {
+    const { user, paciente, medico } = await abrir();
+    await cerrarAviso(user, paciente);
+    await user.click(paciente().getByRole('button', { name: 'Dolor de cabeza' }));
+    await user.click(paciente().getByRole('button', { name: 'Fiebre' }));
+    await user.click(paciente().getByRole('button', { name: /Revisar selección/ }));
+    await user.click(paciente().getByRole('button', { name: '7 de 10' }));
+    await user.click(paciente().getByRole('button', { name: /Confirmar mensaje/ }));
+    await medico().findByText('Tengo fiebre.');
+    await user.type(medico().getByLabelText('Buscar pregunta o respuesta'), 'alergia');
+    await user.click(medico().getByRole('button', { name: /Tiene alergia a algún medicamento/ }));
+    await user.click(medico().getByRole('button', { name: /Enviar al paciente/ }));
+    await paciente().findByText('¿Tiene alergia a algún medicamento?');
+
+    await user.click(paciente().getByRole('button', { name: /Conversación \(2\)/ }));
+    const dialogo = within(await paciente().findByRole('dialog', { name: 'Conversación' }));
+    // Mensaje propio: un video por opción elegida, y la intensidad también sin leer (7/10).
+    expect(dialogo.getByLabelText(/^Video en LSM.*Tengo dolor de cabeza\.$/)).toBeTruthy();
+    expect(dialogo.getByLabelText(/^Video en LSM.*Tengo fiebre\.$/)).toBeTruthy();
+    expect(dialogo.getByText('7/10')).toBeTruthy();
+    // Mensaje del médico: el video se reproduce solo, sin tener que pulsar «play».
+    const videoMedico = dialogo.getByLabelText(/^Video en LSM.*¿Tiene alergia a algún medicamento\?$/) as HTMLVideoElement;
+    expect(videoMedico.autoplay).toBe(true);
+  });
+
+  it('al responder, el catálogo recuerda la pregunta del médico con su video hasta que el paciente contesta', async () => {
+    const { user, paciente, medico } = await abrir();
+    await cerrarAviso(user, paciente);
+    // Sin mensajes del médico no hay recordatorio
+    expect(paciente().queryByRole('complementary', { name: 'Pregunta del médico' })).toBeNull();
+
+    await user.type(medico().getByLabelText('Buscar pregunta o respuesta'), 'alergia');
+    await user.click(medico().getByRole('button', { name: /Tiene alergia a algún medicamento/ }));
+    await user.click(medico().getByRole('button', { name: /Enviar al paciente/ }));
+    await paciente().findByText('¿Tiene alergia a algún medicamento?');
+    await user.click(paciente().getByRole('button', { name: /Responder/ }));
+
+    // En el catálogo, la pregunta sigue a la vista (video que se reproduce solo y texto)
+    const recordatorio = within(paciente().getByRole('complementary', { name: 'Pregunta del médico' }));
+    expect(recordatorio.getByText('¿Tiene alergia a algún medicamento?')).toBeTruthy();
+    const video = recordatorio.getByLabelText(/^Video en LSM.*¿Tiene alergia a algún medicamento\?$/) as HTMLVideoElement;
+    expect(video.autoplay).toBe(true);
+    expect(paciente().getByRole('button', { name: 'Fiebre' })).toBeTruthy();
+
+    // Al enviar la respuesta, el recordatorio se retira
+    await user.click(paciente().getByRole('button', { name: 'Página siguiente' }));
+    await user.click(paciente().getByRole('button', { name: 'No' }));
+    await user.click(paciente().getByRole('button', { name: /Revisar selección/ }));
+    await user.click(paciente().getByRole('button', { name: /Confirmar mensaje/ }));
+    expect(await paciente().findByText(/El médico lo recibió/)).toBeTruthy();
+    expect(paciente().queryByRole('complementary', { name: 'Pregunta del médico' })).toBeNull();
+  });
+
   it('sin intensidad elegida no se transmite ningún valor (RF-19)', async () => {
     const { user, paciente, medico } = await abrir();
     await cerrarAviso(user, paciente);

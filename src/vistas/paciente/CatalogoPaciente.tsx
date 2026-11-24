@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { recursoDeEntrada } from '../../nucleo/recursos';
 import type { Catalogo, EntradaCatalogo, PoliticaRecursos, Seleccion } from '../../nucleo/tipos';
 import { IconoCheck, IconoChevron } from '../comunes/Iconos';
@@ -15,9 +15,43 @@ interface Props {
 
 const POR_PAGINA = 6;
 
+/**
+ * Alto que queda para las tarjetas sin desplazarse: el alto visible de la pantalla menos todo lo demás que contiene
+ * (cabecera, avisos, pie con la paginación). Se escribe en `--alto-disponible` y el CSS deriva de él el tamaño del
+ * video. Se mide de nuevo en cada render (cambian los avisos de arriba) y al cambiar el tamaño de la ventana.
+ */
+function useAltoDisponible() {
+  const lista = useRef<HTMLUListElement>(null);
+  const medir = () => {
+    const ul = lista.current;
+    const cuerpo = ul?.closest<HTMLElement>('.pantalla__cuerpo');
+    const catalogo = ul?.parentElement;
+    if (!ul || !cuerpo || !catalogo) return;
+    const caja = cuerpo.getBoundingClientRect();
+    const tarjetas = ul.getBoundingClientRect();
+    // Arriba: desde el borde del área visible (con su relleno) hasta las tarjetas, sin contar el desplazamiento.
+    const arriba = tarjetas.top - caja.top + cuerpo.scrollTop;
+    // Abajo: el pie con la paginación y el relleno inferior del área.
+    const abajo =
+      catalogo.getBoundingClientRect().bottom - tarjetas.bottom + parseFloat(getComputedStyle(cuerpo).paddingBottom);
+    const alto = `${Math.max(0, Math.floor(cuerpo.clientHeight - arriba - abajo))}px`;
+    if (ul.style.getPropertyValue('--alto-disponible') !== alto) ul.style.setProperty('--alto-disponible', alto);
+  };
+  useLayoutEffect(medir);
+  useLayoutEffect(() => {
+    const cuerpo = lista.current?.closest<HTMLElement>('.pantalla__cuerpo');
+    if (!cuerpo || typeof ResizeObserver === 'undefined') return;
+    const observador = new ResizeObserver(() => medir());
+    observador.observe(cuerpo);
+    return () => observador.disconnect();
+  }, []);
+  return lista;
+}
+
 /** Catálogo del paciente (RF-19) con la cuadrícula paginada del prototipo. Tocar no envía. */
 export function CatalogoPaciente({ catalogo, politica, selecciones, onAlternar, onRevisar }: Props) {
   const [pagina, setPagina] = useState(0);
+  const lista = useAltoDisponible();
   const entradas = catalogo.entradas.filter((e) => e.tipo === 'sintoma' || e.tipo === 'respuesta-paciente');
   const paginas = Math.max(1, Math.ceil(entradas.length / POR_PAGINA));
   const visibles = entradas.slice(pagina * POR_PAGINA, (pagina + 1) * POR_PAGINA);
@@ -25,7 +59,7 @@ export function CatalogoPaciente({ catalogo, politica, selecciones, onAlternar, 
 
   return (
     <div className="catalogo-paciente">
-      <ul className="tarjetas" aria-label={`Opciones, página ${pagina + 1} de ${paginas}`}>
+      <ul ref={lista} className="tarjetas" aria-label={`Opciones, página ${pagina + 1} de ${paginas}`}>
         {visibles.map((e) => (
           <li key={e.id}>
             <Tarjeta entrada={e} catalogo={catalogo} politica={politica} elegida={elegida(e.id)} onAlternar={() => onAlternar(e.id)} />
@@ -93,14 +127,12 @@ function Tarjeta(props: {
       onClick={props.onAlternar}
     >
       <RecursoLSM disponibilidad={recurso} icono={e.icono} tamano="ancho" etiqueta={e.texto} enBoton />
-      {e.tipo === 'respuesta-paciente' && <span className="tarjeta__provisional">Provisional</span>}
-      <span className="tarjeta__pie">
-        <span className="tarjeta__titulo">{titulo}</span>
-        <span className={`pastilla ${elegida ? 'pastilla--elegida' : ''}`} aria-hidden="true">
-          {elegida ? <IconoCheck /> : <span className="pastilla__punto" />}
-          {elegida ? 'Elegido' : 'Elegir'}
-        </span>
+      {/* Toda la tarjeta es el botón: la selección se marca sobre el video (palomita) y con el borde. */}
+      <span className={`tarjeta__marca ${elegida ? 'tarjeta__marca--elegida' : ''}`} aria-hidden="true">
+        {elegida && <IconoCheck />}
       </span>
+      <span className="tarjeta__titulo">{titulo}</span>
+      {e.tipo === 'respuesta-paciente' && <span className="tarjeta__provisional">Provisional</span>}
     </button>
   );
 }

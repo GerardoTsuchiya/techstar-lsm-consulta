@@ -17,7 +17,7 @@ import { AvisoCamara, PanelCaptura, PanelNoReconocido, PanelProcesando } from '.
 import { useCaptura } from './useCaptura';
 import { MENSAJES_ERROR } from '../comunes/textos';
 import { CatalogoPaciente } from './CatalogoPaciente';
-import { ConversacionPaciente, EstadoEnvio, MensajeMedicoDestacado } from './MensajesPaciente';
+import { ConversacionPaciente, EstadoEnvio, MensajeMedicoDestacado, RecordatorioMedico } from './MensajesPaciente';
 import { RevisionPaciente } from './RevisionPaciente';
 
 interface Props {
@@ -108,6 +108,8 @@ function SesionPaciente(props: {
   const enCaptura = turno.fase === 'capturando' || turno.fase === 'procesando';
   const medicoPendiente = ultimoMedico !== undefined && ultimoMedico.id !== respondidoHasta;
   const mostrarMensajeMedico = medicoPendiente && !enCaptura;
+  // Pregunta del médico que todavía no tiene respuesta: se recuerda en el catálogo mientras el paciente elige.
+  const preguntaSinResponder = mensajes.at(-1)?.origen === 'medico' ? ultimoMedico : undefined;
 
   // Al cambiar de paso (catálogo ↔ captura ↔ revisión ↔ mensaje del médico) se muestra desde el principio.
   const paso = mostrarMensajeMedico ? 'medico' : turno.fase === 'enviando' ? 'revision' : turno.fase;
@@ -231,22 +233,33 @@ function SesionPaciente(props: {
             {turno.fase === 'seleccion' && (
               <>
                 {captura.aviso && <AvisoCamara aviso={captura.aviso} onCerrar={captura.cerrarAviso} />}
-                {ultimoPropio && <EstadoEnvio mensaje={ultimoPropio} />}
                 {error && (
                   <p className="nota nota--alerta" role="alert">
                     {error}
                   </p>
                 )}
-                <CatalogoPaciente
-                  catalogo={catalogo}
-                  politica={politica}
-                  selecciones={turno.selecciones}
-                  onAlternar={(entradaId) => despachar({ tipo: 'alternarSeleccion', entradaId })}
-                  onRevisar={() => {
-                    setError(null);
-                    despachar({ tipo: 'revisar', envioId: generarId('env') });
-                  }}
-                />
+                <div className="catalogo-paciente__zona">
+                  {/* Contexto de la conversación junto al catálogo: lo último que dijo el paciente y, si el médico
+                      preguntó después, su pregunta para responderla sin tener que recordarla. */}
+                  {(ultimoPropio || preguntaSinResponder) && (
+                    <div className="catalogo-paciente__contexto">
+                      {ultimoPropio && <EstadoEnvio mensaje={ultimoPropio} />}
+                      {preguntaSinResponder && (
+                        <RecordatorioMedico mensaje={preguntaSinResponder} catalogo={catalogo} politica={politica} />
+                      )}
+                    </div>
+                  )}
+                  <CatalogoPaciente
+                    catalogo={catalogo}
+                    politica={politica}
+                    selecciones={turno.selecciones}
+                    onAlternar={(entradaId) => despachar({ tipo: 'alternarSeleccion', entradaId })}
+                    onRevisar={() => {
+                      setError(null);
+                      despachar({ tipo: 'revisar', envioId: generarId('env') });
+                    }}
+                  />
+                </div>
               </>
             )}
 

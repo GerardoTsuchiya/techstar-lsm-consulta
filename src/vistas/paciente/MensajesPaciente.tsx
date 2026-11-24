@@ -1,5 +1,5 @@
 import { textoDeItem } from '../../nucleo/mensajes';
-import { buscarEntrada, recursoDeSistema, resolverRecurso } from '../../nucleo/recursos';
+import { buscarEntrada, recursoDeEntrada, recursoDeSistema, resolverRecurso } from '../../nucleo/recursos';
 import type { Catalogo, InstantaneaSesion, MensajeMedico, MensajePaciente, PoliticaRecursos } from '../../nucleo/tipos';
 import { IconoDobleCheck, IconoEnviado, IconoPregunta, IconoVideo } from '../comunes/Iconos';
 import { RecursoLSM } from '../comunes/RecursoLSM';
@@ -67,6 +67,32 @@ export function MensajeMedicoDestacado(props: {
   );
 }
 
+/**
+ * Recordatorio en el catálogo de la pregunta del médico que el paciente está respondiendo, con su video, para no
+ * tener que memorizarla mientras elige. Se muestra el mismo recurso registrado en el mensaje (RI-01).
+ */
+export function RecordatorioMedico(props: { mensaje: MensajeMedico; catalogo: Catalogo; politica: PoliticaRecursos }) {
+  const { mensaje: m, catalogo, politica } = props;
+  return (
+    <aside className="recordatorio-medico" aria-label="Pregunta del médico" data-mensaje={m.id}>
+      <RecursoLSM
+        key={m.id}
+        disponibilidad={resolverRecurso(catalogo, m.recursoId, politica)}
+        icono={buscarEntrada(catalogo, m.entradaId)?.icono}
+        tamano="mediano"
+        etiqueta={m.texto}
+        reproducirSolo
+      />
+      <div className="recordatorio-medico__texto">
+        <span className="recordatorio-medico__rotulo">
+          <IconoPregunta tamano={15} /> El médico preguntó · {horaCorta(m.enviadoEn)}
+        </span>
+        <p className="recordatorio-medico__pregunta">{m.texto}</p>
+      </div>
+    </aside>
+  );
+}
+
 /** Estado del último mensaje enviado por el paciente. «Recibido» solo con acuse (RF-20). */
 export function EstadoEnvio({ mensaje }: { mensaje: MensajePaciente }) {
   return (
@@ -83,7 +109,11 @@ export function EstadoEnvio({ mensaje }: { mensaje: MensajePaciente }) {
   );
 }
 
-/** Conversación completa (diálogo «Conversación»): permite pedir aclaración de mensajes anteriores. */
+/**
+ * Conversación completa (diálogo «Conversación»): permite pedir aclaración de mensajes anteriores.
+ * Cada mensaje lleva su video en LSM, que se reproduce solo: muchas personas Sordas no leen español, así que el
+ * texto acompaña al video y no al revés. También los mensajes propios, para que la persona recuerde qué dijo.
+ */
 export function ConversacionPaciente({
   instantanea,
   catalogo,
@@ -109,6 +139,7 @@ export function ConversacionPaciente({
                 icono={buscarEntrada(catalogo, m.entradaId)?.icono}
                 tamano="mediano"
                 etiqueta={m.texto}
+                reproducirSolo
               />
               <div className="conversacion__lado">
                 <p className="conversacion__texto">{m.texto}</p>
@@ -124,12 +155,38 @@ export function ConversacionPaciente({
         ) : (
           <li key={m.id} className="conversacion__propio">
             <span className="conversacion__rotulo">Tú · {horaCorta(m.confirmadoEn)}</span>
-            {m.items.map((it) => (
-              <span key={it.entradaId} className="conversacion__linea">
-                {textoDeItem(it)}
-              </span>
-            ))}
-            <span className="conversacion__estado">{m.recibidoEn ? 'Recibido por el médico' : 'Enviado'}</span>
+            <div className="conversacion__fila">
+              <ul className="conversacion__videos">
+                {m.items.map((it) => {
+                  const entrada = buscarEntrada(catalogo, it.entradaId);
+                  if (!entrada) return null;
+                  return (
+                    <li key={it.entradaId} className="conversacion__video">
+                      <RecursoLSM
+                        disponibilidad={recursoDeEntrada(catalogo, entrada, politica)}
+                        icono={entrada.icono}
+                        tamano="mediano"
+                        etiqueta={entrada.texto}
+                        reproducirSolo
+                      />
+                      {it.intensidad !== undefined && (
+                        <span className="conversacion__intensidad" aria-hidden="true">
+                          {it.intensidad}/10
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="conversacion__lado">
+                {m.items.map((it) => (
+                  <span key={it.entradaId} className="conversacion__linea">
+                    {textoDeItem(it)}
+                  </span>
+                ))}
+                <span className="conversacion__estado">{m.recibidoEn ? 'Recibido por el médico' : 'Enviado'}</span>
+              </div>
+            </div>
           </li>
         ),
       )}
