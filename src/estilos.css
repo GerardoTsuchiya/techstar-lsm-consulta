@@ -2068,17 +2068,29 @@ p {
 .captura__video {
   position: relative;
   overflow: hidden;
-  /* Alto limitado: «Listo» y «Cancelar» deben verse sin desplazarse, también a media pantalla. */
-  height: min(28vh, 300px);
-  min-height: 180px;
+  /* Misma proporción que la cámara (4:3, ver camaraNavegador.ts): la persona ve la imagen completa, con la cara y
+     las manos, para encuadrarse. Un cuadro más ancho que la imagen recortaba la mitad de su alto. */
+  aspect-ratio: 4 / 3;
+  /* Alto limitado: «Listo» y «Cancelar» deben verse sin desplazarse, también a media pantalla (una columna, con
+     los botones debajo). El ancho sale del alto y nunca pasa del de la columna. */
+  --alto-video: max(180px, min(28vh, 300px));
+  width: min(100%, calc(var(--alto-video) * 4 / 3));
+  justify-self: center;
   border-radius: 14px;
   background: var(--escenario);
+}
+@container (min-width: 720px) {
+  /* Dos columnas (pantalla completa del paciente): los botones van al lado, así que el video puede ser más alto. */
+  .captura__video {
+    --alto-video: max(180px, min(50vh, 480px));
+  }
 }
 .captura__video video {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* Si la cámara entrega otra proporción (p. ej. 16:9), se ve completa con franjas en lugar de recortarse. */
+  object-fit: contain;
   transform: scaleX(-1); /* espejo, como en una videollamada */
 }
 .captura__video--activa {
