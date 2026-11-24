@@ -25,6 +25,8 @@ export function PanelCaptura(props: {
   politica: PoliticaRecursos;
   onListo: () => void;
   onCancelar: () => void;
+  /** Apaga la cámara, descarta el clip y vuelve al catálogo (igual que «Cancelar», dicho por su destino). */
+  onCatalogo: () => void;
 }) {
   const { camara, estadoCamara, catalogo, politica } = props;
   const video = useRef<HTMLVideoElement>(null);
@@ -88,6 +90,10 @@ export function PanelCaptura(props: {
         <p className="captura__privacidad">
           La imagen no se guarda y el médico no la ve. Solo se usa para interpretar este mensaje.
         </p>
+        {/* Salida al catálogo sin terminar la seña, con el mismo texto que tras «No reconocimos tu seña». */}
+        <button type="button" className="boton boton--secundario boton--alto" onClick={props.onCatalogo}>
+          Elegir lo que sientes <IconoChevron />
+        </button>
       </div>
     </div>
   );

@@ -136,6 +136,21 @@ describe('Captura en LSM (etapa C)', () => {
     expect(medico().getByText(/Todavía no hay mensajes/)).toBeTruthy();
   });
 
+  it('«Elegir lo que sientes» durante la captura apaga la cámara, descarta el clip y abre el catálogo', async () => {
+    const { user, paciente, medico, camara, reconocer } = await abrir();
+    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
+    await paciente().findByText('Cámara activa');
+    await user.click(paciente().getByRole('button', { name: /Elegir lo que sientes/ }));
+
+    expect(reconocer).not.toHaveBeenCalled();
+    expect(camara().llamadas).not.toContain('listo');
+    expect(camara().clipsEntregados).toHaveLength(0);
+    expect(camara().encendida).toBe(false);
+    expect(paciente().queryByText('Cámara activa')).toBeNull();
+    expect(paciente().getByRole('button', { name: 'Fiebre' })).toBeTruthy();
+    expect(medico().getByText(/Todavía no hay mensajes/)).toBeTruthy();
+  });
+
   it('«Cancelar» durante el procesamiento deja de esperar y un resultado tardío no aparece', async () => {
     const { user, paciente, simulador } = await abrir();
     await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));

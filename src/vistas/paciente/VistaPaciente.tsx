@@ -203,6 +203,7 @@ function SesionPaciente(props: {
                 politica={politica}
                 onListo={() => void captura.listo()}
                 onCancelar={captura.cancelar}
+                onCatalogo={captura.cancelar}
               />
             )}
 
