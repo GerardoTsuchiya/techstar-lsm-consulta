@@ -3,6 +3,7 @@ import type { Catalogo, PoliticaRecursos } from '../../nucleo/tipos';
 import { entradasDelPaciente, type Reconocedor, type ResultadoReconocimiento } from '../reconocedor';
 import { decidir, esModeloReconocedor, type Decision, type ModeloReconocedor } from './clasificador.ts';
 import { extractorMediaPipe, VELOCIDAD_EXTRACCION, type ExtractorPuntos } from './extractorMediaPipe.ts';
+import type { CuadroPuntos } from './puntos.ts';
 
 /**
  * ⚠ RECONOCEDOR EXPERIMENTAL — NO VALIDADO.
@@ -40,6 +41,9 @@ export interface DiagnosticoReconocimiento {
   umbralDistancia: number;
   umbralMargen: number;
 }
+
+/** Puntos del cuadro que muestra ahora el video en vivo, o `null` si no hay imagen que analizar. */
+export type DetectorEnVivo = (video: HTMLVideoElement) => CuadroPuntos | null;
 
 export interface DependenciasExperimental {
   cargarModelo: () => Promise<ModeloReconocedor>;
@@ -95,6 +99,20 @@ export class ReconocedorExperimental implements Reconocedor {
     }));
     // El error se informa al reconocer (la vista lo muestra como «No se pudo interpretar la seña»).
     this.preparado.catch(() => undefined);
+  }
+
+  /**
+   * Detector para dibujar en vivo, sobre la cámara, los puntos de manos y hombros que analiza este
+   * reconocedor (solo modo desarrollo). Usa los mismos modelos que `reconocer`, pero no decide nada
+   * ni guarda los puntos. `null` si el extractor no lo ofrece o no se pudo preparar.
+   */
+  async detectorEnVivo(): Promise<DetectorEnVivo | null> {
+    try {
+      const { extractor } = await this.preparado;
+      return extractor.detectarCuadro ? (video) => extractor.detectarCuadro?.(video) ?? null : null;
+    } catch {
+      return null;
+    }
   }
 
   async reconocer(clip: ClipTemporal, senal: AbortSignal): Promise<ResultadoReconocimiento> {

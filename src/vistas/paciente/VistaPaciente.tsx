@@ -88,6 +88,8 @@ function SesionPaciente(props: {
   const [camara] = useState(() => props.crearCamara());
   const [reconocedor] = useState(() => props.crearReconocedor(politica, catalogo));
   const [avisoAbierto, setAvisoAbierto] = useState(true);
+  /** El aviso de alcance que abre la sesión (no el que se vuelve a abrir con «Alcance»). */
+  const avisoInicial = useRef(true);
   const [confirmarCierre, setConfirmarCierre] = useState(false);
   const [verConversacion, setVerConversacion] = useState(false);
   /** Último mensaje del médico que la persona ya atendió con «Responder» (solo en esta pantalla). */
@@ -137,6 +139,18 @@ function SesionPaciente(props: {
       setError(MENSAJES_ERROR[r.error]);
       despachar({ tipo: 'confirmacionFallida' });
     }
+  }
+
+  /**
+   * Al cerrar el aviso con que empieza la sesión, la primera pantalla es la cámara («Captura en LSM»).
+   * Si no hay reconocedor (flujo de producto) no se enciende y queda el catálogo; si la cámara falla, se
+   * vuelve al catálogo con el aviso de siempre. Reabrir «Alcance» después no vuelve a encenderla.
+   */
+  function cerrarAviso() {
+    setAvisoAbierto(false);
+    if (!avisoInicial.current) return;
+    avisoInicial.current = false;
+    captura.iniciar();
   }
 
   async function noEntendi(mensajeId: string) {
@@ -203,6 +217,7 @@ function SesionPaciente(props: {
                 estadoCamara={captura.estadoCamara}
                 catalogo={catalogo}
                 politica={politica}
+                reconocedor={reconocedor}
                 onListo={() => void captura.listo()}
                 onCancelar={captura.cancelar}
                 onCatalogo={captura.cancelar}
@@ -294,7 +309,7 @@ function SesionPaciente(props: {
         )}
       </div>
 
-      {avisoAbierto && <AvisoAlcance catalogo={catalogo} politica={politica} onCerrar={() => setAvisoAbierto(false)} />}
+      {avisoAbierto && <AvisoAlcance catalogo={catalogo} politica={politica} onCerrar={cerrarAviso} />}
       {verConversacion && (
         <Dialogo
           titulo="Conversación"

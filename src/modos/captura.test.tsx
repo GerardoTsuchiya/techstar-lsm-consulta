@@ -61,8 +61,9 @@ describe('Captura en LSM (etapa C)', () => {
   it('inicio, «Listo» y un caso reconocido que queda pendiente de revisión y llega con via «camara» (RF-17, RF-01)', async () => {
     const { user, paciente, medico, camara, reconocer } = await abrir();
 
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
+    // Al cerrar el aviso de alcance, la primera pantalla es la cámara (no el catálogo).
     expect(await paciente().findByText('Cámara activa')).toBeTruthy();
+    expect(paciente().queryByRole('button', { name: 'Fiebre' })).toBeNull();
     expect(camara().llamadas).toEqual(expect.arrayContaining(['iniciar', 'mostrarEn']));
     expect(camara().encendida).toBe(true);
 
@@ -95,7 +96,6 @@ describe('Captura en LSM (etapa C)', () => {
 
   it('expresión desconocida: aviso accesible con recurso, reintento o catálogo (RF-05)', async () => {
     const { user, paciente, medico, camara } = await abrir();
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
     await user.click(await paciente().findByRole('button', { name: /Listo/ }));
     await user.click(await paciente().findByRole('button', { name: /Simular «desconocido»/ }));
 
@@ -121,7 +121,6 @@ describe('Captura en LSM (etapa C)', () => {
 
   it('«Cancelar» detiene la cámara y descarta el clip sin pedir reconocimiento; el catálogo sigue disponible (RF-17)', async () => {
     const { user, paciente, medico, camara, reconocer } = await abrir();
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
     await paciente().findByText('Cámara activa');
     await user.click(paciente().getByRole('button', { name: /Cancelar/ }));
 
@@ -138,7 +137,6 @@ describe('Captura en LSM (etapa C)', () => {
 
   it('«Elegir lo que sientes» durante la captura apaga la cámara, descarta el clip y abre el catálogo', async () => {
     const { user, paciente, medico, camara, reconocer } = await abrir();
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
     await paciente().findByText('Cámara activa');
     await user.click(paciente().getByRole('button', { name: /Elegir lo que sientes/ }));
 
@@ -153,7 +151,6 @@ describe('Captura en LSM (etapa C)', () => {
 
   it('«Cancelar» durante el procesamiento deja de esperar y un resultado tardío no aparece', async () => {
     const { user, paciente, simulador } = await abrir();
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
     await user.click(await paciente().findByRole('button', { name: /Listo/ }));
     await paciente().findByText('Interpretando tu seña…');
     const capturaId = simulador().capturaPendiente!;
@@ -168,7 +165,6 @@ describe('Captura en LSM (etapa C)', () => {
 
   it('cámara denegada: aviso y catálogo disponible, sin reconocimiento', async () => {
     const { user, paciente, reconocer, camara } = await abrir('desarrollo', 'denegada');
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
 
     const alerta = await paciente().findByRole('alert');
     expect(alerta.textContent).toMatch(/No hay permiso para usar la cámara/);
@@ -181,8 +177,7 @@ describe('Captura en LSM (etapa C)', () => {
   });
 
   it('si la cámara se desconecta durante la captura, se descarta y se avisa', async () => {
-    const { user, paciente, camara, reconocer } = await abrir();
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
+    const { paciente, camara, reconocer } = await abrir();
     await paciente().findByText('Cámara activa');
     camara().desconectar();
     expect((await paciente().findByRole('alert')).textContent).toMatch(/La cámara dejó de responder/);
@@ -191,7 +186,6 @@ describe('Captura en LSM (etapa C)', () => {
 
   it('cierre durante el procesamiento: cámara liberada, reconocimiento abortado y la nueva sesión empieza vacía (RF-18)', async () => {
     const { user, paciente, medico, camara, camaras, simulador } = await abrir();
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
     await user.click(await paciente().findByRole('button', { name: /Listo/ }));
     await paciente().findByText('Interpretando tu seña…');
     const capturaId = simulador().capturaPendiente!;
@@ -211,13 +205,12 @@ describe('Captura en LSM (etapa C)', () => {
     expect(camaras).toHaveLength(2); // cámara nueva para la sesión nueva
     expect(paciente().queryByText(/Interpretando/)).toBeNull();
     expect(paciente().queryByText(/Tengo fiebre/)).toBeNull();
-    expect(paciente().getByRole('button', { name: /Captura en LSM/ })).toBeTruthy();
+    expect(await paciente().findByText('Cámara activa')).toBeTruthy(); // la sesión nueva también empieza en la cámara
     expect(medico().getByText(/Todavía no hay mensajes/)).toBeTruthy();
   });
 
   it('un mensaje del médico durante la captura se anuncia sin ocultar la cámara activa', async () => {
     const { user, paciente, medico } = await abrir();
-    await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
     await paciente().findByText('Cámara activa');
     await user.type(medico().getByLabelText('Buscar pregunta o respuesta'), 'desde');
     await user.click(medico().getByRole('button', { name: /Desde cuándo/ }));
@@ -231,11 +224,26 @@ describe('Captura en LSM (etapa C)', () => {
 
   it('con opciones elegidas la cámara no se inicia (no se pierde la selección)', async () => {
     const { user, paciente, camara } = await abrir();
+    await user.click(await paciente().findByRole('button', { name: /Elegir lo que sientes/ }));
     await user.click(paciente().getByRole('button', { name: 'Fiebre' }));
     const boton = paciente().getByRole('button', { name: /Captura en LSM/ }) as HTMLButtonElement;
     expect(boton.disabled).toBe(true);
     expect(paciente().getByText(/Quita las opciones elegidas para usar la cámara/)).toBeTruthy();
-    expect(camara().llamadas).not.toContain('iniciar');
+    await user.click(boton);
+    expect(camara().llamadas.filter((l) => l === 'iniciar')).toHaveLength(1); // solo la del inicio
+  });
+
+  it('solo el aviso que abre la sesión lleva a la cámara: reabrir «Alcance» no la vuelve a encender', async () => {
+    const { user, paciente, camara } = await abrir();
+    await paciente().findByText('Cámara activa');
+    await user.click(paciente().getByRole('button', { name: /Cancelar/ }));
+    expect(paciente().getByRole('button', { name: 'Fiebre' })).toBeTruthy();
+
+    await user.click(paciente().getByRole('button', { name: /Alcance/ }));
+    await user.click(within(await paciente().findByRole('dialog', { name: 'Alcance de este apoyo' })).getByRole('button', { name: /Entendido/ }));
+    expect(paciente().getByRole('button', { name: 'Fiebre' })).toBeTruthy();
+    expect(paciente().queryByText('Cámara activa')).toBeNull();
+    expect(camara().llamadas.filter((l) => l === 'iniciar')).toHaveLength(1);
   });
 
   it('en el flujo de producto no hay simulador: la captura queda deshabilitada con su explicación', async () => {
@@ -244,6 +252,8 @@ describe('Captura en LSM (etapa C)', () => {
     expect(boton.disabled).toBe(true);
     expect(paciente().getByText(/El reconocimiento en LSM todavía no está disponible/)).toBeTruthy();
     expect(screen.queryByText(/Simulador/)).toBeNull();
+    // Sin reconocedor, el aviso inicial no enciende la cámara: la primera pantalla sigue siendo el catálogo.
+    expect(paciente().getByRole('button', { name: 'Fiebre' })).toBeTruthy();
     expect(camara().llamadas).not.toContain('iniciar');
   });
 });

@@ -20,6 +20,12 @@ export const VELOCIDAD_EXTRACCION = 2;
 
 export interface ExtractorPuntos {
   extraer(fuente: Blob | string, senal: AbortSignal, opciones?: OpcionesExtraccion): Promise<SecuenciaPuntos>;
+  /**
+   * Puntos del cuadro que muestra ahora un `<video>` (la cámara en vivo), con los mismos modelos que
+   * `extraer`. Solo para dibujarlos en pantalla en modo desarrollo: no decide nada ni se guarda.
+   * `null` si el video aún no tiene imagen o el extractor está analizando un clip.
+   */
+  detectarCuadro?(video: HTMLVideoElement): CuadroPuntos | null;
 }
 
 /** Rutas relativas a la página (sirven en `npm run dev` y en Electron con `file://`). */
@@ -58,6 +64,8 @@ function esperarEvento(objetivo: HTMLMediaElement, evento: string, senal: AbortS
 
 class ExtractorMediaPipe implements ExtractorPuntos {
   private cola: Promise<unknown> = Promise.resolve();
+  /** Clips en análisis. Mientras haya uno, la vista en vivo no usa los detectores. */
+  private enCurso = 0;
   constructor(
     private readonly manos: HandLandmarker,
     private readonly pose: PoseLandmarker,
@@ -67,9 +75,15 @@ class ExtractorMediaPipe implements ExtractorPuntos {
 
   /** Un video a la vez: los detectores exigen marcas de tiempo crecientes. */
   extraer(fuente: Blob | string, senal: AbortSignal, opciones: OpcionesExtraccion = {}) {
+    this.enCurso++;
     const tarea = this.cola.then(() => this.extraerUno(fuente, senal, opciones));
-    this.cola = tarea.catch(() => undefined);
+    this.cola = tarea.catch(() => undefined).finally(() => this.enCurso--);
     return tarea;
+  }
+
+  detectarCuadro(video: HTMLVideoElement): CuadroPuntos | null {
+    if (this.enCurso > 0 || video.readyState < 2 || video.videoWidth === 0) return null;
+    return this.detectar(video);
   }
 
   private detectar(video: HTMLVideoElement): CuadroPuntos {

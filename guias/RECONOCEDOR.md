@@ -66,6 +66,12 @@ separado). Inventario completo por video (fuente, permiso, seña, entrada, uso) 
    una falsa aceptación que un acierto perdido.
 6. **Dónde corre:** en el equipo del paciente (la ventana de la app), D34. El clip y sus puntos viven solo en memoria
    mientras se interpreta el turno; al médico solo llega el texto confirmado.
+7. **Puntos en vivo:** durante la captura, el recuadro de la cámara dibuja encima los puntos que analiza el
+   reconocedor (21 por mano y los dos hombros), y debajo de la imagen (no encima, para no taparlos) un resumen como
+   «Manos: 2 · Hombros: sí», para que quien dirige la prueba vea qué se toma en cuenta. Si dice «Manos: 0» con la
+   persona a cuadro, suele ser poca luz. Usa los mismos modelos que el reconocimiento, unas 20 veces por segundo; los
+   puntos se dibujan y se descartan, no deciden nada (la decisión sale del clip completo al pulsar «Listo»). Solo
+   con este reconocedor: el simulador no analiza la imagen. Código: `src/vistas/paciente/PuntosEnVivo.tsx`.
 
 Código: `src/reconocimiento/experimental/` (extractor, características, clasificador y `ReconocedorExperimental`),
 `scripts/evaluar-reconocedor.ts` y la herramienta `herramientas/extraer-puntos.html`.
@@ -165,7 +171,9 @@ npm run evaluar-reconocedor
 
 Escribe `public/modelos/plantillas-lsm.json` y `recursos-candidatos/evaluacion-reconocedor.json` e imprime las tablas.
 Para la demostración: `npm run electron:demo` (ya abre con `--reconocedor=experimental`; `electron:demo-simulado` abre
-con el simulador). En el navegador, la pantalla de inicio permite elegir el reconocedor en modo desarrollo.
+con el simulador). Con dos procesos o dos laptops: `npm run electron:paciente` en el equipo del paciente
+(ya abre con el experimental; `electron:paciente-simulado` abre con el simulador); el médico debe abrir en modo
+desarrollo. En el navegador, la pantalla de inicio permite elegir el reconocedor en modo desarrollo.
 
 ## 7. Qué haría falta para que reconozca de verdad
 

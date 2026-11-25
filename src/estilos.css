@@ -1139,9 +1139,15 @@ p {
   letter-spacing: -0.01em;
   color: var(--verde);
   hyphens: auto;
+  overflow-wrap: anywhere; /* una palabra larga tampoco ensancha la tarjeta */
 }
 .tarjeta__provisional {
-  padding: 0.1rem 0.5rem;
+  /* Nunca más ancha que el video: si no, ensancha la tarjeta y la fila se sale de la pantalla. */
+  max-width: var(--ancho-video);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0.1rem 0.4rem;
   border-radius: 999px;
   background: var(--crema-tarjeta);
   color: var(--tinta-suave);
@@ -2321,6 +2327,30 @@ p {
 }
 .captura__video--activa {
   box-shadow: 0 0 0 3px var(--rojo);
+}
+/* Reconocedor experimental (solo modo desarrollo): puntos de manos y hombros dibujados sobre la cámara. El lienzo
+   mide lo mismo que la imagen y se escala y voltea igual que el video, así que los puntos caen sobre la mano. */
+.puntos-vivo__lienzo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scaleX(-1);
+  pointer-events: none;
+}
+/* Resumen de lo detectado, debajo de la cámara (no encima: taparía los puntos). */
+.puntos-vivo__resumen {
+  margin: -0.35rem 0 0;
+  justify-self: center;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--verde-texto);
+  text-align: center;
+}
+.puntos-vivo__titulo {
+  font-family: var(--texto);
+  font-weight: 600;
 }
 .captura__encendiendo {
   position: absolute;

@@ -3,7 +3,8 @@
 Recorrido para probar la app de principio a fin. Para instalarla y abrirla, ver el [README](../README.md).
 
 1. `npm run dev` → abrir http://127.0.0.1:5173 → «Modo desarrollo» → **Demostración en una pantalla**.
-2. **Médico:** «Iniciar consulta». **Paciente:** aparece «Alcance de este apoyo» → «Entendido, continuar».
+2. **Médico:** «Iniciar consulta». **Paciente:** aparece «Alcance de este apoyo» → «Entendido, continuar». En modo
+   desarrollo la primera pantalla es la cámara («Captura en LSM»): pulsar «Elegir lo que sientes» para ir al catálogo.
 3. **Paciente:** «Elegir» en «Dolor de cabeza» y en «Fiebre» → «Revisar selección (2)». En la revisión, en
    «¿Cuánto te duele?», elegir **7** (empieza en «–/10»: sin valor por defecto).
    *Comprobar:* el médico todavía no ve nada.
@@ -26,6 +27,9 @@ Recorrido para probar la app de principio a fin. Para instalarla y abrirla, ver 
 
 **Dos laptops:** vincularlas (ver «Dos laptops» en el [README](../README.md#en-dos-laptops)) y repetir los pasos, cada participante en su laptop. **Dos procesos en
 una computadora:** `npm run electron:medico-local` y `npm run electron:paciente` escribiendo solo el código (el equipo del paciente encuentra al médico en `127.0.0.1`).
+Con `electron:paciente` la cámara usa el reconocedor experimental, con los puntos en vivo; con
+`npm run electron:paciente-simulado`, el simulador (en ambos casos, solo si el médico abrió en modo desarrollo:
+`electron:medico` y `electron:medico-local` ya lo hacen).
 **Dos pestañas del navegador:** modo **Médico** y luego **Paciente** en otra pestaña (como en la etapa A).
 
 ## Captura en LSM (etapa C)
@@ -47,7 +51,10 @@ En el navegador (`npm run dev`) el navegador pide permiso; el panel del navegado
 **Demostración (modo desarrollo, una pantalla):**
 
 1. `npm run electron:demo` → **Médico:** «Iniciar consulta» → **Paciente:** «Entendido, continuar».
-2. **Paciente:** «Captura en LSM». El recuadro del video muestra «● Cámara activa» y el tiempo (máximo 15 s).
+2. **Paciente:** la cámara se abre sola al cerrar el aviso («Captura en LSM»). El recuadro del video muestra
+   «● Cámara activa» y el tiempo (máximo 15 s).
+   Con el reconocedor experimental, sobre la imagen se dibujan los puntos de las manos y los hombros que analiza, y
+   debajo dice cuántos ve («Puntos que analiza el reconocedor: Manos: 2 · Hombros: sí»). «Manos: 0» suele ser poca luz.
    *Comprobar:* el médico no ve nada.
 3. **«Cancelar»:** la cámara se apaga y se vuelve al catálogo; no se pide reconocimiento.
 4. Otra vez «Captura en LSM», hacer una seña del vocabulario de frente, con hombros y manos a la vista, y **«Listo»:**

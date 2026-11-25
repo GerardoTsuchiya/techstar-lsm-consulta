@@ -51,7 +51,6 @@ async function abrir(lo: SecuenciaPuntos) {
   const medico = () => within(screen.getByRole('region', { name: 'Vista del personal médico' }));
   await user.click(medico().getByRole('button', { name: 'Iniciar consulta' }));
   await user.click(within(await paciente().findByRole('dialog', { name: 'Alcance de este apoyo' })).getByRole('button', { name: /Entendido/ }));
-  await user.click(paciente().getByRole('button', { name: /Captura en LSM/ }));
   await user.click(await paciente().findByRole('button', { name: /Listo/ }));
   return { user, paciente, medico };
 }

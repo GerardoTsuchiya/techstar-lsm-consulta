@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { AdaptadorCamara, EstadoCamara } from '../../camara/adaptador';
 import { buscarEntrada, recursoDeSistema } from '../../nucleo/recursos';
 import type { Catalogo, PoliticaRecursos } from '../../nucleo/tipos';
+import { esExperimental } from '../../reconocimiento/experimental/reconocedorExperimental';
 import type { Reconocedor } from '../../reconocimiento/reconocedor';
 import { esSimulado, type ReconocedorSimulado } from '../../reconocimiento/reconocedorSimulado';
 import {
@@ -15,6 +16,7 @@ import {
 } from '../comunes/Iconos';
 import { RecursoLSM } from '../comunes/RecursoLSM';
 import { tituloDe } from '../comunes/textos';
+import { LienzoPuntos, ResumenPuntos, usePuntosEnVivo } from './PuntosEnVivo';
 import type { AvisoCaptura } from './useCaptura';
 
 /** Panel «Captura en LSM»: cámara activa, «Listo» y «Cancelar» (RF-17). */
@@ -23,14 +25,18 @@ export function PanelCaptura(props: {
   estadoCamara: EstadoCamara;
   catalogo: Catalogo;
   politica: PoliticaRecursos;
+  /** Con el reconocedor experimental (solo desarrollo) se dibujan en vivo los puntos que analiza. */
+  reconocedor?: Reconocedor | null;
   onListo: () => void;
   onCancelar: () => void;
   /** Apaga la cámara, descarta el clip y vuelve al catálogo (igual que «Cancelar», dicho por su destino). */
   onCatalogo: () => void;
 }) {
-  const { camara, estadoCamara, catalogo, politica } = props;
+  const { camara, estadoCamara, catalogo, politica, reconocedor = null } = props;
   const video = useRef<HTMLVideoElement>(null);
   const activa = estadoCamara === 'activa';
+  const experimental = esExperimental(reconocedor) ? reconocedor : null;
+  const puntos = usePuntosEnVivo(video, experimental, activa);
   const segundos = useSegundosActiva(activa);
   const maximo = Math.round(camara.duracionMaximaMs / 1000);
   const enLimite = activa && maximo > 0 && segundos >= maximo;
@@ -47,6 +53,7 @@ export function PanelCaptura(props: {
         <div className={`captura__video ${activa ? 'captura__video--activa' : ''}`}>
           {/* Imagen en espejo, como en una videollamada. Sin audio: no se pide el micrófono. */}
           <video ref={video} autoPlay muted playsInline aria-label="Imagen de tu cámara" />
+          {experimental && <LienzoPuntos lienzo={puntos.lienzo} />}
           {!activa && (
             <span className="captura__encendiendo" role="status">
               <IconoCargando />
@@ -68,6 +75,7 @@ export function PanelCaptura(props: {
             )}
           </span>
         </div>
+        {experimental && activa && <ResumenPuntos resumen={puntos.resumen} />}
       </div>
 
       <div className="tarjeta-crema captura__acciones">

@@ -94,8 +94,8 @@ en redes con aislamiento de clientes (algunas universidades y hospitales), compa
 ## Prueba rápida
 
 1. Médico: «Iniciar consulta». Paciente: «Entendido, continuar».
-2. Paciente: elegir «Dolor de cabeza» y «Fiebre», pulsar «Revisar selección», indicar intensidad 7 y «Confirmar
-   mensaje».
+2. Paciente: se abre la cámara; pulsar «Elegir lo que sientes» para ir al catálogo. Elegir «Dolor de cabeza» y
+   «Fiebre», pulsar «Revisar selección», indicar intensidad 7 y «Confirmar mensaje».
 3. Médico: buscar `alergia`, pulsar «Mostrar al paciente» en la pregunta y después «Enviar al paciente».
 4. Paciente: pulsar «No entendí». Al médico le aparece un aviso para que elija otra frase.
 5. Médico: «Finalizar consulta» → «Terminar y borrar». Las dos vistas se vacían.
@@ -109,7 +109,8 @@ El guion completo, con los casos de error y la captura con cámara, está en [gu
 | `npm run electron:demo` | Médico y paciente en una ventana, con el reconocedor experimental de señas |
 | `npm run electron:demo-simulado` | Igual, pero el resultado de la cámara lo elige manualmente quien dirige la prueba |
 | `npm run electron:medico` | Abre la app en modo médico (laptop del médico) |
-| `npm run electron:paciente` | Abre la app en modo paciente (laptop del paciente) |
+| `npm run electron:paciente` | Abre la app en modo paciente (laptop del paciente). Si el médico abrió en modo desarrollo, la cámara usa el reconocedor experimental de señas, con sus puntos en vivo |
+| `npm run electron:paciente-simulado` | Igual, pero el resultado de la cámara lo elige manualmente quien dirige la prueba |
 | `npm run electron:medico-local` | Modo médico accesible solo desde esta computadora, para probar ambos modos en la misma máquina; el paciente encuentra al médico en `127.0.0.1` con solo el código |
 | `npm run dev` | Versión de navegador en http://127.0.0.1:5173 |
 | `npm test` | Ejecuta las pruebas automáticas |

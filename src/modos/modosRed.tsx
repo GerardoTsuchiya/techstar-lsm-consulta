@@ -2,6 +2,7 @@ import { type SubmitEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { catalogoFicticio } from '../catalogo/catalogoFicticio';
 import { generarId } from '../nucleo/ids';
 import type { Catalogo, PoliticaRecursos } from '../nucleo/tipos';
+import type { FabricaReconocedor } from '../reconocimiento/reconocedor';
 import { type AnuncioRecibido, elegirMedico, MENSAJES_BUSQUEDA, PAUSA_REBUSQUEDA_MS } from '../transporte/busqueda';
 import { normalizarCodigo } from '../transporte/canalSeguro';
 import { conectarPorIpc } from '../transporte/ipcElectron';
@@ -208,7 +209,17 @@ function EstadoBusqueda({ encontrados }: { encontrados: AnuncioRecibido[] | null
  * computadora del médico en la red (D56) y la dirección tecleada queda como respaldo. En el navegador, que no puede
  * buscar, se escriben la dirección y el código.
  */
-export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Catalogo }) {
+export function ModoPacienteRed({
+  catalogo = catalogoFicticio,
+  crearReconocedor,
+}: {
+  catalogo?: Catalogo;
+  /**
+   * Reconocedor de este equipo (`--reconocedor=simulado|experimental`). Solo hay uno si el médico abrió la sesión en
+   * modo desarrollo; por omisión, el simulador.
+   */
+  crearReconocedor?: FabricaReconocedor;
+}) {
   const p = puente();
   const buscador = p?.paciente;
   const [idVentana] = useState(() => generarId('disp'));
@@ -346,7 +357,7 @@ export function ModoPacienteRed({ catalogo = catalogoFicticio }: { catalogo?: Ca
       <div className="solo solo--paciente">
         <BandaRed estado={estado} />
         <div className="solo__contenido marco marco--paciente">
-          <VistaPaciente conexion={conexion} catalogo={catalogo} />
+          <VistaPaciente conexion={conexion} catalogo={catalogo} crearReconocedor={crearReconocedor} />
         </div>
       </div>
     );

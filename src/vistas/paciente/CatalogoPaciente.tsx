@@ -33,9 +33,13 @@ function useAltoDisponible() {
     // Arriba: desde el borde del área visible (con su relleno) hasta las tarjetas, sin contar el desplazamiento.
     const arriba = tarjetas.top - caja.top + cuerpo.scrollTop;
     // Abajo: el pie con la paginación y el relleno inferior del área.
-    const abajo =
-      catalogo.getBoundingClientRect().bottom - tarjetas.bottom + parseFloat(getComputedStyle(cuerpo).paddingBottom);
-    const alto = `${Math.max(0, Math.floor(cuerpo.clientHeight - arriba - abajo))}px`;
+    const estilo = getComputedStyle(cuerpo);
+    const abajo = catalogo.getBoundingClientRect().bottom - tarjetas.bottom + parseFloat(estilo.paddingBottom);
+    // Alto del área SIN descontar una barra de desplazamiento horizontal (`clientHeight` sí la descuenta). Si la
+    // fila se saliera por poco, la barra quitaba alto, las tarjetas se achicaban, la barra desaparecía y volvían a
+    // crecer: la pantalla «vibraba» sin parar.
+    const altoArea = cuerpo.offsetHeight - parseFloat(estilo.borderTopWidth) - parseFloat(estilo.borderBottomWidth);
+    const alto = `${Math.max(0, Math.floor(altoArea - arriba - abajo))}px`;
     const destino = ul.closest<HTMLElement>('.catalogo-paciente__zona') ?? ul;
     if (destino.style.getPropertyValue('--alto-disponible') !== alto) destino.style.setProperty('--alto-disponible', alto);
   };

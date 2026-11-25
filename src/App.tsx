@@ -28,6 +28,6 @@ export function App({ erroresCatalogo = ERRORES_CATALOGO }: { erroresCatalogo?: 
   if (modo === 'medico') return <ModoMedico politica={politica} />;
   if (modo === 'paciente') return <ModoPaciente />;
   if (modo === 'medico-red') return <ModoMedicoRed politica={politica} />;
-  if (modo === 'paciente-red') return <ModoPacienteRed />;
+  if (modo === 'paciente-red') return <ModoPacienteRed crearReconocedor={fabricaDeReconocedor(reconocedor)} />;
   return <Inicio />;
 }
